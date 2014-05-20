@@ -1,0 +1,7 @@
+<resources>
+    <declare-styleable name="numberThumbnail">
+        <attr name="numberThumbnail" format="integer"/>
+        <attr name="Thumbnail_width" format="integer"/>
+        <attr name="ThumbnailImage" format="reference"/>
+    </declare-styleable>
+</resources>
