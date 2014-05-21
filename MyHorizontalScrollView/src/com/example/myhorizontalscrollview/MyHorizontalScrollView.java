@@ -34,13 +34,17 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 	private int numberThumbnail;
 	private FrameLayout itemLayout;
 	private LinearLayout topLnLayout;
+	private LinearLayout addItemLayout;
 	private int centerIndex, previousCenterIndex = 1;
 	private ImageView centerImageView;
 	private float initialLocation, newLocation;
 	private long intinialTime, newTime;
 	private MyHorizontalScrollView instance;
 	private int thumbnailWidthDp;
-	//private boolean isFling = false;
+	private float startLocation;
+	private float stopLocation;
+	private ImageView addImageView;
+	LayoutInflater inflater;
 	
 	private int THUMBNAIL_WIDTH;// pixel
 	private int SCREEN_WIDTH;
@@ -49,14 +53,17 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 	private int SCROLL_DIRECTION;
 	private int SCROLL_FROM_LEFT_TO_RIGHT = 0x01;
 	private int SCROLL_FROM_RIGHT_TO_LEFT = 0x02;
-	private float startLocation;
-	private float stopLocation;
 	private float ONCLICK_THREADHOLD;
 	private int VELOCITY_X_THRESHOLD = 4000;
 	private int WANTED_VELOCITY_X = 4000;
+	private final int SCROLL_STOP_VELOCITY = 2;
+	private final int MOVE_TO_TOP_THRESHOLD = -1;
+	private final int MOVE_TO_BOTTOM_THRESHOLD = -2;
+	private final int MOVE_TO_TOP_OR_BOTTOM  = -3;
 	
 	private OnTouchFinishListener touchFinishListener = null;
 	private OnThumbnailLongTouchListener thumbnailLongTouchListener = null;
+	private OnThumbnailAddListener thumbnailAddListener = null;
 	private GestureDetector gesturedetector;
 	private Drawable hilighLightThumbnailDrawable;
 	private Drawable normalThumbnailDrawable;
@@ -66,7 +73,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 		instance = this;
 		
 		Log.d("TAG", "MyHorizontalScrollView(Context context, AttributeSet attrs)");
-		LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.addView(inflater.inflate(R.layout.activity_my_horizontal_scroll_view, null));
         
         /* Get "numberThumbnail" attribute */
@@ -109,16 +116,27 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
         	topLnLayout.addView(itemLayout);
         }
         
+        /* Add "add" icon */
+        addItemLayout = (LinearLayout) inflater.inflate(R.layout.additem, null, false);
+        topLnLayout.addView(addItemLayout);
+        
         /* Add footer */
         LinearLayout footerlayout = (LinearLayout) inflater.inflate(R.layout.headerfooterlayout, null, false);
-        footerlayout.setLayoutParams(new LinearLayout.LayoutParams(CENTER_LEFT_EDGE, LayoutParams.MATCH_PARENT));
+        footerlayout.setLayoutParams(new LinearLayout.LayoutParams(CENTER_LEFT_EDGE - THUMBNAIL_WIDTH, LayoutParams.MATCH_PARENT));
         topLnLayout.addView(footerlayout);
         
         /* Set thumbnail's title */
-        for (int i = 1; i < numberThumbnail + 1; i++)
+        /* Highlight 1st thumbnail */
+        if (numberThumbnail >= 1)
+        	setThumbnailImageResourceFromDrawable(1, hilighLightThumbnailDrawable);
+        
+        if (numberThumbnail >= 2)
         {
-        	setThumbnailTitle(i,"" + i);
-        	setThumbnailImageResourceFromDrawable(i, normalThumbnailDrawable);
+        	for (int i = 2; i < numberThumbnail + 1; i++)
+            {
+            	setThumbnailTitle(i,"" + i);
+            	setThumbnailImageResourceFromDrawable(i, normalThumbnailDrawable);
+            }
         }
         
         gesturedetector = new GestureDetector(context, GestureDetectorListener);
@@ -145,6 +163,16 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 	public interface OnThumbnailLongTouchListener 
 	{
 	    public void onMyLongTouch (View view, int centerIndex);
+	}
+	
+	public void setOnThumbnailAddListener (OnThumbnailAddListener listener)
+	{
+		this.thumbnailAddListener = listener;
+	}
+	
+	public interface OnThumbnailAddListener
+	{
+		public void onThumbnailAdd(int numberThumnail);
 	}
 	
 	/* Set thumbnail's image resource from ID */
@@ -278,11 +306,11 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 	private int findThumbnailIndex(double locationX) 
 	{
 		int[] location = new int[2];
-		int index = -1;
+		int index = MOVE_TO_TOP_OR_BOTTOM;
 		
 		int i;
 		/* Find all items location */
-		for (i = 1; i < this.numberThumbnail + 1; i++)
+		for (i = 1; i < this.numberThumbnail + 2; i++)
 		{
 			topLnLayout.getChildAt(i).getLocationOnScreen(location);
 			if ((locationX >= location[0]) && (locationX <= (location[0] + THUMBNAIL_WIDTH)))
@@ -302,8 +330,6 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 			
 			@Override
 			public void run() {
-				if ((index >= 1) && (index <= numberThumbnail))
-				{
 					ObjectAnimator animator=ObjectAnimator.ofInt(instance,
 							"scrollX", (index - 1)*THUMBNAIL_WIDTH);
 					/* Wait until scroll animation stop, we highlight center thumbnail */
@@ -338,8 +364,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 					animator.setDuration(ANIMATION_DURATION);
 					animator.start();
 				}
-			}
-		});
+			});
 		
 	}
 	
@@ -353,12 +378,49 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 		}
 	}
 	
+	private void addThumbnailToParent() 
+	{
+		/* Insert thumbnail at the end */ 
+		itemLayout = (FrameLayout) inflater.inflate(R.layout.item, null, false);
+    	topLnLayout.addView(itemLayout,numberThumbnail + 1);
+		
+    	numberThumbnail++;
+    	
+    	/* Set all title again */
+        if (numberThumbnail >= 1)
+        {
+        	for (int i = 1; i < numberThumbnail + 1; i++)
+            {
+            	setThumbnailTitle(i,"" + i);
+            	setThumbnailImageResourceFromDrawable(i, normalThumbnailDrawable);
+            }
+        }
+        
+        /* Scroll to end */
+        updateLayout(numberThumbnail);
+	}
+
 	private void singleTapConfirmed(double stopLocation)
 	{
-		centerIndex = findThumbnailIndex(stopLocation);
-		updateLayout(centerIndex);
-		if (touchFinishListener != null)
-			touchFinishListener.onTouchFinish(instance.centerIndex);
+		//if (numberThumbnail >= 1)
+		//{
+			centerIndex = findThumbnailIndex(stopLocation);
+			
+			if (centerIndex == numberThumbnail + 1)// thumbnail "ADD"
+			{
+				Log.d("TAG", "Add onclick listener");
+				addThumbnailToParent();
+				if (thumbnailAddListener != null)
+					thumbnailAddListener.onThumbnailAdd(instance.numberThumbnail);
+			}
+			else if (centerIndex != MOVE_TO_TOP_OR_BOTTOM)
+			{
+				updateLayout(centerIndex);
+				if (touchFinishListener != null)
+					touchFinishListener.onTouchFinish(instance.centerIndex);
+			}
+			
+		//}
 	}
 
 	private void onScrollEvent()
@@ -381,12 +443,22 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 				newTime = System.currentTimeMillis();
 				
 				/* Horizontal Stop scroll */
-				if(Math.abs((newLocation - initialLocation)/(newTime - intinialTime)*1000) <= 2)
+				if(Math.abs((newLocation - initialLocation)/(newTime - intinialTime)*1000) 
+						<= SCROLL_STOP_VELOCITY)
 				{
-					centerIndex = FindItemNearestCenter();
-					updateLayout(centerIndex);
-					if (touchFinishListener != null)
-						touchFinishListener.onTouchFinish(instance.centerIndex);
+					//if (numberThumbnail >= 1)
+					//{
+						centerIndex = FindItemNearestCenter();
+						
+						if (centerIndex == MOVE_TO_TOP_THRESHOLD)
+							centerIndex = 1;
+						else if (centerIndex == MOVE_TO_BOTTOM_THRESHOLD)
+							centerIndex = numberThumbnail;
+
+						updateLayout(centerIndex);
+						if (touchFinishListener != null)
+							touchFinishListener.onTouchFinish(instance.centerIndex);
+					//}
 					
 					break;
 				}
@@ -420,6 +492,11 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 					arrlocation.add(new xLocation(i, (CENTER_RIGHT_EDGE - (location[0] + THUMBNAIL_WIDTH))));
 				}
 			}
+			
+			if(arrlocation.size() == 0)
+			{
+				return MOVE_TO_TOP_THRESHOLD;
+			}
 		}
 		
 		/* Scroll from right to left */
@@ -436,15 +513,14 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 					arrlocation.add(new xLocation(i, location[0] - CENTER_LEFT_EDGE));
 				}
 			}
+			
+			if(arrlocation.size() == 0)
+			{
+				return MOVE_TO_BOTTOM_THRESHOLD;
+			}
 		}
 		
 		int nearestIndex;
-		
-		if(arrlocation.size() == 0)
-		{
-			return -1;
-		}
-		
 		nearestIndex = FindMin(arrlocation);
 		return nearestIndex;
 	}

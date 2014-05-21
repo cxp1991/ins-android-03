@@ -45,23 +45,28 @@ containing a value of this type.
         public static int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static int balloon_dark=0x7f020000;
-        public static int balloon_light=0x7f020001;
-        public static int ic_launcher=0x7f020002;
+        public static int add=0x7f020000;
+        public static int add_1=0x7f020001;
+        public static int add_2=0x7f020002;
+        public static int balloon_dark=0x7f020003;
+        public static int balloon_light=0x7f020004;
+        public static int ic_launcher=0x7f020005;
     }
     public static final class id {
-        public static int action_settings=0x7f080006;
-        public static int headerfooterlayout=0x7f080002;
+        public static int action_settings=0x7f080007;
+        public static int additemImgV=0x7f080002;
+        public static int headerfooterlayout=0x7f080003;
         public static int hrScrollview=0x7f080000;
-        public static int itemFrLayout=0x7f080003;
-        public static int thumbnailImage=0x7f080004;
+        public static int itemFrLayout=0x7f080004;
+        public static int thumbnailImage=0x7f080005;
         public static int toplnlayout=0x7f080001;
-        public static int tv=0x7f080005;
+        public static int tv=0x7f080006;
     }
     public static final class layout {
         public static int activity_my_horizontal_scroll_view=0x7f030000;
-        public static int headerfooterlayout=0x7f030001;
-        public static int item=0x7f030002;
+        public static int additem=0x7f030001;
+        public static int headerfooterlayout=0x7f030002;
+        public static int item=0x7f030003;
     }
     public static final class menu {
         public static int my_horizontal_scroll_view=0x7f070000;

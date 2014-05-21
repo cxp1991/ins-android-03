@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.example.myhorizontalscrollview.MyHorizontalScrollView;
+import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnThumbnailAddListener;
 import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnThumbnailLongTouchListener;
 import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnTouchFinishListener;
 
@@ -24,6 +25,7 @@ public class MainActivity extends Activity {
         MyHorizontalScrollView ringtoneHrScrollView = (MyHorizontalScrollView) findViewById(R.id.ringtonescrollview);
         ringtoneHrScrollView.setOnTouchFinishListener(ringtoneOnTouchFinish);
         ringtoneHrScrollView.setOnThumbnailLongTouchListener(ringtoneLongTouchListener);
+        ringtoneHrScrollView.setOnThumbnailAddListener(ringtoneThumbnailAddListener);
         
         MyHorizontalScrollView musicHrScrollView = (MyHorizontalScrollView) findViewById(R.id.musicscrollview);
         musicHrScrollView.setOnTouchFinishListener(musicOnTouchFinish);
@@ -52,6 +54,14 @@ public class MainActivity extends Activity {
 			/*Log.d("LONGPRESS", "centerIndex = " + centerIndex);
 			TextView tv = (TextView) view.findViewById(R.id.tv);
 			tv.setText("LONG");*/
+		}
+	};
+
+	OnThumbnailAddListener ringtoneThumbnailAddListener = new OnThumbnailAddListener() {
+		
+		@Override
+		public void onThumbnailAdd(int numberThumnail) {
+			Log.d("OnThumbnailAddListener", "numberThumnail = " + numberThumnail);
 		}
 	};
 }
