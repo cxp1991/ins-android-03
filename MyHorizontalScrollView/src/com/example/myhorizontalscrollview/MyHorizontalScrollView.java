@@ -32,7 +32,6 @@ import android.widget.TextView;
 public class MyHorizontalScrollView extends HorizontalScrollView {
 	
 	private int numberThumbnail;
-	private Drawable thumbnailInitialImage;
 	private FrameLayout itemLayout;
 	private LinearLayout topLnLayout;
 	private int centerIndex, previousCenterIndex = 1;
@@ -53,14 +52,14 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 	private float startLocation;
 	private float stopLocation;
 	private float ONCLICK_THREADHOLD;
-	private int VELOCITY_X_THRESHOLD = 3000;
-	private int WANTED_VELOCITY_X = 2000;
+	private int VELOCITY_X_THRESHOLD = 4000;
+	private int WANTED_VELOCITY_X = 4000;
 	
 	private OnTouchFinishListener touchFinishListener = null;
 	private OnThumbnailLongTouchListener thumbnailLongTouchListener = null;
 	private GestureDetector gesturedetector;
-	private int hilighLightThumbnailDrawable;
-	private int normalThumbnailDrawable;
+	private Drawable hilighLightThumbnailDrawable;
+	private Drawable normalThumbnailDrawable;
 	
 	public MyHorizontalScrollView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -78,7 +77,8 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
             /* Default value is 10 Thumbnails */
             numberThumbnail = a.getInt(R.styleable.numberThumbnail_numberThumbnail, 10);
             thumbnailWidthDp = a.getInt(R.styleable.numberThumbnail_Thumbnail_width, 100);
-            thumbnailInitialImage = a.getDrawable(R.styleable.numberThumbnail_ThumbnailImage);
+            normalThumbnailDrawable = a.getDrawable(R.styleable.numberThumbnail_NormalThumbnailImage);
+            hilighLightThumbnailDrawable = a.getDrawable(R.styleable.numberThumbnail_HighlightThumbnailImage);
         } finally {
             if (a != null) {
                 a.recycle(); // ensure this is always called
@@ -118,12 +118,10 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
         for (int i = 1; i < numberThumbnail + 1; i++)
         {
         	setThumbnailTitle(i,"" + i);
-        	setThumbnailImageResourceFromDrawable(i, thumbnailInitialImage);
+        	setThumbnailImageResourceFromDrawable(i, normalThumbnailDrawable);
         }
         
         gesturedetector = new GestureDetector(context, GestureDetectorListener);
-        setHilighLightThumbnailDrawable(R.drawable.balloon_light);
-        setNormalThumbnailDrawable(R.drawable.balloon_dark);
         
 	}
 	
@@ -163,14 +161,14 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 		imgView.setImageDrawable(drawable);
 	}
 	
-	public void setHilighLightThumbnailDrawable (int drawableId)
+	public void setHilighLightThumbnailDrawable (Drawable drawable)
 	{
-		this.hilighLightThumbnailDrawable  = drawableId;
+		this.hilighLightThumbnailDrawable  = drawable;
 	}
 	
-	public void setNormalThumbnailDrawable (int drawableId)
+	public void setNormalThumbnailDrawable (Drawable drawable)
 	{
-		this.normalThumbnailDrawable = drawableId;
+		this.normalThumbnailDrawable = drawable;
 	}
 	
 	/* Set thumbnail's padding */
@@ -298,46 +296,48 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 	}
 
 	/* Update layout */
-	private void updateLayout()
+	private void updateLayout(final int index)
 	{
 		instance.post(new Runnable() {
 			
 			@Override
 			public void run() {
-				ObjectAnimator animator=ObjectAnimator.ofInt(instance,
-						"scrollX", (centerIndex - 1)*THUMBNAIL_WIDTH);
-				
-				/* Wait until scroll animation stop, we highlight center thumbnail */
-				animator.addListener(new AnimatorListener() {
-				
-					@Override
-					public void onAnimationStart(Animator animation) {
-					}
+				if ((index >= 1) && (index <= numberThumbnail))
+				{
+					ObjectAnimator animator=ObjectAnimator.ofInt(instance,
+							"scrollX", (index - 1)*THUMBNAIL_WIDTH);
+					/* Wait until scroll animation stop, we highlight center thumbnail */
+					animator.addListener(new AnimatorListener() {
 					
-					@Override
-					public void onAnimationRepeat(Animator animation) {
-					}
-					
-					@Override
-					public void onAnimationEnd(Animator animation) {
+						@Override
+						public void onAnimationStart(Animator animation) {
+						}
 						
-						/* UnHighlight previous center item */
-						centerImageView = (ImageView) topLnLayout.getChildAt(previousCenterIndex).findViewById(R.id.thumbnailImage);
-						centerImageView.setImageResource(normalThumbnailDrawable);
+						@Override
+						public void onAnimationRepeat(Animator animation) {
+						}
 						
-						/* Highlight center item */
-						centerImageView = (ImageView) topLnLayout.getChildAt(centerIndex).findViewById(R.id.thumbnailImage);
-						centerImageView.setImageResource(hilighLightThumbnailDrawable);
-						previousCenterIndex = centerIndex;
-					}
-					
-					@Override
-					public void onAnimationCancel(Animator animation) {
-					}
-				});
-			
-				animator.setDuration(ANIMATION_DURATION);
-				animator.start();
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							
+								Log.d ("updateLayout", "index = " + index);
+								/* UnHighlight previous center item */
+								centerImageView = (ImageView) topLnLayout.getChildAt(previousCenterIndex).findViewById(R.id.thumbnailImage);
+								centerImageView.setImageDrawable(normalThumbnailDrawable);
+							
+								/* Highlight center item */
+								centerImageView = (ImageView) topLnLayout.getChildAt(index).findViewById(R.id.thumbnailImage);
+								centerImageView.setImageDrawable(hilighLightThumbnailDrawable);
+								previousCenterIndex = index;
+						}
+						
+						@Override
+						public void onAnimationCancel(Animator animation) {
+						}
+					});
+					animator.setDuration(ANIMATION_DURATION);
+					animator.start();
+				}
 			}
 		});
 		
@@ -356,11 +356,9 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 	private void singleTapConfirmed(double stopLocation)
 	{
 		centerIndex = findThumbnailIndex(stopLocation);
-		if (centerIndex < 0) return;
-		updateLayout();
-		
+		updateLayout(centerIndex);
 		if (touchFinishListener != null)
-			touchFinishListener.onTouchFinish(this.centerIndex);
+			touchFinishListener.onTouchFinish(instance.centerIndex);
 	}
 
 	private void onScrollEvent()
@@ -382,62 +380,11 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
 				newLocation = instance.getScrollX();
 				newTime = System.currentTimeMillis();
 				
-				//Log.d("VELOCITY", "Quang duong = " + Math.abs((newLocation - initialLocation)));
-				//Log.d("VELOCITY", "Thoi gian = " + Math.abs((newTime - intinialTime)*1000));
-				//Log.d("onscroll", "Van toc() = " + Math.abs((newLocation - initialLocation)/(newTime - intinialTime)*1000));
 				/* Horizontal Stop scroll */
 				if(Math.abs((newLocation - initialLocation)/(newTime - intinialTime)*1000) <= 2)
 				{
 					centerIndex = FindItemNearestCenter();
-					if (centerIndex < 0) break;
-					Log.d("SCROLL", "centerindex = " + centerIndex);
-				
-					instance.post(new Runnable() {
-						
-						@Override
-						public void run() {
-							int value = 0;
-							
-							if(centerIndex > 0)
-								value = (centerIndex-1)*THUMBNAIL_WIDTH;
-							
-							/* Cool, I can change speed of scroll using this animation */
-							ObjectAnimator animator=ObjectAnimator.ofInt(instance,
-									"scrollX", value);
-							
-							animator.addListener(new AnimatorListener() {
-								
-								@Override
-								public void onAnimationStart(Animator animation) {
-								}
-								
-								@Override
-								public void onAnimationRepeat(Animator animation) {
-								}
-								
-								@Override
-								public void onAnimationEnd(Animator animation) {
-									/* UnHighlight previous center item */
-									centerImageView = (ImageView) topLnLayout.getChildAt(previousCenterIndex).findViewById(R.id.thumbnailImage);
-									centerImageView.setImageResource(R.drawable.balloon_dark);
-									
-									/* Highlight center item */
-									centerImageView = (ImageView) topLnLayout.getChildAt(centerIndex).findViewById(R.id.thumbnailImage);
-									centerImageView.setImageResource(R.drawable.balloon_light);
-									previousCenterIndex = centerIndex;
-								}
-								
-								@Override
-								public void onAnimationCancel(Animator animation) {
-								}
-							});
-							
-							animator.setDuration(ANIMATION_DURATION);
-							animator.start();
-							
-						}
-					});
-					
+					updateLayout(centerIndex);
 					if (touchFinishListener != null)
 						touchFinishListener.onTouchFinish(instance.centerIndex);
 					

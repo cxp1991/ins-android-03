@@ -2,6 +2,7 @@
     <declare-styleable name="numberThumbnail">
         <attr name="numberThumbnail" format="integer"/>
         <attr name="Thumbnail_width" format="integer"/>
-        <attr name="ThumbnailImage" format="reference"/>
+        <attr name="HighlightThumbnailImage" format="reference"/>
+        <attr name="NormalThumbnailImage" format="reference"/>
     </declare-styleable>
 </resources>

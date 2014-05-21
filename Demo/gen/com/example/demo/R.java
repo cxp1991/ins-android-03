@@ -12,7 +12,11 @@ public final class R {
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int ThumbnailImage=0x7f010002;
+        public static final int HighlightThumbnailImage=0x7f010002;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int NormalThumbnailImage=0x7f010003;
         /** <p>Must be an integer value, such as "<code>100</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -49,6 +53,9 @@ containing a value of this type.
         public static final int balloon_dark=0x7f020000;
         public static final int balloon_light=0x7f020001;
         public static final int ic_launcher=0x7f020002;
+        public static final int songthumbnail=0x7f020003;
+        public static final int songthumbnailbright=0x7f020004;
+        public static final int songthumbnaildark=0x7f020005;
     }
     public static final class id {
         public static final int action_settings=0x7f080008;
@@ -133,27 +140,39 @@ containing a value of this type.
            <colgroup align="left" />
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #numberThumbnail_ThumbnailImage com.example.demo:ThumbnailImage}</code></td><td></td></tr>
+           <tr><td><code>{@link #numberThumbnail_HighlightThumbnailImage com.example.demo:HighlightThumbnailImage}</code></td><td></td></tr>
+           <tr><td><code>{@link #numberThumbnail_NormalThumbnailImage com.example.demo:NormalThumbnailImage}</code></td><td></td></tr>
            <tr><td><code>{@link #numberThumbnail_Thumbnail_width com.example.demo:Thumbnail_width}</code></td><td></td></tr>
            <tr><td><code>{@link #numberThumbnail_numberThumbnail com.example.demo:numberThumbnail}</code></td><td></td></tr>
            </table>
-           @see #numberThumbnail_ThumbnailImage
+           @see #numberThumbnail_HighlightThumbnailImage
+           @see #numberThumbnail_NormalThumbnailImage
            @see #numberThumbnail_Thumbnail_width
            @see #numberThumbnail_numberThumbnail
          */
         public static final int[] numberThumbnail = {
-            0x7f010000, 0x7f010001, 0x7f010002
+            0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003
         };
         /**
-          <p>This symbol is the offset where the {@link com.example.demo.R.attr#ThumbnailImage}
+          <p>This symbol is the offset where the {@link com.example.demo.R.attr#HighlightThumbnailImage}
           attribute's value can be found in the {@link #numberThumbnail} array.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name com.example.demo:ThumbnailImage
+          @attr name com.example.demo:HighlightThumbnailImage
         */
-        public static final int numberThumbnail_ThumbnailImage = 2;
+        public static final int numberThumbnail_HighlightThumbnailImage = 2;
+        /**
+          <p>This symbol is the offset where the {@link com.example.demo.R.attr#NormalThumbnailImage}
+          attribute's value can be found in the {@link #numberThumbnail} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name com.example.demo:NormalThumbnailImage
+        */
+        public static final int numberThumbnail_NormalThumbnailImage = 3;
         /**
           <p>This symbol is the offset where the {@link com.example.demo.R.attr#Thumbnail_width}
           attribute's value can be found in the {@link #numberThumbnail} array.

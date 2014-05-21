@@ -8,7 +8,8 @@ package com.example.myhorizontalscrollview;
 
 public final class R {
 	public static final class attr {
-		public static final int ThumbnailImage = 0x7f010002;
+		public static final int HighlightThumbnailImage = 0x7f010002;
+		public static final int NormalThumbnailImage = 0x7f010003;
 		public static final int Thumbnail_width = 0x7f010001;
 		public static final int numberThumbnail = 0x7f010000;
 	}
@@ -48,8 +49,9 @@ public final class R {
 		public static final int AppTheme = 0x7f060001;
 	}
 	public static final class styleable {
-		public static final int[] numberThumbnail = { 0x7f010000, 0x7f010001, 0x7f010002 };
-		public static final int numberThumbnail_ThumbnailImage = 2;
+		public static final int[] numberThumbnail = { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003 };
+		public static final int numberThumbnail_HighlightThumbnailImage = 2;
+		public static final int numberThumbnail_NormalThumbnailImage = 3;
 		public static final int numberThumbnail_Thumbnail_width = 1;
 		public static final int numberThumbnail_numberThumbnail = 0;
 	}

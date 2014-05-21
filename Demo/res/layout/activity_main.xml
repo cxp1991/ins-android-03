@@ -9,7 +9,8 @@
         android:layout_height="100dp"
         custom:numberThumbnail="20"
 		custom:Thumbnail_width="100"
-		custom:ThumbnailImage="@drawable/balloon_dark"
+		custom:NormalThumbnailImage="@drawable/songthumbnaildark"
+        custom:HighlightThumbnailImage="@drawable/songthumbnailbright"
         android:scrollbars="none"
         android:layout_alignParentTop="true">
     </com.example.myhorizontalscrollview.MyHorizontalScrollView>
@@ -20,7 +21,8 @@
         android:layout_height="100dp"
         custom:numberThumbnail="20"
         custom:Thumbnail_width="100"
-        custom:ThumbnailImage="@drawable/ic_launcher"
+        custom:NormalThumbnailImage="@drawable/songthumbnaildark"
+        custom:HighlightThumbnailImage="@drawable/songthumbnailbright"
         android:scrollbars="none"
         android:layout_alignParentBottom="true">
     </com.example.myhorizontalscrollview.MyHorizontalScrollView>

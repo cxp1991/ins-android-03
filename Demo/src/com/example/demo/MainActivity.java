@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.example.myhorizontalscrollview.MyHorizontalScrollView;
 import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnThumbnailLongTouchListener;

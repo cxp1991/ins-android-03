@@ -1,4 +1,5 @@
-int attr ThumbnailImage 0x7f010002
+int attr HighlightThumbnailImage 0x7f010002
+int attr NormalThumbnailImage 0x7f010003
 int attr Thumbnail_width 0x7f010001
 int attr numberThumbnail 0x7f010000
 int dimen activity_horizontal_margin 0x7f040000
@@ -22,7 +23,8 @@ int string app_name 0x7f050000
 int string hello_world 0x7f050002
 int style AppBaseTheme 0x7f060000
 int style AppTheme 0x7f060001
-int[] styleable numberThumbnail { 0x7f010000, 0x7f010001, 0x7f010002 }
-int styleable numberThumbnail_ThumbnailImage 2
+int[] styleable numberThumbnail { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003 }
+int styleable numberThumbnail_HighlightThumbnailImage 2
+int styleable numberThumbnail_NormalThumbnailImage 3
 int styleable numberThumbnail_Thumbnail_width 1
 int styleable numberThumbnail_numberThumbnail 0
