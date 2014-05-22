@@ -12,11 +12,19 @@ public final class R {
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static int HighlightThumbnailImage=0x7f010002;
+        public static int HighlightThumbnailImage=0x7f010003;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static int NormalThumbnailImage=0x7f010003;
+        public static int NormalThumbnailImage=0x7f010004;
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static int Thumbnail_height=0x7f010002;
         /** <p>Must be an integer value, such as "<code>100</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -25,6 +33,15 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static int Thumbnail_width=0x7f010001;
+        /**  0 = top, 1 = middle, 2 = bottom 
+         <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static int layout_location=0x7f010005;
         /** <p>Must be an integer value, such as "<code>100</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -59,7 +76,7 @@ containing a value of this type.
         public static int hrScrollview=0x7f080000;
         public static int itemFrLayout=0x7f080004;
         public static int thumbnailImage=0x7f080005;
-        public static int toplnlayout=0x7f080001;
+        public static int toplinearlayout=0x7f080001;
         public static int tv=0x7f080006;
     }
     public static final class layout {
@@ -113,16 +130,21 @@ containing a value of this type.
            <tr><th>Attribute</th><th>Description</th></tr>
            <tr><td><code>{@link #numberThumbnail_HighlightThumbnailImage com.example.myhorizontalscrollview:HighlightThumbnailImage}</code></td><td></td></tr>
            <tr><td><code>{@link #numberThumbnail_NormalThumbnailImage com.example.myhorizontalscrollview:NormalThumbnailImage}</code></td><td></td></tr>
+           <tr><td><code>{@link #numberThumbnail_Thumbnail_height com.example.myhorizontalscrollview:Thumbnail_height}</code></td><td></td></tr>
            <tr><td><code>{@link #numberThumbnail_Thumbnail_width com.example.myhorizontalscrollview:Thumbnail_width}</code></td><td></td></tr>
+           <tr><td><code>{@link #numberThumbnail_layout_location com.example.myhorizontalscrollview:layout_location}</code></td><td> 0 = top, 1 = middle, 2 = bottom </td></tr>
            <tr><td><code>{@link #numberThumbnail_numberThumbnail com.example.myhorizontalscrollview:numberThumbnail}</code></td><td></td></tr>
            </table>
            @see #numberThumbnail_HighlightThumbnailImage
            @see #numberThumbnail_NormalThumbnailImage
+           @see #numberThumbnail_Thumbnail_height
            @see #numberThumbnail_Thumbnail_width
+           @see #numberThumbnail_layout_location
            @see #numberThumbnail_numberThumbnail
          */
         public static final int[] numberThumbnail = {
-            0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003
+            0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003,
+            0x7f010004, 0x7f010005
         };
         /**
           <p>This symbol is the offset where the {@link com.example.myhorizontalscrollview.R.attr#HighlightThumbnailImage}
@@ -133,7 +155,7 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           @attr name com.example.myhorizontalscrollview:HighlightThumbnailImage
         */
-        public static final int numberThumbnail_HighlightThumbnailImage = 2;
+        public static final int numberThumbnail_HighlightThumbnailImage = 3;
         /**
           <p>This symbol is the offset where the {@link com.example.myhorizontalscrollview.R.attr#NormalThumbnailImage}
           attribute's value can be found in the {@link #numberThumbnail} array.
@@ -143,7 +165,21 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           @attr name com.example.myhorizontalscrollview:NormalThumbnailImage
         */
-        public static final int numberThumbnail_NormalThumbnailImage = 3;
+        public static final int numberThumbnail_NormalThumbnailImage = 4;
+        /**
+          <p>This symbol is the offset where the {@link com.example.myhorizontalscrollview.R.attr#Thumbnail_height}
+          attribute's value can be found in the {@link #numberThumbnail} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.example.myhorizontalscrollview:Thumbnail_height
+        */
+        public static final int numberThumbnail_Thumbnail_height = 2;
         /**
           <p>This symbol is the offset where the {@link com.example.myhorizontalscrollview.R.attr#Thumbnail_width}
           attribute's value can be found in the {@link #numberThumbnail} array.
@@ -158,6 +194,22 @@ containing a value of this type.
           @attr name com.example.myhorizontalscrollview:Thumbnail_width
         */
         public static final int numberThumbnail_Thumbnail_width = 1;
+        /**
+          <p>
+          @attr description
+           0 = top, 1 = middle, 2 = bottom 
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          <p>This is a private symbol.
+          @attr name com.example.myhorizontalscrollview:layout_location
+        */
+        public static final int numberThumbnail_layout_location = 5;
         /**
           <p>This symbol is the offset where the {@link com.example.myhorizontalscrollview.R.attr#numberThumbnail}
           attribute's value can be found in the {@link #numberThumbnail} array.

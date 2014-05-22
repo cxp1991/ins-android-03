@@ -8,9 +8,11 @@ package com.example.myhorizontalscrollview;
 
 public final class R {
 	public static final class attr {
-		public static final int HighlightThumbnailImage = 0x7f010002;
-		public static final int NormalThumbnailImage = 0x7f010003;
+		public static final int HighlightThumbnailImage = 0x7f010003;
+		public static final int NormalThumbnailImage = 0x7f010004;
+		public static final int Thumbnail_height = 0x7f010002;
 		public static final int Thumbnail_width = 0x7f010001;
+		public static final int layout_location = 0x7f010005;
 		public static final int numberThumbnail = 0x7f010000;
 	}
 	public static final class dimen {
@@ -32,7 +34,7 @@ public final class R {
 		public static final int hrScrollview = 0x7f080002;
 		public static final int itemFrLayout = 0x7f080006;
 		public static final int thumbnailImage = 0x7f080007;
-		public static final int toplnlayout = 0x7f080003;
+		public static final int toplinearlayout = 0x7f080003;
 		public static final int tv = 0x7f080008;
 	}
 	public static final class layout {
@@ -54,10 +56,12 @@ public final class R {
 		public static final int AppTheme = 0x7f060001;
 	}
 	public static final class styleable {
-		public static final int[] numberThumbnail = { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003 };
-		public static final int numberThumbnail_HighlightThumbnailImage = 2;
-		public static final int numberThumbnail_NormalThumbnailImage = 3;
+		public static final int[] numberThumbnail = { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005 };
+		public static final int numberThumbnail_HighlightThumbnailImage = 3;
+		public static final int numberThumbnail_NormalThumbnailImage = 4;
+		public static final int numberThumbnail_Thumbnail_height = 2;
 		public static final int numberThumbnail_Thumbnail_width = 1;
+		public static final int numberThumbnail_layout_location = 5;
 		public static final int numberThumbnail_numberThumbnail = 0;
 	}
 }

@@ -6,11 +6,13 @@
     <com.example.myhorizontalscrollview.MyHorizontalScrollView 
         android:id="@+id/ringtonescrollview"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        custom:numberThumbnail="0"
-		custom:Thumbnail_width="100"
+        android:layout_height="200dp"
+        custom:numberThumbnail="2"
+		custom:Thumbnail_width="90"
+		custom:Thumbnail_height="90"
 		custom:NormalThumbnailImage="@drawable/songthumbnaildark"
         custom:HighlightThumbnailImage="@drawable/songthumbnailbright"
+        custom:layout_location="0"
         android:scrollbars="none"
         android:layout_alignParentTop="true">
     </com.example.myhorizontalscrollview.MyHorizontalScrollView>
@@ -18,11 +20,13 @@
     <com.example.myhorizontalscrollview.MyHorizontalScrollView 
         android:id="@+id/musicscrollview"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="200dp"
         custom:numberThumbnail="1"
-        custom:Thumbnail_width="100"
+        custom:Thumbnail_width="90"
+        custom:Thumbnail_height="90"
         custom:NormalThumbnailImage="@drawable/songthumbnaildark"
         custom:HighlightThumbnailImage="@drawable/songthumbnailbright"
+        custom:layout_location="2"
         android:scrollbars="none"
         android:layout_alignParentBottom="true">
     </com.example.myhorizontalscrollview.MyHorizontalScrollView>

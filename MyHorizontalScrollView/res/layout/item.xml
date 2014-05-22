@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="100dp"
+android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:id="@+id/itemFrLayout">
 
@@ -8,9 +8,9 @@ android:id="@+id/itemFrLayout">
 		android:id="@+id/thumbnailImage"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:src="@drawable/balloon_dark"
 		android:adjustViewBounds="true"
 		android:padding="5dp"
+		android:src="@drawable/add_1"
 	/> 
 
 	<TextView

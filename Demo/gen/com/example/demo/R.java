@@ -12,11 +12,19 @@ public final class R {
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int HighlightThumbnailImage=0x7f010002;
+        public static final int HighlightThumbnailImage=0x7f010003;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int NormalThumbnailImage=0x7f010003;
+        public static final int NormalThumbnailImage=0x7f010004;
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int Thumbnail_height=0x7f010002;
         /** <p>Must be an integer value, such as "<code>100</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -25,6 +33,15 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int Thumbnail_width=0x7f010001;
+        /**  0 = top, 1 = middle, 2 = bottom 
+         <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int layout_location=0x7f010005;
         /** <p>Must be an integer value, such as "<code>100</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -69,7 +86,7 @@ containing a value of this type.
         public static final int musicscrollview=0x7f080001;
         public static final int ringtonescrollview=0x7f080000;
         public static final int thumbnailImage=0x7f080007;
-        public static final int toplnlayout=0x7f080003;
+        public static final int toplinearlayout=0x7f080003;
         public static final int tv=0x7f080008;
     }
     public static final class layout {
@@ -147,16 +164,21 @@ containing a value of this type.
            <tr><th>Attribute</th><th>Description</th></tr>
            <tr><td><code>{@link #numberThumbnail_HighlightThumbnailImage com.example.demo:HighlightThumbnailImage}</code></td><td></td></tr>
            <tr><td><code>{@link #numberThumbnail_NormalThumbnailImage com.example.demo:NormalThumbnailImage}</code></td><td></td></tr>
+           <tr><td><code>{@link #numberThumbnail_Thumbnail_height com.example.demo:Thumbnail_height}</code></td><td></td></tr>
            <tr><td><code>{@link #numberThumbnail_Thumbnail_width com.example.demo:Thumbnail_width}</code></td><td></td></tr>
+           <tr><td><code>{@link #numberThumbnail_layout_location com.example.demo:layout_location}</code></td><td> 0 = top, 1 = middle, 2 = bottom </td></tr>
            <tr><td><code>{@link #numberThumbnail_numberThumbnail com.example.demo:numberThumbnail}</code></td><td></td></tr>
            </table>
            @see #numberThumbnail_HighlightThumbnailImage
            @see #numberThumbnail_NormalThumbnailImage
+           @see #numberThumbnail_Thumbnail_height
            @see #numberThumbnail_Thumbnail_width
+           @see #numberThumbnail_layout_location
            @see #numberThumbnail_numberThumbnail
          */
         public static final int[] numberThumbnail = {
-            0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003
+            0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003,
+            0x7f010004, 0x7f010005
         };
         /**
           <p>This symbol is the offset where the {@link com.example.demo.R.attr#HighlightThumbnailImage}
@@ -167,7 +189,7 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           @attr name com.example.demo:HighlightThumbnailImage
         */
-        public static final int numberThumbnail_HighlightThumbnailImage = 2;
+        public static final int numberThumbnail_HighlightThumbnailImage = 3;
         /**
           <p>This symbol is the offset where the {@link com.example.demo.R.attr#NormalThumbnailImage}
           attribute's value can be found in the {@link #numberThumbnail} array.
@@ -177,7 +199,21 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           @attr name com.example.demo:NormalThumbnailImage
         */
-        public static final int numberThumbnail_NormalThumbnailImage = 3;
+        public static final int numberThumbnail_NormalThumbnailImage = 4;
+        /**
+          <p>This symbol is the offset where the {@link com.example.demo.R.attr#Thumbnail_height}
+          attribute's value can be found in the {@link #numberThumbnail} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.example.demo:Thumbnail_height
+        */
+        public static final int numberThumbnail_Thumbnail_height = 2;
         /**
           <p>This symbol is the offset where the {@link com.example.demo.R.attr#Thumbnail_width}
           attribute's value can be found in the {@link #numberThumbnail} array.
@@ -192,6 +228,22 @@ containing a value of this type.
           @attr name com.example.demo:Thumbnail_width
         */
         public static final int numberThumbnail_Thumbnail_width = 1;
+        /**
+          <p>
+          @attr description
+           0 = top, 1 = middle, 2 = bottom 
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          <p>This is a private symbol.
+          @attr name com.example.demo:layout_location
+        */
+        public static final int numberThumbnail_layout_location = 5;
         /**
           <p>This symbol is the offset where the {@link com.example.demo.R.attr#numberThumbnail}
           attribute's value can be found in the {@link #numberThumbnail} array.
