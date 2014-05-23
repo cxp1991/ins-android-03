@@ -2,9 +2,10 @@ package com.example.myhorizontalscrollview;
 
 import java.util.ArrayList;
 
-import android.R.bool;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
+import android.animation.LayoutTransition;
+import android.animation.LayoutTransition.TransitionListener;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
@@ -18,11 +19,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
@@ -42,7 +44,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	private int numberThumbnail;
 	private FrameLayout itemLayout;
 	private LinearLayout topLnLayout;
-	private LinearLayout addItemLayout;
+	private FrameLayout addItemLayout;
 	private int centerIndex, previousCenterIndex = 1;
 	private ImageView centerImageView;
 	private float initialLocation, newLocation;
@@ -53,6 +55,8 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	private float stopLocation;
 	private LayoutInflater inflater;
 	private int layoutLocation; // 0 = top, 1 = middle, 2 = bottom
+	private LayoutParams params;
+	private LayoutTransition layoutTransition;
 	
 	private int THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT;// pixel
 	private int SCREEN_WIDTH;
@@ -69,6 +73,8 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	private final int MOVE_TO_BOTTOM_THRESHOLD = -2;
 	private final int MOVE_TO_TOP_OR_BOTTOM  = -3;
 	private final int COUNT_TO_CALC_DIRECTION = 5;
+	private final int ACTION_REMOVE_UP = 0x03;
+	private final int ACTION_REMOVE_DOWN = 0x04;
 	
 	private OnTouchFinishListener touchFinishListener = null;
 	private OnThumbnailLongTouchListener thumbnailLongTouchListener = null;
@@ -77,6 +83,8 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	private Drawable hilighLightThumbnailDrawable;
 	private Drawable normalThumbnailDrawable;
 	private boolean isThumbnailRemoveFinish = true;
+	private boolean isLayoutTranslationFinish;
+	private int removeIndex;
 	
 	private float x0 = 0, y0 = 0;
     private float x1 = 0, y1 = 0;
@@ -92,7 +100,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.addView(inflater.inflate(R.layout.activity_my_horizontal_scroll_view, null));
         
-        /* Get "numberThumbnail" attribute */
+        /* Get  attributes */
         TypedArray a = null;
         try {
             a = getContext().obtainStyledAttributes(attrs, R.styleable.numberThumbnail);
@@ -115,15 +123,27 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		THUMBNAIL_WIDTH = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, thumbnailWidthDp, r.getDisplayMetrics());
 		THUMBNAIL_HEIGHT = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, thumbnailHeightDp, r.getDisplayMetrics());
 		ONCLICK_THREADHOLD = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, r.getDisplayMetrics());
+		
 		/* Get Center location */
 		SCREEN_WIDTH =  context.getResources().getDisplayMetrics().widthPixels;
 		CENTER_LEFT_EDGE = SCREEN_WIDTH/2 - THUMBNAIL_WIDTH/2;
 		CENTER_RIGHT_EDGE = SCREEN_WIDTH/2 + THUMBNAIL_WIDTH/2;
 		
-		/* Choose linear layout is top/middle/bottom */
 		topLnLayout = (LinearLayout) findViewById(R.id.toplinearlayout);
         itemLayout = (FrameLayout) inflater.inflate(R.layout.item, null, false);
        
+        /* Control thumbnail position */
+        params = new LayoutParams(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
+        
+        //Log.d("params", "location = " + layoutLocation);
+        
+        if (layoutLocation == 0)
+        	params.gravity = Gravity.TOP;
+        else if (layoutLocation == 1)
+        	params.gravity = Gravity.CENTER_VERTICAL;
+        else if (layoutLocation == 2)
+        	params.gravity = Gravity.BOTTOM;
+        
         /* Add header */
         LinearLayout headerlayout = (LinearLayout) inflater.inflate(R.layout.headerfooterlayout, null, false);
     	headerlayout.setLayoutParams(new LinearLayout.LayoutParams(CENTER_LEFT_EDGE, LayoutParams.MATCH_PARENT ));
@@ -133,13 +153,22 @@ public class MyHorizontalScrollView extends HorizontalScrollView
         for (int i = 0; i < numberThumbnail; i++)
         {
         	itemLayout = (FrameLayout) inflater.inflate(R.layout.item, null, false);
-        	itemLayout.setLayoutParams(new LayoutParams(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT ));
+        	itemLayout.setLayoutParams(new LinearLayout.LayoutParams(THUMBNAIL_WIDTH, LayoutParams.MATCH_PARENT));
+        	
+        	ImageView thumbnail = (ImageView) itemLayout.findViewById(R.id.thumbnailImage);
+    		TextView title = (TextView) itemLayout.findViewById(R.id.tv);
+    		
+    		thumbnail.setLayoutParams(params);
+    		title.setLayoutParams(params);
+    		
         	topLnLayout.addView(itemLayout);
         }
         
         /* Add "add" icon */
-        addItemLayout = (LinearLayout) inflater.inflate(R.layout.additem, null, false);
-        addItemLayout.setLayoutParams(new LayoutParams(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT ));
+        addItemLayout = (FrameLayout) inflater.inflate(R.layout.additem, null, false);
+        addItemLayout.setLayoutParams(new LayoutParams(THUMBNAIL_WIDTH, LayoutParams.MATCH_PARENT));
+        ImageView addImgaView = (ImageView) addItemLayout.findViewById(R.id.additemImgV);
+        addImgaView.setLayoutParams(params);
         topLnLayout.addView(addItemLayout);
         
         /* Add footer */
@@ -151,7 +180,10 @@ public class MyHorizontalScrollView extends HorizontalScrollView
         /* Set thumbnail's title */
         /* Highlight 1st thumbnail */
         if (numberThumbnail >= 1)
+        {
+        	setThumbnailTitle(1, "1");
         	setThumbnailImageResourceFromDrawable(1, hilighLightThumbnailDrawable);
+        }
         
         if (numberThumbnail >= 2)
         {
@@ -162,8 +194,14 @@ public class MyHorizontalScrollView extends HorizontalScrollView
             }
         }
         
+        /* Gesture detector for "long press" event */
         gesturedetector = new GestureDetector(context, GestureDetectorListener);
         
+        /* Set animation for add or remove view */
+        layoutTransition = new LayoutTransition();
+        layoutTransition.setDuration(100);
+        layoutTransition.addTransitionListener(OnLayoutTranslation);
+		topLnLayout.setLayoutTransition(layoutTransition);
 	}
 	
 	/* On Touch Finish Listener */
@@ -323,14 +361,21 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 					dy = (float) Math.sqrt ((y1 - y0) * (y1 - y0));
 					
 					Log.d ("TAG", "dx = " + dx + ", dy = " + dy);
+					Log.i ("TAG", "y = " + (y1 - y0));
 					
 					if (dy >= 2*dx)
 					{
+						final int action_mode;
 						isActionRemove = true;
 						
-						int index = findThumbnailIndex(x0);
+						final int index = findThumbnailIndex(x0);
 						Log.d("TAG", "Remove thumbnail, index = " + index) ;
-						removeThumbnailFromParent(index);
+						if ((y1 - y0) >= 0)
+							action_mode = ACTION_REMOVE_DOWN;
+						else 
+							action_mode = ACTION_REMOVE_UP;
+						
+						removeThumbnailFromParent (index, action_mode);
 					}
 				}
 				
@@ -377,7 +422,12 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	{
 		/* Insert thumbnail at the end */ 
 		itemLayout = (FrameLayout) inflater.inflate(R.layout.item, null, false);
-		itemLayout.setLayoutParams(new LayoutParams(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT));
+		itemLayout.setLayoutParams(new LayoutParams(THUMBNAIL_WIDTH, LayoutParams.MATCH_PARENT));
+		ImageView thumbnail = (ImageView) itemLayout.findViewById(R.id.thumbnailImage);
+		TextView title = (TextView) itemLayout.findViewById(R.id.tv);
+		
+		thumbnail.setLayoutParams(params);
+		title.setLayoutParams(params);
     	topLnLayout.addView(itemLayout,numberThumbnail + 1);
 		
     	numberThumbnail++;
@@ -397,34 +447,65 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	}
 
 	/* Remove 1 thumbnail from its parent */
-	private void removeThumbnailFromParent (final int index)
+	private void removeThumbnailFromParent (final int index, final int action)
 	{
+		
+		/* Previous removing is not finish (you removed too fast) */
 		if (!isThumbnailRemoveFinish)
 			return;
 		
+		/* No more any thumbnail */
 		if (index < 1 || index > numberThumbnail)
+		{
+			isThumbnailRemoveFinish = true;
 			return;
+		}
 		
 		isThumbnailRemoveFinish = false;
-		
+
+		/* Alpha animation setting */
 		Animation fadeOut = new AlphaAnimation(1, 0);
 		fadeOut.setInterpolator(new AccelerateInterpolator()); //and this
 		fadeOut.setDuration(750);
 		
-		Animation translate = new TranslateAnimation(0,0,0,250);
+		/* Translate animation setting */ 
+		Animation translate = null;
+		
+		if (layoutLocation == 0 && (action == ACTION_REMOVE_DOWN))
+			translate = new TranslateAnimation(0,0,0, THUMBNAIL_WIDTH);
+		else if (layoutLocation == 0 && (action == ACTION_REMOVE_UP))
+		{
+			isThumbnailRemoveFinish = true;
+			return;
+		}
+		
+		if (layoutLocation == 2 && (action == ACTION_REMOVE_UP))
+			translate = new TranslateAnimation(0,0,0, THUMBNAIL_WIDTH*(-1));
+		else if (layoutLocation == 2 && (action == ACTION_REMOVE_DOWN))
+		{
+			isThumbnailRemoveFinish = true;
+			return;
+		}
+		
 		translate.setDuration(750);
 		
 		AnimationSet animationSet = new AnimationSet(true);
 		animationSet.addAnimation(fadeOut);
 		animationSet.addAnimation(translate);
-		topLnLayout.getChildAt(index).setAnimation(animationSet);
-		topLnLayout.getChildAt(index).startAnimation(animationSet);
-		 
-		fadeOut.setAnimationListener(new AnimationListener() {
+		
+		FrameLayout frlayout = (FrameLayout) topLnLayout.getChildAt(index);
+		ImageView thumbnail = (ImageView) frlayout.findViewById(R.id.thumbnailImage);
+		TextView title = (TextView) frlayout.findViewById(R.id.tv);
+		
+		thumbnail.setAnimation(animationSet);
+		title.setAnimation(animationSet);
+		thumbnail.startAnimation(animationSet);
+		title.startAnimation(animationSet);
+		
+		animationSet.setAnimationListener(new AnimationListener() {
 			
 			@Override
 			public void onAnimationStart(Animation animation) {
-				
 			}
 			
 			@Override
@@ -433,42 +514,78 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 			
 			@Override
 			public void onAnimationEnd(Animation animation) {
+				Log.i ("TAG", "Start animationset");
+				
 				instance.post(new Runnable() {
 					
 					@Override
 					public void run() {
-						Log.i("removeThumbnailFromParent[2]", "num = " + numberThumbnail + ", index = " + index);
+						FrameLayout frlayout = (FrameLayout) topLnLayout.getChildAt(index);
+						frlayout.removeAllViews();
 						topLnLayout.removeViewAt(index);
-						 numberThumbnail--;
-						 
-						/* Set all title again */
-				        if (numberThumbnail >= 1)
-				        {
-				        	for (int i = 1; i < numberThumbnail + 1; i++)
-				            {
-				            	setThumbnailTitle(i,"" + i);
-				            	setThumbnailImageResourceFromDrawable(i, normalThumbnailDrawable);
-				            }
-				        }
-				        
-				        /* Set centerIndex again */
-				        
-				        if ((centerIndex >= 1) && (centerIndex <= numberThumbnail))
-				        {
-				        	updateLayout(centerIndex);
-				        }
-				        else if (centerIndex > numberThumbnail && numberThumbnail > 0)
-				        {
-				        	centerIndex --;
-				        	updateLayout(centerIndex);
-				        }
-				        
-				        isThumbnailRemoveFinish = true;
+						numberThumbnail--;
+						
+						/* Auto call LayoutTranslation listener */
+						removeIndex = index;
 					}
 				});
+			
+				Log.i ("TAG", "End animationset");
 			}
 		});
+
 	}
+
+	/* LayoutTranslation Listener */
+	LayoutTransition.TransitionListener OnLayoutTranslation = new TransitionListener() {
+		
+		@Override
+		public void startTransition(LayoutTransition transition,
+				ViewGroup container, View view, int transitionType) {
+			
+			/* First layout translation */
+			if (transitionType == LayoutTransition.DISAPPEARING)
+			{
+				Log.i ("TAG", "Start Dispear translation");
+			}
+		}
+		
+		@Override
+		public void endTransition(LayoutTransition transition, ViewGroup container,
+				View view, int transitionType) {
+			
+			/* Last layout translation */
+			if (transitionType == LayoutTransition.CHANGE_DISAPPEARING
+					&& container.getId() == instance.getId())
+			{
+				/* Set all title again */ 
+		        if (numberThumbnail >= 1)
+		        {
+		        	for (int i = 1; i < numberThumbnail + 1; i++)
+		            {
+		            	setThumbnailTitle(i,"" + i);
+		            	setThumbnailImageResourceFromDrawable(i, normalThumbnailDrawable);
+		            }
+		        }
+		        
+		        /* Set centerIndex again */ 
+		        
+		        if ((centerIndex >= 1) && (centerIndex <= numberThumbnail))
+		        {
+		        	updateLayout(centerIndex);
+		        }
+		        else if (centerIndex > numberThumbnail && numberThumbnail > 0)
+		        {
+		        	centerIndex --;
+		        	updateLayout(centerIndex);
+		        }
+		        
+		        isThumbnailRemoveFinish = true;
+				
+		        Log.i ("TAG", "Stop Dispear translation");
+			}
+		}
+	};
 	
 	/* Find thumbail index from x coordinate */
 	private int findThumbnailIndex(double locationX) 

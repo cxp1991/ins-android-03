@@ -11,16 +11,15 @@ android:id="@+id/itemFrLayout">
 		android:adjustViewBounds="true"
 		android:padding="5dp"
 		android:src="@drawable/add_1"
+		android:layout_gravity="bottom"
 	/> 
 
 	<TextView
 	    android:id="@+id/tv"
 		android:layout_width="match_parent" 
 		android:layout_height="wrap_content" 
-		android:layout_gravity="center_horizontal|center_vertical"
 		android:background="#00000000"
-		android:textColor="#ffffffff"
-		android:text="1"
+		android:textColor="#ffffff00"
 		android:textSize="25sp"
 		android:gravity="center_horizontal"
 		android:padding="5dp"
