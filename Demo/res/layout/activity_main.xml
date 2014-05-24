@@ -10,8 +10,8 @@
         custom:numberThumbnail="2"
 		custom:Thumbnail_width="90"
 		custom:Thumbnail_height="90"
-		custom:NormalThumbnailImage="@drawable/songthumbnaildark"
-        custom:HighlightThumbnailImage="@drawable/songthumbnailbright"
+		custom:NormalThumbnailImage="@drawable/music01"
+        custom:HighlightThumbnailImage="@drawable/music01"
         custom:layout_location="0"
         android:scrollbars="none"
         android:layout_alignParentTop="true">

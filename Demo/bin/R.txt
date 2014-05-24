@@ -12,9 +12,11 @@ int drawable add_2 0x7f020002
 int drawable balloon_dark 0x7f020003
 int drawable balloon_light 0x7f020004
 int drawable ic_launcher 0x7f020005
-int drawable songthumbnail 0x7f020006
-int drawable songthumbnailbright 0x7f020007
-int drawable songthumbnaildark 0x7f020008
+int drawable music 0x7f020006
+int drawable music01 0x7f020007
+int drawable songthumbnail 0x7f020008
+int drawable songthumbnailbright 0x7f020009
+int drawable songthumbnaildark 0x7f02000a
 int id action_settings 0x7f080009
 int id additemImgV 0x7f080004
 int id headerfooterlayout 0x7f080005
