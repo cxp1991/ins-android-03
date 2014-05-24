@@ -244,7 +244,9 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	public void setThumbnailImageResourceFromDrawable(int index, Drawable drawable)
 	{
 		ImageView imgView = (ImageView)topLnLayout.getChildAt(index).findViewById(R.id.thumbnailImage);
-		imgView.setImageDrawable(drawable);
+		
+		if (imgView != null) // Fast removing
+			imgView.setImageDrawable(drawable);
 	}
 	
 	public void setHilighLightThumbnailDrawable (Drawable drawable)
@@ -379,7 +381,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 					Log.d ("TAG", "dx = " + dx + ", dy = " + dy);
 					Log.i ("TAG", "y = " + (y1 - y0));
 					
-					if ((dy > 0) && dy >= 2*dx)
+					if ((dy > (THUMBNAIL_WIDTH/5)) && dy >= 2*dx)
 					{
 						final int action_mode;
 						isActionRemove = true;
@@ -392,6 +394,8 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 							action_mode = ACTION_REMOVE_UP;
 						
 						removeThumbnailFromParent (topLnLayout.getChildAt(index), action_mode);
+						
+						break;
 					}
 					
 					enableScroll = true;
@@ -531,6 +535,10 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 						numberThumbnail--;
 						
 						/* Auto call LayoutTranslation listener */
+						
+						/* Enale scroll */
+						enableScroll = true;
+						
 					}
 				});
 			
