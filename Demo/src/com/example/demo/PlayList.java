@@ -26,3 +26,4 @@ public abstract class PlayList
 	public abstract void initializePlayList();
 	public abstract void savePlayListStatus();
 }
+

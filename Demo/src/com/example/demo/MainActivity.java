@@ -2,9 +2,12 @@ package com.example.demo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.example.myhorizontalscrollview.MyHorizontalScrollView;
 import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnThumbnailAddListener;
@@ -13,15 +16,20 @@ import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnTouchFinishLi
 
 public class MainActivity extends Activity {
 
+	private Activity mActivity;
+	private ImageView imgView;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
+        
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+                                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        
         setContentView(R.layout.activity_main);
         
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		
         MyHorizontalScrollView ringtoneHrScrollView = (MyHorizontalScrollView) findViewById(R.id.ringtonescrollview);
         ringtoneHrScrollView.setOnTouchFinishListener(ringtoneOnTouchFinish);
         ringtoneHrScrollView.setOnThumbnailLongTouchListener(ringtoneLongTouchListener);
@@ -29,9 +37,34 @@ public class MainActivity extends Activity {
         
         MyHorizontalScrollView musicHrScrollView = (MyHorizontalScrollView) findViewById(R.id.musicscrollview);
         musicHrScrollView.setOnTouchFinishListener(musicOnTouchFinish);
+        
+        /* Query to list all song in device */
+    	if (Utils.mListAllSong.size() == 0)
+    	{
+			Utils.getAllAudio(this);
+    	}
+    	
+    	/* Add result to data container 
+    	 * Using thread to not block UI thread
+    	 * */
+    	new Thread( new Runnable()
+    	{
+            private int index;
+
+			@Override
+            public void run()
+            {
+            	if (Utils.mListAllSong.size() == 0)
+            	{
+            		Looper.prepare();
+                    Utils.insertQueryResultIntoSonglist();
+                    Looper.loop();
+            	}
+            }
+        }).start();
     }
     
-    OnTouchFinishListener ringtoneOnTouchFinish = new OnTouchFinishListener() {
+	OnTouchFinishListener ringtoneOnTouchFinish = new OnTouchFinishListener() {
 		
 		@Override
 		public void onTouchFinish(int centerIndex) {
@@ -62,6 +95,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onThumbnailAdd(int numberThumnail) {
 			Log.d("OnThumbnailAddListener", "numberThumnail = " + numberThumnail);
+			Log.d("TAG", "size = " + Utils.mListAllSong.size());
 		}
 	};
 }

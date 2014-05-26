@@ -32,10 +32,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-/*
- * Custom HorizontalScrollView
- * @date: 20/05/2014
- * @author: Phong Cao
+/**
+ * 	Custom HorizontalScrollView
+ * 
+ * @date: 2014
+ * @author: Ideas&Solutions Android Team, PhongCao
  * @email: caoxuanphong.khtn@gmail.com
  * */
 
@@ -201,7 +202,9 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		topLnLayout.setLayoutTransition(layoutTransition);
 	}
 	
-	/* On Touch Finish Listener */
+	/**
+	 *  On Touch Finish Listener 
+	 */
 	public void setOnTouchFinishListener(OnTouchFinishListener listener) 
 	{
 	    this.touchFinishListener = listener;
@@ -212,7 +215,9 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	    public void onTouchFinish (int centerIndex);
 	}
 	
-	/* On Thumbnail long touch listener */
+	/**
+	 *  On Thumbnail long touch listener 
+	 */
 	public void setOnThumbnailLongTouchListener(OnThumbnailLongTouchListener listener) 
 	{
 	    this.thumbnailLongTouchListener = listener;
@@ -223,6 +228,10 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	    public void onMyLongTouch (View view, int centerIndex);
 	}
 	
+	/**
+	 * Thumbnail Add Listener
+	 * @param listener
+	 */
 	public void setOnThumbnailAddListener (OnThumbnailAddListener listener)
 	{
 		this.thumbnailAddListener = listener;
@@ -233,14 +242,18 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		public void onThumbnailAdd(int numberThumnail);
 	}
 	
-	/* Set thumbnail's image resource from ID */
+	/**
+	 *  Set thumbnail's image resource from ID 
+	 */
 	public void setThumbnailImageResourceFromId(int index, int drawbleId)
 	{
 		ImageView imgView = (ImageView)topLnLayout.getChildAt(index).findViewById(R.id.thumbnailImage);
 		imgView.setImageResource(drawbleId);
 	}
 	
-	/* Set thumbnail's image resource from Drawable */
+	/**
+	 *  Set thumbnail's image resource from Drawable 
+	 */
 	public void setThumbnailImageResourceFromDrawable(int index, Drawable drawable)
 	{
 		ImageView imgView = (ImageView)topLnLayout.getChildAt(index).findViewById(R.id.thumbnailImage);
@@ -249,17 +262,29 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 			imgView.setImageDrawable(drawable);
 	}
 	
+	/**
+	 * Set highlight thumbnail.
+	 * 
+	 * @param drawable
+	 */
 	public void setHilighLightThumbnailDrawable (Drawable drawable)
 	{
 		this.hilighLightThumbnailDrawable  = drawable;
 	}
 	
+	/**
+	 * Set normal thumbnail.
+	 * 
+	 * @param drawable
+	 */
 	public void setNormalThumbnailDrawable (Drawable drawable)
 	{
 		this.normalThumbnailDrawable = drawable;
 	}
 	
-	/* Set thumbnail's padding */
+	/** 
+	 * Set item's thumbnail padding 
+	 */
 	public void setThumbnailPadding(int value)
 	{
 		ImageView imgView = null;
@@ -270,7 +295,12 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		}
 	}
 	
-	/* Set Thumbnail's title */
+	/**
+	 * Set item's title.
+	 * 
+	 * @param index
+	 * @param title
+	 */
 	public void setThumbnailTitle (int index, String title)
 	{
         	TextView tv = (TextView) topLnLayout.getChildAt(index).findViewById(R.id.tv);
@@ -279,6 +309,9 @@ public class MyHorizontalScrollView extends HorizontalScrollView
         		tv.setText(title);
 	}
 	
+	/**
+	 * Long-press evetn listener
+	 */
 	GestureDetector.OnGestureListener GestureDetectorListener = new GestureDetector.SimpleOnGestureListener()
 	{
 		@Override
@@ -288,19 +321,26 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	    }
 	};
 
-	/* set velocityX speed threshold */
+	/**
+	 *  Set velocityX speed threshold 
+	 */
 	public void setFlingVelocityXThreshold(int velocityX)
 	{
 		this.VELOCITY_X_THRESHOLD = velocityX;
 	}
 	
-	/* set WANTED_VELOCITY_X */
+	/**
+	 *  set WANTED_VELOCITY_X
+	 */ 
 	public void setWantedVelocityX (int velocityX)
 	{
 		this.WANTED_VELOCITY_X = velocityX;
 	}
 
-	/* Limit HorizontalScrollView fling speed */
+	/**
+	 *  Limit @MyHorizontalScrollView fling speed
+	 *  when user flings too fast 
+	 */
 	@Override
 	public void fling(int velocityX) 
 	{
@@ -316,6 +356,9 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		super.fling(velocityX);
 	}
 	
+	/**
+	 *  Transfer full event to onTouchEvent().
+	 */
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
 		/* To pass all action to onTouchEvent */
@@ -326,13 +369,12 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	}
 	
 	
-	/* Enable/Disable scroll event */
+	/**
+	 *  Enable/Disable scroll event 
+	 */
 	@Override
 	protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX,
 			boolean clampedY) {
-		
-//		Log.i("onOverScrolled", "scrollX = " + scrollX + ", scrollY = " + 
-//				scrollY + ", clampedX = " + clampedX + ", clampedY = " + clampedY);
 		
 		if (enableScroll)
 		{
@@ -341,6 +383,13 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		}
 	}
 
+	/**
+	 * Listen events:
+	 * 	1. Single-tap: add action, choose item action
+	 * 	2. Long-press
+	 * 	3. Scroll
+	 * 	4. Remove
+	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		this.gesturedetector.onTouchEvent(event);
@@ -362,25 +411,28 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 			case MotionEvent.ACTION_MOVE:
 				Log.d("MotionEvent.ACTION_MOVE", "MotionEvent.ACTION_MOVE");
 				
+				/* Wait to get threshold to find direction of action event */
 				if (count < COUNT_TO_CALC_DIRECTION)
 				{
 					count ++;
 					break;
 				}
 				
+				/* Find-out direction action  */
 				if (count == COUNT_TO_CALC_DIRECTION)
 				{
 					count++;
 					x1 = event.getX();
 					y1 = event.getY();
 					
-					/* Calc direction */
+					/* Calculate direction */
 					dx = (float) Math.sqrt ((x1 - x0) * (x1 - x0));
 					dy = (float) Math.sqrt ((y1 - y0) * (y1 - y0));
 					
 					Log.d ("TAG", "dx = " + dx + ", dy = " + dy);
 					Log.i ("TAG", "y = " + (y1 - y0));
 					
+					/* Is up-to-down or down-to-up touch action */
 					if ((dy > (THUMBNAIL_WIDTH/5)) && dy >= 2*dx)
 					{
 						final int action_mode;
@@ -408,6 +460,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 				stopLocation = event.getX();
 				count = 0;
 				
+				/* If remove item action we stop here */
 				if (isActionRemove)
 				{
 					isActionRemove = false;
@@ -439,7 +492,9 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		return super.onTouchEvent(event);
 	}
 	
-	/* Add 1 thumbnail at the end of parent */
+	/**
+	 *  Add 1 thumbnail at the end of parent
+	 */ 
 	private void addThumbnailToParent() 
 	{
 		/* Insert thumbnail at the end */ 
@@ -468,7 +523,10 @@ public class MyHorizontalScrollView extends HorizontalScrollView
         updateLayout(numberThumbnail);
 	}
 
-	/* Remove 1 thumbnail from its parent */
+	/**
+	 *  Remove 1 thumbnail from its parent 
+	 */
+	
 	private void removeThumbnailFromParent (final View v, final int action)
 	{
 		final FrameLayout view = (FrameLayout)v;
@@ -548,7 +606,10 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 
 	}
 
-	/* LayoutTranslation Listener */
+	/**
+	 * LayoutTranslation Listener for 2 event:
+	 * Add item & remove item
+	 */
 	LayoutTransition.TransitionListener OnLayoutTranslation = new TransitionListener() {
 		
 		@Override
@@ -597,17 +658,22 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		}
 	};
 	
-	/* Find thumbail index from x coordinate */
+	/**
+	 *  Find item index from x coordinate
+	 */ 
 	private int findThumbnailIndex(double locationX) 
 	{
 		int[] location = new int[2];
 		int index = MOVE_TO_TOP_OR_BOTTOM;
 		
 		int i;
+		
 		/* Find all items location */
 		for (i = 1; i < this.numberThumbnail + 2; i++)
 		{
 			topLnLayout.getChildAt(i).getLocationOnScreen(location);
+			
+			/* Filter wanted item */
 			if ((locationX >= location[0]) && (locationX <= (location[0] + THUMBNAIL_WIDTH)))
 			{
 				index = i;
@@ -618,7 +684,12 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		return index;
 	}
 
-	/* Update layout */
+	/**
+	 *  Update layout
+	 *  
+	 *   + Scroll @MyHorizontalScrollview to @index
+	 *   + Highlight @centerIndex item 
+	 */
 	private void updateLayout(final int index)
 	{
 		Log.i("updateLayout", "updateLayout");
@@ -627,6 +698,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 			
 			@Override
 			public void run() {
+					/* Using animation to scroll @MyHorizontalScrollView */
 					ObjectAnimator animator=ObjectAnimator.ofInt(instance,
 							"scrollX", (index - 1)*THUMBNAIL_WIDTH);
 					/* Wait until scroll animation stop, we highlight center thumbnail */
@@ -646,6 +718,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 								Log.i ("updateLayout", "numberThumbnail = " + numberThumbnail);
 								ImageView imgView = null;
 								
+								/* First reset highlight */
 								for (int i = 1; i <= numberThumbnail; i ++)
 								{
 									imgView = (ImageView) topLnLayout.getChildAt(i).findViewById(R.id.thumbnailImage);
@@ -653,6 +726,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 										imgView.setImageDrawable(normalThumbnailDrawable);
 								}
 								
+								/* Then, highlight @centerIndex item */
 								imgView = (ImageView) topLnLayout.getChildAt(centerIndex).findViewById(R.id.thumbnailImage);
 								if (imgView != null) // fast removing
 									imgView.setImageDrawable(hilighLightThumbnailDrawable);	
@@ -671,6 +745,12 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		
 	}
 	
+	/**
+	 * Long-press event -> find chosen item's index -> 
+	 * create long-press listener event.
+	 * 
+	 * @param location
+	 */
 	private void longPress(double location)
 	{
 		Log.d("longPress", "longPress");
@@ -683,18 +763,31 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		}
 	}
 	
+	/**
+	 *	Scroll @MyHorizontalScrollView to the chosen item by
+	 *	single-tap event. 
+	 * 
+	 * 	Update @centerIndex is chosen item's index.
+	 * 
+	 *  If item is "add" item then add new item into MyHorizontalScrollView 
+	 * 
+	 * @param stopLocation is x-coordinate of single-tap event.
+	 */
+	
 	private void singleTapConfirmed (double stopLocation)
 	{
 		Log.d("singleTapConfirmed", "singleTapConfirmed");
 		
 		centerIndex = findThumbnailIndex(stopLocation);
 		
-		if (centerIndex == numberThumbnail + 1)// thumbnail "ADD"
+		/* "Add" item */
+		if (centerIndex == numberThumbnail + 1)
 		{
 			addThumbnailToParent();
 			if (thumbnailAddListener != null)
 				thumbnailAddListener.onThumbnailAdd(instance.numberThumbnail);
 		}
+		/* Normal item */
 		else if (centerIndex != MOVE_TO_TOP_OR_BOTTOM)
 		{
 			updateLayout(centerIndex);
@@ -703,6 +796,11 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		}
 	}
 
+	/**
+	 *  Wait until scroll event finish. Then find the nearst index, and
+	 *  scroll MyHorizontalScrollView to this index.
+	 */
+	
 	private void onScrollEvent()
 	{
 		Log.d("TAG", "onScroll");
@@ -727,7 +825,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 				if(Math.abs((newLocation - initialLocation)/(newTime - intinialTime)*1000) 
 						<= SCROLL_STOP_VELOCITY)
 				{
-					centerIndex = FindItemNearestCenter();
+					centerIndex = ScrollEventFindItemNearestCenter();
 					
 					if (centerIndex == MOVE_TO_TOP_THRESHOLD)
 						centerIndex = 1;
@@ -749,7 +847,14 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		}
 	};
 
-	private int FindItemNearestCenter()
+	/**
+	 * Find index of item is nearest center in scroll event.
+	 * We will find x-location of all item then compare with "threshold"
+	 * depends on scroll direction.
+	 *  
+	 * @return index of item is nearest center
+	 */
+	private int ScrollEventFindItemNearestCenter()
 	{
 	
 		int[] location = new int[2];
@@ -802,7 +907,12 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		return nearestIndex;
 	}
 
-	/* Find minimum value */
+	/**
+	 *  Find minimum value
+	 *  
+	 * @param arrLocation
+	 * @return minimum value
+	 */
 	private int FindMin(ArrayList<xLocation> arrLocation) {
 	
 		int minIndex =arrLocation.get(0).getIndex();
@@ -819,9 +929,11 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		return minIndex;
 	}
 	
-	/*
-	* Delay using Thread
-	* */
+	/**
+	 * Delay using Thread
+	 * 
+	 * @param time in milliseconds
+	 */
 	private void Delay(int time)
 	{
 		try
@@ -834,7 +946,9 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		}	
 	}
 
-	/* Object save index & distance from center position of each item */
+	/**
+	 *  Object save index & distance from center position of each item 
+	 */
 	private class xLocation
 	{
 		private int index;
