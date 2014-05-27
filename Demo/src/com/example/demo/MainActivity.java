@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -49,8 +50,6 @@ public class MainActivity extends Activity {
     	 * */
     	new Thread( new Runnable()
     	{
-            private int index;
-
 			@Override
             public void run()
             {
@@ -96,6 +95,9 @@ public class MainActivity extends Activity {
 		public void onThumbnailAdd(int numberThumnail) {
 			Log.d("OnThumbnailAddListener", "numberThumnail = " + numberThumnail);
 			Log.d("TAG", "size = " + Utils.mListAllSong.size());
+			
+			Intent intent = new Intent(getApplication(), ListAllSong.class);
+			startActivity(intent);
 		}
 	};
 }

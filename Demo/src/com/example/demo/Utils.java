@@ -49,6 +49,7 @@ public class Utils
 		
 		@Override
 		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+			/* Should not do large work here */
 			mCursor = cursor;
 		}
 		
@@ -73,7 +74,7 @@ public class Utils
 				                    projection,     // Projection to return
 				                    selection,            // No selection clause
 				                    null,            // No selection arguments
-				                    MediaStore.Audio.Media.TITLE + " ASC"            // Default sort order
+				                    MediaStore.Audio.Media.TITLE + " ASC"            //sort order
 								);
 
 			return mCursorLoader;
@@ -89,8 +90,10 @@ public class Utils
 		
 		Bitmap thumbnail = null;
 		
-		if (mCursor.moveToFirst()) {
-			do {
+		if (mCursor.moveToFirst()) 
+		{
+			do 
+			{
 				thumbnail = getAudioThumbnail(mActivity.getBaseContext(), mCursor.getLong(4));
 				
 				mListAllSong.add(new MySong(
