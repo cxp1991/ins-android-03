@@ -1,13 +1,16 @@
 package com.example.demo;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +20,7 @@ public class AllSongAdapter extends BaseAdapter
 	private Context mContext;
 	private Filter mFilter;
 	private ArrayList<MySong> mArraylist;
+	private ArrayList<Integer> mCheckedPosition;
 	 
 	public AllSongAdapter(Context context, ArrayList<MySong> listSong)
 	{
@@ -125,32 +129,47 @@ public class AllSongAdapter extends BaseAdapter
 		public ImageView mThumbnail;
 		public TextView mSongName;
 		public TextView mArtist;
+		public CheckBox mCheckbox;
 		
 		public CompleteListViewHolder(View base) 
 		{  
 			mThumbnail = (ImageView) base.findViewById(R.id.thumbnail);
 			mSongName  = (TextView) base.findViewById(R.id.tvsongname);
 			mArtist    = (TextView) base.findViewById(R.id.tvartist);
+			mCheckbox  = (CheckBox) base.findViewById(R.id.checkbox); 
+			
+			mCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) 
+				{
+					// Here we get the position that we have set for the checkbox using setTag.
+					int getPosition = (Integer) buttonView.getTag();  
+					// Set the value of checkbox to maintain its state
+					Utils.mListAllSong.get(getPosition).setmSelected(buttonView.isChecked()); 
+				}
+			});
 		}  
 	 }  
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		View v = convertView;  
         CompleteListViewHolder viewHolder;
         
+        /* Times to do is equal number item displays at start time */
         if (convertView == null) 
         {  
              LayoutInflater li = (LayoutInflater) mContext  
                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);  
-             v = li.inflate(R.layout.itemlistviewlayout, null);  
-             viewHolder = new CompleteListViewHolder(v);  
-             v.setTag(viewHolder);  
+             convertView = li.inflate(R.layout.itemlistviewlayout, null);  
+
+             viewHolder = new CompleteListViewHolder(convertView);  
+             convertView.setTag(viewHolder);  
         }
         else 
         {  
-             viewHolder = (CompleteListViewHolder) v.getTag();  
+             viewHolder = (CompleteListViewHolder) convertView.getTag();  
         }  
 
         viewHolder.mSongName.setText(Utils.mListAllSong.get(position).getmSongName());
@@ -160,7 +179,10 @@ public class AllSongAdapter extends BaseAdapter
         else
         	viewHolder.mThumbnail.setImageResource(R.drawable.music);
         
-        return v;
+        viewHolder.mCheckbox.setTag(position); 
+        viewHolder.mCheckbox.setChecked(Utils.mListAllSong.get(position).ismSelected()); 
+        
+        return convertView;
 	}
 
 }

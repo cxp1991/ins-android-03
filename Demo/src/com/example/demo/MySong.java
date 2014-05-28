@@ -9,6 +9,7 @@ public class MySong
 	private String mSongArtist;
 	private int    mSongDurationSecond;
 	private Bitmap mThumbnail;
+	private boolean mSelected = false;
 	
 	/**
 	 * Constructor 
@@ -65,6 +66,20 @@ public class MySong
 	 */
 	public Bitmap getmThumbnail() {
 		return mThumbnail;
+	}
+
+	/**
+	 * @return the mSelected
+	 */
+	public boolean ismSelected() {
+		return mSelected;
+	}
+
+	/**
+	 * @param mSelected the mSelected to set
+	 */
+	public void setmSelected(boolean mSelected) {
+		this.mSelected = mSelected;
 	}
 }
 
