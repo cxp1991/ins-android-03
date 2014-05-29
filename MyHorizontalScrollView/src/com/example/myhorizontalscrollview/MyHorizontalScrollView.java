@@ -563,47 +563,52 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		animationSet.addAnimation(fadeOut);
 		animationSet.addAnimation(translate);
 		
-		ImageView thumbnail = (ImageView) view.findViewById(R.id.thumbnailImage);
-		TextView title = (TextView) view.findViewById(R.id.tv);
-		
-		thumbnail.setAnimation(animationSet);
-		title.setAnimation(animationSet);
-		thumbnail.startAnimation(animationSet);
-		title.startAnimation(animationSet);
-		
-		animationSet.setAnimationListener(new AnimationListener() {
+		try {
+			ImageView thumbnail = (ImageView) view.findViewById(R.id.thumbnailImage);
+			TextView title = (TextView) view.findViewById(R.id.tv);
 			
-			@Override
-			public void onAnimationStart(Animation animation) {
-				Log.i ("TAG", "Start animationset");
-			}
+			thumbnail.setAnimation(animationSet);
+			title.setAnimation(animationSet);
+			thumbnail.startAnimation(animationSet);
+			title.startAnimation(animationSet);
 			
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-			}
-			
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				instance.post(new Runnable() {
-					
-					@Override
-					public void run() {
-						view.removeAllViews();
-						topLnLayout.removeView(view);
-						numberThumbnail--;
+			animationSet.setAnimationListener(new AnimationListener() {
+				
+				@Override
+				public void onAnimationStart(Animation animation) {
+					Log.i ("TAG", "Start animationset");
+				}
+				
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+				}
+				
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					instance.post(new Runnable() {
 						
-						/* Auto call LayoutTranslation listener */
-						
-						/* Enale scroll */
-						enableScroll = true;
-						
-					}
-				});
-			
-				Log.i ("TAG", "End animationset");
-			}
-		});
+						@Override
+						public void run() {
+							view.removeAllViews();
+							topLnLayout.removeView(view);
+							numberThumbnail--;
+							
+							/* Auto call LayoutTranslation listener */
+							
+							/* Enale scroll */
+							enableScroll = true;
+							
+						}
+					});
+				
+					Log.i ("TAG", "End animationset");
+				}
+			});
 
+		}catch (NullPointerException ex)
+		{
+			
+		}
 	}
 
 	/**

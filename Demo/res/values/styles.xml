@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -13,8 +13,20 @@
     </style>
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+   <style name="MyTheme" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>
+    
+	<style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">#E68A00</item>
+    </style>
+    
+	<style name="your_style_name">  
+    <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
+    <item name="android:scrollbarStyle">outsideOverlay</item>
+    <item name="android:scrollbars">vertical</item>
+    <item name="android:fadeScrollbars">false</item>
+    <item name="android:scrollbarThumbVertical">@drawable/add</item>
+</style>
 
 </resources>
