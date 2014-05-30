@@ -163,15 +163,15 @@ public class MyHorizontalScrollView extends HorizontalScrollView
         }
         
         /* Add "add" icon */
-        addItemLayout = (FrameLayout) inflater.inflate(R.layout.additem, null, false);
-        addItemLayout.setLayoutParams(new LayoutParams(THUMBNAIL_WIDTH, LayoutParams.MATCH_PARENT));
-        ImageView addImgaView = (ImageView) addItemLayout.findViewById(R.id.additemImgV);
-        addImgaView.setLayoutParams(params);
-        topLnLayout.addView(addItemLayout);
+//        addItemLayout = (FrameLayout) inflater.inflate(R.layout.additem, null, false);
+//        addItemLayout.setLayoutParams(new LayoutParams(THUMBNAIL_WIDTH, LayoutParams.MATCH_PARENT));
+//        ImageView addImgaView = (ImageView) addItemLayout.findViewById(R.id.additemImgV);
+//        addImgaView.setLayoutParams(params);
+//        topLnLayout.addView(addItemLayout);
         
         /* Add footer */
         LinearLayout footerlayout = (LinearLayout) inflater.inflate(R.layout.headerfooterlayout, null, false);
-        footerlayout.setLayoutParams(new LinearLayout.LayoutParams(CENTER_LEFT_EDGE - THUMBNAIL_WIDTH, 
+        footerlayout.setLayoutParams(new LinearLayout.LayoutParams(CENTER_LEFT_EDGE, 
         		LayoutParams.MATCH_PARENT));
         topLnLayout.addView(footerlayout);
         
@@ -495,7 +495,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	/**
 	 *  Add 1 thumbnail at the end of parent
 	 */ 
-	private void addThumbnailToParent() 
+	public void addThumbnailToParent() 
 	{
 		/* Insert thumbnail at the end */ 
 		itemLayout = (FrameLayout) inflater.inflate(R.layout.item, null, false);
@@ -674,7 +674,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		int i;
 		
 		/* Find all items location */
-		for (i = 1; i < this.numberThumbnail + 2; i++)
+		for (i = 1; i < this.numberThumbnail + 1; i++)
 		{
 			topLnLayout.getChildAt(i).getLocationOnScreen(location);
 			
@@ -704,8 +704,9 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 			@Override
 			public void run() {
 					/* Using animation to scroll @MyHorizontalScrollView */
-					ObjectAnimator animator=ObjectAnimator.ofInt(instance,
+					ObjectAnimator animator = ObjectAnimator.ofInt(instance,
 							"scrollX", (index - 1)*THUMBNAIL_WIDTH);
+					
 					/* Wait until scroll animation stop, we highlight center thumbnail */
 					animator.addListener(new AnimatorListener() {
 					
@@ -723,18 +724,24 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 								Log.i ("updateLayout", "numberThumbnail = " + numberThumbnail);
 								ImageView imgView = null;
 								
-								/* First reset highlight */
-								for (int i = 1; i <= numberThumbnail; i ++)
+								try 
 								{
-									imgView = (ImageView) topLnLayout.getChildAt(i).findViewById(R.id.thumbnailImage);
+									/* First reset highlight */
+									for (int i = 1; i <= numberThumbnail; i ++)
+									{
+										imgView = (ImageView) topLnLayout.getChildAt(i).findViewById(R.id.thumbnailImage);
+										if (imgView != null) // fast removing
+											imgView.setImageDrawable(normalThumbnailDrawable);
+									}
+									
+									/* Then, highlight @centerIndex item */
+									imgView = (ImageView) topLnLayout.getChildAt(centerIndex).findViewById(R.id.thumbnailImage);
 									if (imgView != null) // fast removing
-										imgView.setImageDrawable(normalThumbnailDrawable);
+										imgView.setImageDrawable(hilighLightThumbnailDrawable);
 								}
-								
-								/* Then, highlight @centerIndex item */
-								imgView = (ImageView) topLnLayout.getChildAt(centerIndex).findViewById(R.id.thumbnailImage);
-								if (imgView != null) // fast removing
-									imgView.setImageDrawable(hilighLightThumbnailDrawable);	
+								catch (NullPointerException e)
+								{
+								}
 								Log.i("updateLayout", "Update Layout finish");
 						}
 						
@@ -785,15 +792,15 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		
 		centerIndex = findThumbnailIndex(stopLocation);
 		
-		/* "Add" item */
+		/* "Add" item 
 		if (centerIndex == numberThumbnail + 1)
 		{
 			addThumbnailToParent();
 			if (thumbnailAddListener != null)
 				thumbnailAddListener.onThumbnailAdd(instance.numberThumbnail);
-		}
+		}*/
 		/* Normal item */
-		else if (centerIndex != MOVE_TO_TOP_OR_BOTTOM)
+		if (centerIndex != MOVE_TO_TOP_OR_BOTTOM)
 		{
 			updateLayout(centerIndex);
 			if (touchFinishListener != null)

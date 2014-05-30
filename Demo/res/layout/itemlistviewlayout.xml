@@ -24,12 +24,21 @@
 	        
 		</LinearLayout>
 	    
+		<CheckBox
+		    android:id="@+id/checkbox"
+		    android:layout_width="60dp"
+		    android:layout_height="60dp"
+		    android:layout_alignParentRight="true"
+		    android:focusable="false"
+		    android:focusableInTouchMode="false"/>
+		
 		<LinearLayout 
 		    android:id="@+id/lntitle"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:orientation="vertical"
 		    android:layout_toRightOf="@id/lnthumbnail"
+		    android:layout_toLeftOf="@id/checkbox"
 		    android:layout_marginLeft="5dp"
 		    >
 			
@@ -37,27 +46,29 @@
 	        android:id="@+id/tvsongname"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_toRightOf="@+id/thumbnail"
+	        android:layout_marginTop="5dp"
+	        android:textSize="15sp"
+	        android:singleLine="true"
+	        android:ellipsize="marquee"
+        	android:marqueeRepeatLimit ="marquee_forever"
+        	android:scrollHorizontally="true"
 	        android:textColor="#FFFFFF"
-	        android:textSize="14sp"
 	        android:textStyle="bold" />
 		    
 		     <TextView
 	        android:id="@+id/tvartist"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_toRightOf="@+id/thumbnail"
+	        android:textSize="15sp"
+	        android:singleLine="true"
+	        android:ellipsize="marquee"
+        	android:marqueeRepeatLimit ="marquee_forever"
+        	android:scrollHorizontally="true"
+	        android:layout_marginTop="5dp"
 	        android:textColor="#FFFFFF"
-	        android:textSize="14sp"
 	        android:textStyle="bold" />
-		     
 		</LinearLayout>
 	
-		<CheckBox
-		    android:id="@+id/checkbox"
-		    android:layout_width="60dp"
-		    android:layout_height="60dp"
-		    android:layout_alignParentRight="true" />
 	</RelativeLayout>
 	
 </FrameLayout>

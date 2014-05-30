@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -20,7 +20,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-
+/**
+ * Control Navigation drawer
+ * 
+ * @author cxphong
+ */
 public class Main extends Activity
 {
 	private DrawerLayout mDrawerLayout;
@@ -52,13 +56,14 @@ public class Main extends Activity
 		mTitle = mDrawerTitle = getTitle();
 		navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
 		
+		/* Add item on navigation drawer */
 		mDrawerItem = new ArrayList<DrawerItem>();
 		mDrawerItem.add(new DrawerItem(navMenuTitles[0], R.drawable.ic_home));
 		mDrawerItem.add(new DrawerItem(navMenuTitles[1], R.drawable.ic_communities));
 		
 		mDrawerAdapter = new DrawerListAdapter(this, mDrawerItem);
-		mDrawerList.setOnItemClickListener(SlideMenuClickListener);
 		mDrawerList.setAdapter(mDrawerAdapter);
+		mDrawerList.setOnItemClickListener(SlideMenuClickListener);
 		
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -139,12 +144,30 @@ public class Main extends Activity
 	private void displayView(int position) {
 		Log.i("displayView", "displayView");
 		Fragment fragment = null;
+		final FragmentTransaction ft = getFragmentManager().beginTransaction(); 
+		
+		/*
+		 * When press back button from listsongfragment, I want to come back to homefragment
+		 * insteads of exit program
+		 * */
+		Fragment myFragment = (Fragment)getFragmentManager().findFragmentByTag("HOME_FRAGMENT");
+		
 		switch (position) {
 		case 0:
 			fragment = new HomeFragment();
+			ft.replace(R.id.content_frame, fragment, "HOME_FRAGMENT").commit();
 			break;
 		case 1:
 			fragment = new ListSongFragment();
+			
+			/*
+			 * If current fragment is HomeFragment then save current app state
+			 * into backstack
+			 * */
+			if (myFragment != null)
+				ft.addToBackStack(null);
+			
+			ft.replace(R.id.content_frame, fragment, "LIST_SONG_FRAGMENT").commit();
 			break;
 		default:
 			break;
@@ -152,10 +175,6 @@ public class Main extends Activity
 
 		if (fragment != null) 
 		{
-			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager.beginTransaction()
-					.replace(R.id.content_frame, fragment).commit();
-
 			// update selected item and title, then close the drawer
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);

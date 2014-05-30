@@ -1,12 +1,18 @@
 package ins.android.app03.home;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myhorizontalscrollview.MyHorizontalScrollView;
 import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnThumbnailAddListener;
@@ -16,6 +22,9 @@ import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnTouchFinishLi
 
 public class HomeFragment extends Fragment
 {
+	private MyHorizontalScrollView musicHrScrollView;
+	private int keyBackPressCount = 2;
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -27,9 +36,38 @@ public class HomeFragment extends Fragment
         ringtoneHrScrollView.setOnThumbnailLongTouchListener(ringtoneLongTouchListener);
         ringtoneHrScrollView.setOnThumbnailAddListener(ringtoneThumbnailAddListener);
         
-        MyHorizontalScrollView musicHrScrollView = (MyHorizontalScrollView) rootView.findViewById(R.id.musicscrollview);
+        musicHrScrollView = (MyHorizontalScrollView) rootView.findViewById(R.id.musicscrollview);
         musicHrScrollView.setOnTouchFinishListener(musicOnTouchFinish);
         
+        rootView.setFocusableInTouchMode(true);
+		  rootView.requestFocus();
+		  
+		  rootView.setOnKeyListener(new OnKeyListener() {
+			
+			@Override
+			public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+				
+				if( (keyCode == KeyEvent.KEYCODE_BACK) && (keyEvent.getAction() == KeyEvent.ACTION_DOWN))
+				{
+					Log.e("onKey", "back press");
+					keyBackPressCount --;
+					if (keyBackPressCount  > 0)
+					{
+						Toast toast = Toast.makeText(getActivity(), "Press back again to exit", Toast.LENGTH_SHORT);
+						toast.setGravity(Gravity.CENTER, 0, 0);
+						toast.show();
+						return true;
+					}
+				    return false;
+				}
+				
+				return false;
+			}
+		  });
+        
+        /* Fragment need it to add item to Actionbar */
+        setHasOptionsMenu(true);
+		  
         return rootView;
     }
 	
@@ -61,6 +99,16 @@ public class HomeFragment extends Fragment
             	}
             }
         }).start();
+    	
+    	/*
+    	 *  Add new Item into parent
+    	 */
+    	
+    	for (int i = 0; i < Utils.mListAllSong.size(); i++)
+    	{
+    		if (Utils.mListAllSong.get(i).ismSelected())
+    			musicHrScrollView.addThumbnailToParent();
+    	}
 	}
 	
 	OnTouchFinishListener ringtoneOnTouchFinish = new OnTouchFinishListener() {
@@ -97,4 +145,5 @@ public class HomeFragment extends Fragment
 			Log.d("TAG", "size = " + Utils.mListAllSong.size());
 		}
 	};
+
 }

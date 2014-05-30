@@ -7,6 +7,8 @@ import ins.android.app03.home.Utils;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +25,13 @@ public class AllSongAdapter extends BaseAdapter
 	private Context mContext;
 	private Filter mFilter;
 	private ArrayList<MySong> mArraylist;
+	private Typeface font; 
 	 
 	public AllSongAdapter(Context context, ArrayList<MySong> listSong)
 	{
 		this.mContext = context;
 		this.mArraylist = listSong;
+		this.font = Typeface.createFromAsset(context.getAssets(), "Chantelli_Antiqua.ttf");
 	}
 	
 	/**
@@ -71,16 +75,18 @@ public class AllSongAdapter extends BaseAdapter
 		@Override
 		protected FilterResults performFiltering(CharSequence constraint) 
 		{
+			Log.i("TAG", "performFiltering");
 			FilterResults results=new FilterResults();
 			
 			String prefix  = constraint.toString().toLowerCase();
-			ArrayList<MySong> valueArraylist = new ArrayList<MySong>();
+			ArrayList<MySong> valueArraylist = new ArrayList<MySong>();                              
 			
 			/* reset data */
 			if (Utils.mListAllSong.size() < mArraylist.size())
 			{
 				Utils.mListAllSong.clear();
 				Utils.mListAllSong.addAll(mArraylist);
+				//notifyDataSetChanged();
 			}	
 				
             for (int i = 0; i < Utils.mListAllSong.size(); i++) 
@@ -120,8 +126,17 @@ public class AllSongAdapter extends BaseAdapter
 		protected void publishResults(CharSequence constraint,
 				FilterResults results) 
 		{
+			Log.i("TAG", "publishResults");
 			 Utils.mListAllSong = (ArrayList<MySong>) results.values;
-			 notifyDataSetChanged();
+			 
+			 if (results.count > 0) 
+			 {
+				 notifyDataSetChanged();
+			 }
+			 else 
+			 {
+                 notifyDataSetInvalidated();
+             }
 		}
 		
 	}
@@ -150,6 +165,7 @@ public class AllSongAdapter extends BaseAdapter
 					int getPosition = (Integer) buttonView.getTag();  
 					// Set the value of checkbox to maintain its state
 					Utils.mListAllSong.get(getPosition).setmSelected(buttonView.isChecked()); 
+					notifyDataSetChanged();
 				}
 			});
 		}  
@@ -176,7 +192,11 @@ public class AllSongAdapter extends BaseAdapter
         }  
 
         viewHolder.mSongName.setText(Utils.mListAllSong.get(position).getmSongName());
+        viewHolder.mSongName.setTypeface(this.font);
+        
         viewHolder.mArtist.setText(Utils.mListAllSong.get(position).getmSongArtist());
+        viewHolder.mArtist.setTypeface(this.font);
+        
         if (Utils.mListAllSong.get(position).getmThumbnail() != null)
         	viewHolder.mThumbnail.setImageBitmap(Utils.mListAllSong.get(position).getmThumbnail());
         else

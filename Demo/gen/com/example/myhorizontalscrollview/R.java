@@ -25,10 +25,10 @@ public final class R {
 		public static final int add_2 = 0x7f020002;
 		public static final int balloon_dark = 0x7f020004;
 		public static final int balloon_light = 0x7f020005;
-		public static final int ic_launcher = 0x7f020009;
+		public static final int ic_launcher = 0x7f02000a;
 	}
 	public static final class id {
-		public static final int action_settings = 0x7f090016;
+		public static final int action_settings = 0x7f090019;
 		public static final int additemImgV = 0x7f090005;
 		public static final int headerfooterlayout = 0x7f090008;
 		public static final int hrScrollview = 0x7f090003;
@@ -44,7 +44,7 @@ public final class R {
 		public static final int item = 0x7f030005;
 	}
 	public static final class menu {
-		public static final int my_horizontal_scroll_view = 0x7f080001;
+		public static final int my_horizontal_scroll_view = 0x7f080003;
 	}
 	public static final class string {
 		public static final int action_settings = 0x7f050001;
