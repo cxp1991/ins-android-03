@@ -29,9 +29,8 @@ public class ListSongFragment extends Fragment
 	 private SearchView mSearchView;
 	 private ListView lv;
 	 private  AllSongAdapter adapter;
-	 private int count = 1;
-	 
-	@Override
+
+	 @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
@@ -44,7 +43,6 @@ public class ListSongFragment extends Fragment
 
 		  /* Fragment need it to add item to Actionbar */
 		  setHasOptionsMenu(true);
-		  
 		  return rootView;
 	}
 
@@ -113,10 +111,17 @@ public class ListSongFragment extends Fragment
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
 		switch (item.getItemId()) {
 		case R.id.action_done:
 			SwitchToHomeFragment();
+			break;
+		case R.id.action_selectall:
+			Log.i("onQueryTextChange", "Select all");
+			selectAllSong();
+			break;
+		case R.id.action_unselectall:
+			Log.i("onQueryTextChange", "UnSelect all");
+			unSelectAllSong();
 			break;
 		default:
 			break;
@@ -125,7 +130,44 @@ public class ListSongFragment extends Fragment
 		return super.onOptionsItemSelected(item);
 	}
 
-	
+	/**
+	 * Select All
+	 */
+	private void selectAllSong() 
+	{
+		Log.i("TAG", "" + lv.getLastVisiblePosition());
+		for (int position = 0; position < lv.getLastVisiblePosition(); position++)
+		{
+			CheckBox checkbox = (CheckBox) lv.getChildAt(position).findViewById(R.id.checkbox);
+			checkbox.setChecked(true);
+		}
+		
+		for (int i = 0; i < Utils.mListAllSong.size(); i++)
+		{
+			Utils.mListAllSong.get(i).setmSelected(true); 
+			adapter.notifyDataSetChanged();
+		}
+	}
+
+	/**
+	 * Un Select All
+	 */
+	private void unSelectAllSong()
+	{
+		for (int position = 0; position < lv.getLastVisiblePosition(); position++)
+		{
+			Log.d("TAG", "count  = " + lv.getCount());
+			CheckBox checkbox = (CheckBox) lv.getChildAt(position).findViewById(R.id.checkbox);
+			checkbox.setChecked(false);
+		}
+		
+		for (int i = 0; i < Utils.mListAllSong.size(); i++)
+		{
+			Utils.mListAllSong.get(i).setmSelected(false); 
+			adapter.notifyDataSetChanged();
+		}
+	}
+
 	/**
 	 * SearchView listener 
 	 */
@@ -135,6 +177,7 @@ public class ListSongFragment extends Fragment
 		@Override
 		public boolean onQueryTextSubmit(String arg0) 
 		{
+			Log.i("TAG", "onQueryTextSubmit");
 			return false;
 		}
 		

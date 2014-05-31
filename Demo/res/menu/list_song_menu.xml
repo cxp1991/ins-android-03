@@ -14,15 +14,29 @@
      limitations under the License.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	
-	<item android:id="@+id/action_search"
+    	<item android:id="@+id/action_search"
           android:title="Search"
           android:icon="@android:drawable/ic_menu_search"
-          android:showAsAction="always"
+          android:showAsAction="ifRoom|collapseActionView"
           android:actionViewClass="android.widget.SearchView" />
-    
+    	
       <item android:id="@+id/action_done"
           android:icon="@drawable/ic_action_accept"
           android:showAsAction="always"/>
+      
+       <item android:id="@+id/action_more"
+          android:icon="@drawable/ic_action_overflow"
+          android:showAsAction="always">
+        	<menu> 
+        	   <item 
+        	       	android:id="@+id/action_selectall"
+          			android:title="Select All"
+          			android:showAsAction="withText"/>
+        	   <item 
+        	       	android:id="@+id/action_unselectall"
+          			android:title="Unselect All"
+          			android:showAsAction="withText"/> 
+        	</menu>  
+        </item>
       
 </menu>

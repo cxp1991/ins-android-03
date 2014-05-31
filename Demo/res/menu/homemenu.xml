@@ -1,9 +1,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
-        android:id="@+id/action_addsong"
-        android:showAsAction="always"
-        android:title="addsong"
-        android:icon="@android:drawable/ic_menu_add"/>
-
+    <item android:id="@+id/action_overflow"
+          android:icon="@drawable/ic_action_overflow"
+          android:showAsAction="always">
+        	<menu> 
+        	   <item 
+        	       	android:id="@+id/action_add_song"
+          			android:title="Add Song"
+          			android:showAsAction="withText"/>
+        	   <item 
+        	       	android:id="@+id/action_remove_all_song"
+          			android:title="Remove All Song"
+          			android:showAsAction="withText"/>
+        	   <item 
+        	       	android:id="@+id/action_scroll_to_end"
+          			android:title="Scroll To End"
+          			android:showAsAction="withText"/>
+        	   <item 
+        	       	android:id="@+id/action_scroll_to_head"
+          			android:title="Scroll To Head"
+          			android:showAsAction="withText"/> 
+        	</menu>  
+	</item>
+        
 </menu>

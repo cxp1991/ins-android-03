@@ -383,6 +383,34 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		}
 	}
 
+	
+	/**
+	 * Scroll to item has index is @index
+	 */
+	public void scrollToIndex(int index)
+	{
+		Log.d("TAG", "scrollToIndex");
+		this.scrollTo((index - 1)*THUMBNAIL_WIDTH, 0);
+	}
+	
+	/**
+	 * Highlight item at @index
+	 */
+	public void highlightIdex(int index)
+	{
+		try
+		{
+			Log.d("TAG", "highlightIdex");
+			/* Then, highlight @centerIndex item */
+			ImageView imgView = (ImageView) topLnLayout.getChildAt(index).findViewById(R.id.thumbnailImage);
+			imgView.setImageDrawable(hilighLightThumbnailDrawable);
+		}
+		catch(Exception e)
+		{
+			Log.e("TAG", "highlightIdex exaption");
+		}
+	}
+	
 	/**
 	 * Listen events:
 	 * 	1. Single-tap: add action, choose item action
@@ -519,8 +547,15 @@ public class MyHorizontalScrollView extends HorizontalScrollView
             }
         }
         
-        /* Scroll to end */
-        updateLayout(numberThumbnail);
+        /* 
+         * Scroll to end 
+         * Using animation
+         * */
+        //updateLayout(numberThumbnail);
+        
+        /*
+         * Not using animation
+         */
 	}
 
 	/**
@@ -736,8 +771,11 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 									
 									/* Then, highlight @centerIndex item */
 									imgView = (ImageView) topLnLayout.getChildAt(centerIndex).findViewById(R.id.thumbnailImage);
+									Log.d("TAG", "Highlight index = " + imgView);
 									if (imgView != null) // fast removing
+									{
 										imgView.setImageDrawable(hilighLightThumbnailDrawable);
+									}
 								}
 								catch (NullPointerException e)
 								{

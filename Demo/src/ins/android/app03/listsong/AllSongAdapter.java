@@ -89,10 +89,11 @@ public class AllSongAdapter extends BaseAdapter
 				Utils.mListAllSong.clear();
 				Utils.mListAllSong.addAll(mArraylist);
 				
-				new Thread(new Runnable() {
-					
+				new Thread(new Runnable() 
+				{
 					@Override
-					public void run() {
+					public void run() 
+					{
 						mAdapter.notifyDataSetChanged();
 					}
 				});

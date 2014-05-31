@@ -63,6 +63,8 @@ public class Main extends Activity
 		mDrawerItem = new ArrayList<DrawerItem>();
 		mDrawerItem.add(new DrawerItem(navMenuTitles[0], R.drawable.ic_home));
 		mDrawerItem.add(new DrawerItem(navMenuTitles[1], R.drawable.ic_communities));
+		mDrawerItem.add(new DrawerItem(navMenuTitles[2], R.drawable.ic_communities));
+		mDrawerItem.add(new DrawerItem(navMenuTitles[3], R.drawable.ic_communities));
 		
 		mDrawerAdapter = new DrawerListAdapter(this, mDrawerItem);
 		mDrawerList.setAdapter(mDrawerAdapter);
@@ -154,7 +156,6 @@ public class Main extends Activity
 		 * When press back button from listsongfragment, I want to come back to homefragment
 		 * insteads of exit program
 		 * */
-		Fragment mHomeFragment = (Fragment)getFragmentManager().findFragmentByTag("HOME_FRAGMENT");
 		Fragment mListSongFragment = (Fragment)getFragmentManager().findFragmentByTag("LIST_SONG_FRAGMENT");
 		
 		switch (position) {
@@ -174,16 +175,6 @@ public class Main extends Activity
 			ft.replace(R.id.content_frame, fragment, "HOME_FRAGMENT").commit();
 			break;
 		case 1:
-			fragment = new ListSongFragment();
-			
-			/*
-			 * If current fragment is HomeFragment then save current app state
-			 * into backstack
-			 * */
-			if (mHomeFragment != null)
-				ft.addToBackStack(null);
-			
-			ft.replace(R.id.content_frame, fragment, "LIST_SONG_FRAGMENT").commit();
 			break;
 		default:
 			break;
