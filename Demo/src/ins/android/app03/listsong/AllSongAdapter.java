@@ -26,12 +26,14 @@ public class AllSongAdapter extends BaseAdapter
 	private Filter mFilter;
 	private ArrayList<MySong> mArraylist;
 	private Typeface font; 
+	private AllSongAdapter mAdapter;
 	 
 	public AllSongAdapter(Context context, ArrayList<MySong> listSong)
 	{
 		this.mContext = context;
 		this.mArraylist = listSong;
 		this.font = Typeface.createFromAsset(context.getAssets(), "Chantelli_Antiqua.ttf");
+		this.mAdapter = this;
 	}
 	
 	/**
@@ -59,7 +61,7 @@ public class AllSongAdapter extends BaseAdapter
      * Implement search 
      * @return
      */
-	public Filter getFilter()
+	public Filter myGetFilter()
 	{
 		  if (mFilter == null) 
 		  {
@@ -86,7 +88,14 @@ public class AllSongAdapter extends BaseAdapter
 			{
 				Utils.mListAllSong.clear();
 				Utils.mListAllSong.addAll(mArraylist);
-				//notifyDataSetChanged();
+				
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						mAdapter.notifyDataSetChanged();
+					}
+				});
 			}	
 				
             for (int i = 0; i < Utils.mListAllSong.size(); i++) 

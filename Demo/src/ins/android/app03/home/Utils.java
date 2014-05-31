@@ -91,20 +91,26 @@ public class Utils
 		
 		Bitmap thumbnail = null;
 		
-		if (mCursor.moveToFirst()) 
-		{
-			do 
+		try {
+			if (mCursor.moveToFirst()) 
 			{
-				thumbnail = getAudioThumbnail(mActivity.getBaseContext(), mCursor.getLong(4));
-				
-				mListAllSong.add(new MySong(
-	    				  mCursor.getString(0), 
-	    				  mCursor.getString(1), 
-	    				  mCursor.getInt(2)/1000, 
-	    				  mCursor.getString(3), 
-	    				  thumbnail));
-				
-			} while (mCursor.moveToNext());
+				do 
+				{
+					thumbnail = getAudioThumbnail(mActivity.getBaseContext(), mCursor.getLong(4));
+					
+					mListAllSong.add(new MySong(
+		    				  mCursor.getString(0), 
+		    				  mCursor.getString(1), 
+		    				  mCursor.getInt(2)/1000, 
+		    				  mCursor.getString(3), 
+		    				  thumbnail));
+					
+				} while (mCursor.moveToNext());
+			}
+		}
+		catch (Exception e)
+		{
+			
 		}
 		
 		Log.d("insertQueryResultIntoSonglist", "size = " + mListAllSong.size());

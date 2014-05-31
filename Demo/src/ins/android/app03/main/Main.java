@@ -7,12 +7,15 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -95,6 +98,7 @@ public class Main extends Activity
 				
 	}
 	
+	
 	ListView.OnItemClickListener SlideMenuClickListener = new OnItemClickListener() {
 
 		@Override
@@ -150,11 +154,23 @@ public class Main extends Activity
 		 * When press back button from listsongfragment, I want to come back to homefragment
 		 * insteads of exit program
 		 * */
-		Fragment myFragment = (Fragment)getFragmentManager().findFragmentByTag("HOME_FRAGMENT");
+		Fragment mHomeFragment = (Fragment)getFragmentManager().findFragmentByTag("HOME_FRAGMENT");
+		Fragment mListSongFragment = (Fragment)getFragmentManager().findFragmentByTag("LIST_SONG_FRAGMENT");
 		
 		switch (position) {
 		case 0:
 			fragment = new HomeFragment();
+			/*
+			 * If current fragment is HomeFragment then save current app state
+			 * into backstack
+			 * */
+			if (mListSongFragment != null)
+			{
+				FragmentManager fragmentManager = getFragmentManager();
+				fragmentManager.popBackStack();
+			}
+				
+			
 			ft.replace(R.id.content_frame, fragment, "HOME_FRAGMENT").commit();
 			break;
 		case 1:
@@ -164,7 +180,7 @@ public class Main extends Activity
 			 * If current fragment is HomeFragment then save current app state
 			 * into backstack
 			 * */
-			if (myFragment != null)
+			if (mHomeFragment != null)
 				ft.addToBackStack(null);
 			
 			ft.replace(R.id.content_frame, fragment, "LIST_SONG_FRAGMENT").commit();
@@ -175,11 +191,13 @@ public class Main extends Activity
 
 		if (fragment != null) 
 		{
-			// update selected item and title, then close the drawer
+//			// update selected item and title, then close the drawer
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
 			setTitle(navMenuTitles[position]);
+			Log.i("TAG", "Close Navigation");
 			mDrawerLayout.closeDrawer(mDrawerList);
+			
 		}
 		else 
 		{
@@ -199,7 +217,6 @@ public class Main extends Activity
 	 * When using the ActionBarDrawerToggle, you must call it during
 	 * onPostCreate() and onConfigurationChanged()...
 	 */
-
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);

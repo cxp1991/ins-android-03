@@ -4,6 +4,7 @@ import ins.android.app03.home.HomeFragment;
 import ins.android.app03.home.R;
 import ins.android.app03.home.Utils;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,6 +53,8 @@ public class ListSongFragment extends Fragment
 	 */
 	private void SwitchToHomeFragment()
 	{
+		FragmentManager fragm = getFragmentManager();
+		fragm.popBackStack();
 		Fragment fragment = new HomeFragment();
 		final FragmentTransaction ft = getFragmentManager().beginTransaction(); 
 		ft.replace(R.id.content_frame, fragment).commit();
@@ -139,7 +142,7 @@ public class ListSongFragment extends Fragment
 		public boolean onQueryTextChange(String newText) 
 		{
 			Log.i("onQueryTextChange", "" + newText);
-			adapter.getFilter().filter(newText);
+			adapter.myGetFilter().filter(newText);
 			return true;
 		}
 	};

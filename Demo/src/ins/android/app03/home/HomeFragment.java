@@ -1,6 +1,7 @@
 package ins.android.app03.home;
 
-import android.app.AlertDialog;
+import java.util.ArrayList;
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Looper;
@@ -11,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myhorizontalscrollview.MyHorizontalScrollView;
@@ -24,11 +24,13 @@ public class HomeFragment extends Fragment
 {
 	private MyHorizontalScrollView musicHrScrollView;
 	private int keyBackPressCount = 2;
+	private static boolean IS_REQUEST_MUSIC_IN_DEVICE = false;
+	private static ArrayList<Integer> selectedPositionArray = new ArrayList<Integer>(); 
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-		Log.i("TAG", "onCreateView");
+		Log.i("HomeFragment", "onCreateView");
         View rootView = inflater.inflate(R.layout.activity_main, container, false);
         
         MyHorizontalScrollView ringtoneHrScrollView = (MyHorizontalScrollView) rootView.findViewById(R.id.ringtonescrollview);
@@ -39,10 +41,13 @@ public class HomeFragment extends Fragment
         musicHrScrollView = (MyHorizontalScrollView) rootView.findViewById(R.id.musicscrollview);
         musicHrScrollView.setOnTouchFinishListener(musicOnTouchFinish);
         
+        /*
+         * Back press listener 
+         */
         rootView.setFocusableInTouchMode(true);
-		  rootView.requestFocus();
+		rootView.requestFocus();
 		  
-		  rootView.setOnKeyListener(new OnKeyListener() {
+		rootView.setOnKeyListener(new OnKeyListener() {
 			
 			@Override
 			public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
@@ -75,41 +80,63 @@ public class HomeFragment extends Fragment
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		Log.i("TAG", "onActivityCreated");
+		Log.i("HomeFragment", "onActivityCreated");
 		
-		/* Query to list all song in device */
-    	if (Utils.mListAllSong.size() == 0)
+    	try 
     	{
-			Utils.getAllAudio(getActivity());
-    	}
-    	
-    	/* Add result to data container 
-    	 * Using thread to not block UI thread
-    	 * */
-    	new Thread( new Runnable()
-    	{
-			@Override
-            public void run()
-            {
-            	if (Utils.mListAllSong.size() == 0)
-            	{
-            		Looper.prepare();
-                    Utils.insertQueryResultIntoSonglist();
-                    Looper.loop();
-            	}
-            }
-        }).start();
+    		/* Query to list all song in device */
+        	if (IS_REQUEST_MUSIC_IN_DEVICE == false)
+        	{
+    			Utils.getAllAudio(getActivity());
+        	}
+        	
+    		/* Add result to data container 
+        	 * Using thread to not block UI thread
+        	 * */
+        	new Thread( new Runnable()
+        	{
+    			@Override
+                public void run()
+                {
+                	if (IS_REQUEST_MUSIC_IN_DEVICE == false)
+                	{
+                		Looper.prepare();
+                        Utils.insertQueryResultIntoSonglist();
+                        Looper.loop();
+                        IS_REQUEST_MUSIC_IN_DEVICE = true;
+                	}
+                }
+            }).start();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
     	
     	/*
     	 *  Add new Item into parent
+    	 *  
+    	 * Reset selected item in database
+    	 * to when open ListFragment all item is not selected.
     	 */
-    	
+
+    	/* Add old selected item */
+		for (int j = 0; j < selectedPositionArray.size(); j++)
+		{
+			musicHrScrollView.addThumbnailToParent();
+		}
+		
     	for (int i = 0; i < Utils.mListAllSong.size(); i++)
     	{
+    		/* Add new selected item */
     		if (Utils.mListAllSong.get(i).ismSelected())
+    		{
+    			selectedPositionArray.add(i);
     			musicHrScrollView.addThumbnailToParent();
+    			Utils.mListAllSong.get(i).setmSelected(false);
+    		}
     	}
-	}
+    	
+}
+	
 	
 	OnTouchFinishListener ringtoneOnTouchFinish = new OnTouchFinishListener() {
 		
