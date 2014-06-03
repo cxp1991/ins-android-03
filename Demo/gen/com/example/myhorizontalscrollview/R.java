@@ -28,7 +28,7 @@ public final class R {
 		public static final int ic_launcher = 0x7f02000b;
 	}
 	public static final class id {
-		public static final int action_settings = 0x7f090020;
+		public static final int action_settings = 0x7f090021;
 		public static final int additemImgV = 0x7f090005;
 		public static final int headerfooterlayout = 0x7f090008;
 		public static final int hrScrollview = 0x7f090003;

@@ -44,9 +44,6 @@ public class Main extends Activity
 	private ArrayList<DrawerItem> mDrawerItem;
 	private DrawerListAdapter mDrawerAdapter;
 	
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -198,7 +195,8 @@ public class Main extends Activity
 	}
 
 	@Override
-	public void setTitle(CharSequence title) {
+	public void setTitle(CharSequence title) 
+	{
 		Log.i("setTitle", "setTitle");
 		mTitle = title;
 		getActionBar().setTitle(mTitle);
@@ -206,7 +204,7 @@ public class Main extends Activity
 
 	/**
 	 * When using the ActionBarDrawerToggle, you must call it during
-	 * onPostCreate() and onConfigurationChanged()...
+	 * onPostCreate() and onConfigurationChanged() ...
 	 */
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {

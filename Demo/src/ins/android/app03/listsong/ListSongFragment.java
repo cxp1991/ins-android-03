@@ -3,19 +3,17 @@ package ins.android.app03.listsong;
 import ins.android.app03.home.HomeFragment;
 import ins.android.app03.home.R;
 import ins.android.app03.home.Utils;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -30,16 +28,49 @@ public class ListSongFragment extends Fragment
 	 private ListView lv;
 	 private  AllSongAdapter adapter;
 
-	 @Override
+	 /* (non-Javadoc)
+		 * @see android.app.Fragment#onAttach(android.app.Activity)
+		 */
+		@Override
+		public void onAttach(Activity activity) {
+			// TODO Auto-generated method stub
+			Log.i("ListSongFragment", "onAttach");
+			super.onAttach(activity);
+		}
+
+		/* (non-Javadoc)
+		 * @see android.app.Fragment#onResume()
+		 */
+		@Override
+		public void onResume() {
+			Log.i("ListSongFragment", "onResume");
+			// TODO Auto-generated method stub
+			super.onResume();
+		}
+
+		/* (non-Javadoc)
+		 * @see android.app.Fragment#onStart()
+		 */
+		@Override
+		public void onStart() {
+			Log.i("ListSongFragment", "onStart");
+			// TODO Auto-generated method stub
+			super.onStart();
+		}
+		
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
+		  while (!HomeFragment.IS_REQUEST_MUSIC_IN_DEVICE);
+		  
+		  Log.i("ListSongFragment", "oncreateView");
 		  final View rootView = inflater.inflate(R.layout.listviewlayout, container, false);
 		  
-		  adapter = new AllSongAdapter(getActivity(), Utils.mListAllSong);
+		  adapter = new AllSongAdapter(getActivity(), Utils.mListAllSong, getActivity());
 		  lv = (ListView) rootView.findViewById(R.id.lv);
-		  lv.setAdapter(adapter);
 		  lv.setOnItemClickListener(itemClickListener);
+		  lv.setAdapter(adapter);
 
 		  /* Fragment need it to add item to Actionbar */
 		  setHasOptionsMenu(true);
@@ -51,11 +82,9 @@ public class ListSongFragment extends Fragment
 	 */
 	private void SwitchToHomeFragment()
 	{
+		Log.i("TAG", "SwitchToHomeFragment");
 		FragmentManager fragm = getFragmentManager();
 		fragm.popBackStack();
-		Fragment fragment = new HomeFragment();
-		final FragmentTransaction ft = getFragmentManager().beginTransaction(); 
-		ft.replace(R.id.content_frame, fragment).commit();
 	}
 	
 	/**
@@ -68,15 +97,13 @@ public class ListSongFragment extends Fragment
 		public void onItemClick (AdapterView<?> listview, View viewItem, int position,
 				long id) 
 		{
+			Log.i("TAG", "onItemClick");
 			CheckBox checkbox = (CheckBox) viewItem.findViewById(R.id.checkbox);
 			
 			if (checkbox.isChecked())
 				checkbox.setChecked(false);
 			else
 				checkbox.setChecked(true);
-			
-			Utils.mListAllSong.get(position).setmSelected(checkbox.isChecked()); 
-			adapter.notifyDataSetChanged();
 		}
 	};
 	
@@ -135,18 +162,30 @@ public class ListSongFragment extends Fragment
 	 */
 	private void selectAllSong() 
 	{
-		Log.i("TAG", "" + lv.getLastVisiblePosition());
-		for (int position = 0; position < lv.getLastVisiblePosition(); position++)
+		Log.i("TAG", "firstVisiblePosition = " + lv.getFirstVisiblePosition());
+		Log.i("TAG", "LastVisiblePosition = " + lv.getLastVisiblePosition());
+		for (int position = lv.getFirstVisiblePosition(); position < lv.getLastVisiblePosition(); position++)
 		{
-			CheckBox checkbox = (CheckBox) lv.getChildAt(position).findViewById(R.id.checkbox);
-			checkbox.setChecked(true);
+			/*
+			 * Sometime, item is visible but item's checkbox is not
+			 */
+			try 
+			{
+				CheckBox checkbox = (CheckBox) lv.getChildAt(position).findViewById(R.id.checkbox);
+				checkbox.setChecked(true);
+			}
+			catch (Exception e)
+			{
+				
+			}
 		}
 		
 		for (int i = 0; i < Utils.mListAllSong.size(); i++)
 		{
 			Utils.mListAllSong.get(i).setmSelected(true); 
-			adapter.notifyDataSetChanged();
 		}
+		
+		adapter.notifyDataSetChanged();
 	}
 
 	/**
@@ -154,18 +193,27 @@ public class ListSongFragment extends Fragment
 	 */
 	private void unSelectAllSong()
 	{
-		for (int position = 0; position < lv.getLastVisiblePosition(); position++)
+		for (int position = lv.getFirstVisiblePosition(); position < lv.getLastVisiblePosition(); position++)
 		{
-			Log.d("TAG", "count  = " + lv.getCount());
-			CheckBox checkbox = (CheckBox) lv.getChildAt(position).findViewById(R.id.checkbox);
-			checkbox.setChecked(false);
+			try
+			{
+				Log.d("TAG", "count  = " + lv.getCount());
+				CheckBox checkbox = (CheckBox) lv.getChildAt(position).findViewById(R.id.checkbox);
+				checkbox.setChecked(false);
+			}
+			catch (Exception e)
+			{
+				
+			}
 		}
 		
 		for (int i = 0; i < Utils.mListAllSong.size(); i++)
 		{
 			Utils.mListAllSong.get(i).setmSelected(false); 
-			adapter.notifyDataSetChanged();
 		}
+		
+		adapter.notifyDataSetChanged();
+		
 	}
 
 	/**

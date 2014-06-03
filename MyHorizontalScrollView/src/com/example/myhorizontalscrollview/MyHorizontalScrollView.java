@@ -78,7 +78,8 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	
 	private OnTouchFinishListener touchFinishListener = null;
 	private OnThumbnailLongTouchListener thumbnailLongTouchListener = null;
-	private OnThumbnailAddListener thumbnailAddListener = null;
+	private OnItemAddListener itemAddListener = null;
+	private OnItemRemoveListener itemRemoveListener = null;
 	private GestureDetector gesturedetector;
 	private Drawable hilighLightThumbnailDrawable;
 	private Drawable normalThumbnailDrawable;
@@ -181,6 +182,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
         {
         	setThumbnailTitle(1, "1");
         	setThumbnailImageResourceFromDrawable(1, hilighLightThumbnailDrawable);
+        	centerIndex = 1;
         }
         
         if (numberThumbnail >= 2)
@@ -229,18 +231,50 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	}
 	
 	/**
-	 * Thumbnail Add Listener
+	 * Item Add Listener
 	 * @param listener
 	 */
-	public void setOnThumbnailAddListener (OnThumbnailAddListener listener)
+	public void setOnItemAddListener (OnItemAddListener listener)
 	{
-		this.thumbnailAddListener = listener;
+		this.itemAddListener = listener;
 	}
 	
-	public interface OnThumbnailAddListener
+	public interface OnItemAddListener
 	{
-		public void onThumbnailAdd(int numberThumnail);
+		public void onItemnailAdd(int numberThumnail);
 	}
+	
+
+	/**
+	 * Item remove Listener
+	 * @param listener
+	 */
+	public void setOnItemRemoveListener (OnItemRemoveListener listener)
+	{
+		this.itemRemoveListener = listener;
+	}
+	
+	public interface OnItemRemoveListener
+	{
+		public void onItemRemove(int itemRemoved);
+	}
+	
+	/**
+	 * Get @centerIndex
+	 */
+	public int getCenterIndex()
+	{
+		return this.centerIndex;
+	}
+	
+	/**
+	 * Set CenterIndex
+	 */
+	public void setCenterIndex(int newCenterIndex)
+	{
+		this.centerIndex = newCenterIndex;
+	}
+	
 	
 	/**
 	 *  Set thumbnail's image resource from ID 
@@ -389,8 +423,14 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	 */
 	public void scrollToIndex(int index)
 	{
-		Log.d("TAG", "scrollToIndex");
-		this.scrollTo((index - 1)*THUMBNAIL_WIDTH, 0);
+		Log.d("TAG", "scrollToIndex = " + index);
+		Log.d("TAG", "scrollToIndex = " + (index - 1)*THUMBNAIL_WIDTH);
+		
+		//this.scrollTo((index - 1)*THUMBNAIL_WIDTH, 0);
+		
+		ObjectAnimator animator = ObjectAnimator.ofInt(instance,
+				"scrollX", (index - 1)*THUMBNAIL_WIDTH);
+		animator.start();
 	}
 	
 	/**
@@ -398,9 +438,17 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	 */
 	public void highlightIdex(int index)
 	{
+		/*
+		 * This has only meaning at the first time we add song
+		 * into scrollview.
+		 * No event is catched.
+		 * */
+		centerIndex = index;
+		
 		try
 		{
-			Log.d("TAG", "highlightIdex");
+			//this.scrollToIndex(index);
+			Log.d("TAG", "highlightIdex = " + index);
 			/* Then, highlight @centerIndex item */
 			ImageView imgView = (ImageView) topLnLayout.getChildAt(index).findViewById(R.id.thumbnailImage);
 			imgView.setImageDrawable(hilighLightThumbnailDrawable);
@@ -419,7 +467,8 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	 * 	4. Remove
 	 */
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
+	public boolean onTouchEvent(MotionEvent event) 
+	{
 		this.gesturedetector.onTouchEvent(event);
 		
 		switch (event.getAction()) 
@@ -473,7 +522,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 						else 
 							action_mode = ACTION_REMOVE_UP;
 						
-						removeThumbnailFromParent (topLnLayout.getChildAt(index), action_mode);
+						removeThumbnailFromParent (topLnLayout.getChildAt(index), action_mode, index);
 						
 						break;
 					}
@@ -521,10 +570,13 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	}
 	
 	/**
-	 *  Add 1 thumbnail at the end of parent
+	 *  Add 1 item at the end of parrent
+	 *  I do not update layout(centerIndex & highlight it)
+	 *  Do not using animation
 	 */ 
 	public void addThumbnailToParent() 
 	{
+		Log.i("TAG", "addThumbnailToParent");
 		/* Insert thumbnail at the end */ 
 		itemLayout = (FrameLayout) inflater.inflate(R.layout.item, null, false);
 		itemLayout.setLayoutParams(new LayoutParams(THUMBNAIL_WIDTH, LayoutParams.MATCH_PARENT));
@@ -559,23 +611,35 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	}
 
 	/**
-	 *  Remove 1 thumbnail from its parent 
+	 *  Remove 1 item from its parent 
+	 *  Remove using view not index to remove bugs when remove multiple items at the same time.
+	 *  FIXME: Sometimes insteads of remove item It'll scroll the horizontalscrollview
 	 */
-	
-	private void removeThumbnailFromParent (final View v, final int action)
+	private void removeThumbnailFromParent (final View v, final int action, final int index)
 	{
+		/*
+		 * Framelayout contains item will be removed
+		 */
 		final FrameLayout view = (FrameLayout)v;
 		
 		Log.d ("removeThumbnailFromParent", "removeThumbnailFromParent");
 
-		/* Alpha animation setting */
+		/* 
+		 * Alpha & Translate animation 
+		 * to display how item will be removed
+		 */
+		
+		/* Alpha animation */
 		Animation fadeOut = new AlphaAnimation(1, 0);
 		fadeOut.setInterpolator(new AccelerateInterpolator()); //and this
 		fadeOut.setDuration(750);
 		
-		/* Translate animation setting */ 
+		/* Translate animation */
 		Animation translate = null;
 		
+		/* Check user gesture is valid */
+		
+		/* Our horizontalscrollview is in top of screen */
 		if (layoutLocation == 0 && (action == ACTION_REMOVE_DOWN))
 			translate = new TranslateAnimation(0,0,0, THUMBNAIL_WIDTH);
 		else if (layoutLocation == 0 && (action == ACTION_REMOVE_UP))
@@ -584,6 +648,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 			return;
 		}
 		
+		/* Our horizontalscrollview is in bottom of screen */
 		if (layoutLocation == 2 && (action == ACTION_REMOVE_UP))
 			translate = new TranslateAnimation(0,0,0, THUMBNAIL_WIDTH*(-1));
 		else if (layoutLocation == 2 && (action == ACTION_REMOVE_DOWN))
@@ -594,11 +659,13 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		
 		translate.setDuration(750);
 		
+		/* Merge 2 animations using Animationset*/
 		AnimationSet animationSet = new AnimationSet(true);
 		animationSet.addAnimation(fadeOut);
 		animationSet.addAnimation(translate);
 		
 		try {
+			/* Thumbnail & text will use above animation */
 			ImageView thumbnail = (ImageView) view.findViewById(R.id.thumbnailImage);
 			TextView title = (TextView) view.findViewById(R.id.tv);
 			
@@ -607,6 +674,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 			thumbnail.startAnimation(animationSet);
 			title.startAnimation(animationSet);
 			
+			/* Wait until animation terminate, then remove item out of our horizontal scrollview */
 			animationSet.setAnimationListener(new AnimationListener() {
 				
 				@Override
@@ -624,14 +692,27 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 						
 						@Override
 						public void run() {
+							int indexOfView = topLnLayout.indexOfChild(view);
+							/* Remove imageview & textview are inside removing item */
 							view.removeAllViews();
+							
+							/* Remove item */
 							topLnLayout.removeView(view);
 							numberThumbnail--;
+							Log.i ("Remove Item", "item = " + index);
 							
 							/* Auto call LayoutTranslation listener */
 							
 							/* Enale scroll */
 							enableScroll = true;
+
+							/*
+							 * Call item removing listener
+							 * Don't use index, use index of removed view instead 
+							 */
+							if (itemRemoveListener != null)
+					        	itemRemoveListener.onItemRemove(indexOfView);
+					        
 							
 						}
 					});
@@ -656,7 +737,9 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		public void startTransition(LayoutTransition transition,
 				ViewGroup container, View view, int transitionType) {
 			
-			/* First layout translation */
+			/* 
+			 * Start Dispear animation
+			 */
 			if (transitionType == LayoutTransition.DISAPPEARING)
 			{
 				Log.i ("TAG", "Start Dispear translation");
@@ -667,7 +750,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		public void endTransition(LayoutTransition transition, ViewGroup container,
 				View view, int transitionType) {
 			
-			/* Last layout translation */
+			/* End dispear animation */
 			if (transitionType == LayoutTransition.CHANGE_DISAPPEARING
 					&& container.getId() == instance.getId())
 			{
@@ -677,22 +760,44 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		        	for (int i = 1; i < numberThumbnail + 1; i++)
 		            {
 		            	setThumbnailTitle(i,"" + i);
-		            	setThumbnailImageResourceFromDrawable(i, normalThumbnailDrawable);
+		            	//setThumbnailImageResourceFromDrawable(i, normalThumbnailDrawable);
 		            }
 		        }
 		        
-		        /* Set centerIndex again */ 
+		        /*
+		         *  Update center position 
+		         *  and hghlight it. 
+		         */ 
 		        
 		        if ((centerIndex >= 1) && (centerIndex <= numberThumbnail))
 		        {
-		        	updateLayout(centerIndex);
-		        }
-		        else if (centerIndex > numberThumbnail && numberThumbnail > 0)
-		        {
-		        	centerIndex --;
+		        	Log.d("TAG", "Remove item: Not last item");
 		        	updateLayout(centerIndex);
 		        }
 		        
+		        /* Last item was removed 
+		         * Then turn back 1 item
+		         * */
+		        else if (centerIndex > numberThumbnail && numberThumbnail > 0)
+		        {
+		        	Log.d("TAG", "Remove item: Last item");
+		        	centerIndex --;
+		        	updateLayout(centerIndex);
+		        }
+		        /* 1 item remain */
+		        else if ( centerIndex == 1 & numberThumbnail == 0)
+		        {
+		        	Log.d("TAG", "Remove item: 1 item remain, centerIndex now is 0");
+		        	centerIndex = 0;
+		        }
+		        else
+		        {
+		        	Log.d("TAG", "Remove item: Hmm, don't update layout" +
+		        			"Check below information");
+		        	Log.d("TAG", "center index = " + centerIndex + ", numberthumbnail = " + numberThumbnail);
+		        }
+		        
+		    	Log.i ("Remove Item", "centerIndex = " + centerIndex);
 		        Log.i ("TAG", "Stop Dispear translation");
 			}
 		}
@@ -730,7 +835,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	 *   + Scroll @MyHorizontalScrollview to @index
 	 *   + Highlight @centerIndex item 
 	 */
-	private void updateLayout(final int index)
+	public void updateLayout(final int index)
 	{
 		Log.i("updateLayout", "updateLayout");
 		
@@ -771,7 +876,6 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 									
 									/* Then, highlight @centerIndex item */
 									imgView = (ImageView) topLnLayout.getChildAt(centerIndex).findViewById(R.id.thumbnailImage);
-									Log.d("TAG", "Highlight index = " + imgView);
 									if (imgView != null) // fast removing
 									{
 										imgView.setImageDrawable(hilighLightThumbnailDrawable);

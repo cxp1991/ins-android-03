@@ -6,6 +6,7 @@ import ins.android.app03.home.Utils;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -25,15 +26,15 @@ public class AllSongAdapter extends BaseAdapter
 	private Context mContext;
 	private Filter mFilter;
 	private ArrayList<MySong> mArraylist;
-	private Typeface font; 
 	private AllSongAdapter mAdapter;
+	private Activity mActivity;
 	 
-	public AllSongAdapter(Context context, ArrayList<MySong> listSong)
+	public AllSongAdapter(Context context, ArrayList<MySong> listSong, Activity activity)
 	{
 		this.mContext = context;
 		this.mArraylist = listSong;
-		this.font = Typeface.createFromAsset(context.getAssets(), "Chantelli_Antiqua.ttf");
 		this.mAdapter = this;
+		this.mActivity = activity;
 	}
 	
 	/**
@@ -89,14 +90,14 @@ public class AllSongAdapter extends BaseAdapter
 				Utils.mListAllSong.clear();
 				Utils.mListAllSong.addAll(mArraylist);
 				
-				new Thread(new Runnable() 
-				{
-					@Override
-					public void run() 
-					{
-						mAdapter.notifyDataSetChanged();
-					}
-				});
+//				new Thread(new Runnable() 
+//				{
+//					@Override
+//					public void run() 
+//					{
+//						mAdapter.notifyDataSetChanged();
+//					}
+//				}).start();
 			}	
 				
             for (int i = 0; i < Utils.mListAllSong.size(); i++) 
@@ -141,11 +142,13 @@ public class AllSongAdapter extends BaseAdapter
 			 
 			 if (results.count > 0) 
 			 {
-				 notifyDataSetChanged();
+				 Log.i("TAG", "adapter line 145");
+				mAdapter.notifyDataSetChanged();
 			 }
 			 else 
 			 {
-                 notifyDataSetInvalidated();
+				 Log.i("TAG", "adapter line 150");
+				mAdapter.notifyDataSetInvalidated();
              }
 		}
 		
@@ -156,6 +159,7 @@ public class AllSongAdapter extends BaseAdapter
 		public ImageView mThumbnail;
 		public TextView mSongName;
 		public TextView mArtist;
+		public TextView mDuration;
 		public CheckBox mCheckbox;
 		
 		public CompleteListViewHolder(View base) 
@@ -163,6 +167,7 @@ public class AllSongAdapter extends BaseAdapter
 			mThumbnail = (ImageView) base.findViewById(R.id.thumbnail);
 			mSongName  = (TextView) base.findViewById(R.id.tvsongname);
 			mArtist    = (TextView) base.findViewById(R.id.tvartist);
+			mDuration  = (TextView) base.findViewById(R.id.tvduration);
 			mCheckbox  = (CheckBox) base.findViewById(R.id.checkbox); 
 			
 			mCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() 
@@ -171,11 +176,26 @@ public class AllSongAdapter extends BaseAdapter
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) 
 				{
+					try {
 					// Here we get the position that we have set for the checkbox using setTag.
 					int getPosition = (Integer) buttonView.getTag();  
 					// Set the value of checkbox to maintain its state
 					Utils.mListAllSong.get(getPosition).setmSelected(buttonView.isChecked()); 
-					notifyDataSetChanged();
+					
+						mActivity.runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								Log.i("TAG", "adapter line 189");
+								mAdapter.notifyDataSetChanged();							
+							}
+						});
+						
+					}
+					catch (Exception e)
+					{
+						
+					}
 				}
 			});
 		}  
@@ -202,15 +222,25 @@ public class AllSongAdapter extends BaseAdapter
         }  
 
         viewHolder.mSongName.setText(Utils.mListAllSong.get(position).getmSongName());
-        viewHolder.mSongName.setTypeface(this.font);
-        
+        viewHolder.mSongName.setTypeface(Typeface.SERIF);
         viewHolder.mArtist.setText(Utils.mListAllSong.get(position).getmSongArtist());
-        viewHolder.mArtist.setTypeface(this.font);
+        viewHolder.mArtist.setTypeface(Typeface.SERIF);
+        
+        String time;
+        String minute = Utils.mListAllSong.get(position).getmSongDurationSecond()/60 + "";
+        int second = Utils.mListAllSong.get(position).getmSongDurationSecond()%60;
+        if (second < 10)
+        	time = minute + ":" + "0" + second;
+        else
+        	time = minute + ":" + second;
+        
+        viewHolder.mDuration.setText(time);
+        viewHolder.mDuration.setTypeface(Typeface.SERIF);
         
         if (Utils.mListAllSong.get(position).getmThumbnail() != null)
         	viewHolder.mThumbnail.setImageBitmap(Utils.mListAllSong.get(position).getmThumbnail());
         else
-        	viewHolder.mThumbnail.setImageResource(R.drawable.music);
+        	viewHolder.mThumbnail.setImageResource(R.drawable.music_icon_01);
         
         viewHolder.mCheckbox.setTag(position); 
         viewHolder.mCheckbox.setChecked(Utils.mListAllSong.get(position).ismSelected()); 

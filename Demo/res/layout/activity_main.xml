@@ -3,15 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.example.myhorizontalscrollview.MyHorizontalScrollView 
+	<com.example.myhorizontalscrollview.MyHorizontalScrollView 
         android:id="@+id/ringtonescrollview"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        custom:numberThumbnail="20"
+        custom:numberThumbnail="5"
 		custom:Thumbnail_width="90"
 		custom:Thumbnail_height="90"
-		custom:NormalThumbnailImage="@drawable/music01"
-        custom:HighlightThumbnailImage="@drawable/music01"
+		custom:NormalThumbnailImage="@drawable/songthumbnaildark"
+        custom:HighlightThumbnailImage="@drawable/songthumbnailbright"
         custom:layout_location="0"
         android:scrollbars="none"
         android:layout_alignParentTop="true">
@@ -36,7 +36,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/add" />
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

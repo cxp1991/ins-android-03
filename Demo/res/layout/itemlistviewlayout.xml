@@ -24,22 +24,36 @@
 	        
 		</LinearLayout>
 	    
-		<CheckBox
-		    android:id="@+id/checkbox"
-		    android:layout_width="60dp"
-		    android:layout_height="60dp"
-		    android:layout_alignParentRight="true"
-		    android:focusable="false"
-		    android:focusableInTouchMode="false"/>
-		
+		  <CheckBox
+	    android:id="@+id/checkbox"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_centerVertical="true"
+	    android:focusable="false"
+	    android:focusableInTouchMode="false"
+	    android:layout_alignParentRight="true" />
+		  
+       <TextView
+        android:id="@+id/tvduration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/checkbox"
+        android:layout_centerVertical="true"
+        android:padding="5dp"
+        android:textSize="15sp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:layout_marginTop="5dp"
+        android:textColor="#FFFFFF"/>
+       
 		<LinearLayout 
 		    android:id="@+id/lntitle"
 		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
+		    android:layout_height="60dp"
 		    android:orientation="vertical"
-		    android:layout_toRightOf="@id/lnthumbnail"
-		    android:layout_toLeftOf="@id/checkbox"
 		    android:layout_marginLeft="5dp"
+		    android:layout_toRightOf="@id/lnthumbnail"
+		    android:layout_toLeftOf="@id/tvduration"
 		    >
 			
 		    <TextView
@@ -50,10 +64,7 @@
 	        android:textSize="15sp"
 	        android:singleLine="true"
 	        android:ellipsize="marquee"
-        	android:marqueeRepeatLimit ="marquee_forever"
-        	android:scrollHorizontally="true"
-	        android:textColor="#FFFFFF"
-	        android:textStyle="bold" />
+	        android:textColor="#FFFFFF"/>
 		    
 		     <TextView
 	        android:id="@+id/tvartist"
@@ -62,11 +73,8 @@
 	        android:textSize="15sp"
 	        android:singleLine="true"
 	        android:ellipsize="marquee"
-        	android:marqueeRepeatLimit ="marquee_forever"
-        	android:scrollHorizontally="true"
 	        android:layout_marginTop="5dp"
-	        android:textColor="#FFFFFF"
-	        android:textStyle="bold" />
+	        android:textColor="#FFFFFF"/>
 		</LinearLayout>
 	
 	</RelativeLayout>

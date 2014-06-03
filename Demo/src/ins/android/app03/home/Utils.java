@@ -42,6 +42,10 @@ public class Utils
 		mLoadermanager.initLoader(1, null, callback);
 	}
 	
+	/**
+	 * Using Loadermanager & Cursorloader to list all audio
+	 * in external device 
+	 */
 	static LoaderCallbacks<Cursor> callback = new LoaderCallbacks<Cursor>() {
 		
 		@Override
@@ -50,16 +54,22 @@ public class Utils
 		
 		@Override
 		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-			/* Should not do large work here */
+			/*
+			 *  Should not do large work here
+			 */
 			mCursor = cursor;
 		}
 		
 		@Override
 		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-			/* Music Filter */
+			/*
+			 *  Music Filter 
+			 */
 			String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
 
-			/* Result table column */
+			/* 
+			 * Result table column 
+			 */
 			String[] projection = {
 					MediaStore.Audio.Media.DISPLAY_NAME, // Name
 					MediaStore.Audio.Media.ARTIST,		 // artist
@@ -87,6 +97,9 @@ public class Utils
 	 */
 	public static void insertQueryResultIntoSonglist()
 	{
+		/*
+		 * Wait util  onLoadFinished of Loadermanager done
+		 */
 		while (mCursor == null);
 		
 		Bitmap thumbnail = null;
@@ -96,8 +109,14 @@ public class Utils
 			{
 				do 
 				{
+					/* 
+					 * Get thumbnail from this audio
+					 * */
 					thumbnail = getAudioThumbnail(mActivity.getBaseContext(), mCursor.getLong(4));
 					
+					/*
+					 * Add to container 
+					 */
 					mListAllSong.add(new MySong(
 		    				  mCursor.getString(0), 
 		    				  mCursor.getString(1), 
@@ -129,12 +148,21 @@ public class Utils
 		
 	    try 
 	    {
+	    	/*
+	    	 * Get album's uri
+	    	 * */
 	        final Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 	        Uri uri = ContentUris.withAppendedId(sArtworkUri, album_id);
 
+	        /*
+	         * Open uri
+	         */
 	        ParcelFileDescriptor pfd = context.getContentResolver()
 	    	            .openFileDescriptor(uri, "r");
 
+	        /*
+	         * Decode bitmap from album
+	         */
 	        if (pfd != null) 
 	        {
 	            FileDescriptor fd = pfd.getFileDescriptor();
