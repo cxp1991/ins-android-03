@@ -2,6 +2,7 @@ package com.example.myhorizontalscrollview;
 
 import java.util.ArrayList;
 
+import android.R.mipmap;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.LayoutTransition;
@@ -84,6 +85,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	private Drawable hilighLightThumbnailDrawable;
 	private Drawable normalThumbnailDrawable;
 	private boolean enableScroll = true;
+	private int mItemRemovedIndex;
 	
 	private float x0 = 0, y0 = 0;
     private float x1 = 0, y1 = 0;
@@ -617,6 +619,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	 */
 	private void removeThumbnailFromParent (final View v, final int action, final int index)
 	{
+		this.mItemRemovedIndex = index;
 		/*
 		 * Framelayout contains item will be removed
 		 */
@@ -693,6 +696,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 						@Override
 						public void run() {
 							int indexOfView = topLnLayout.indexOfChild(view);
+							
 							/* Remove imageview & textview are inside removing item */
 							view.removeAllViews();
 							
@@ -732,11 +736,10 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	 * Add item & remove item
 	 */
 	LayoutTransition.TransitionListener OnLayoutTranslation = new TransitionListener() {
-		
+
 		@Override
 		public void startTransition(LayoutTransition transition,
 				ViewGroup container, View view, int transitionType) {
-			
 			/* 
 			 * Start Dispear animation
 			 */
@@ -769,38 +772,53 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		         *  and hghlight it. 
 		         */ 
 		        
-		        if ((centerIndex >= 1) && (centerIndex <= numberThumbnail))
-		        {
-		        	Log.d("TAG", "Remove item: Not last item");
-		        	updateLayout(centerIndex);
-		        }
+	        	if (mItemRemovedIndex < centerIndex)
+	        	{
+	        		Log.d("TAG", "Remove item: item before center item");
+	        		centerIndex --;
+	        		updateLayout(centerIndex);
+	        	}
+		        	/* Item removed's index = centerIndex */
+		            if (mItemRemovedIndex == centerIndex)
+		         	{
+		         		Log.d("TAG", "Remove item: item is center item");
+		         		
+		         		/* 1 item remain */
+		         		if (numberThumbnail == 0)
+		         		{
+		         			centerIndex = 0;
+		         		}
+		         		
+		         		/* The last item was removed */
+		         		else if (centerIndex > numberThumbnail)
+		         		{
+		         			Log.d("TAG", "Remove item: Last item");
+				        	centerIndex --;
+				        	updateLayout(centerIndex);
+		         		}
+		         		else
+		         			updateLayout(centerIndex);
+			         		
+		         	}
+		         	else if (mItemRemovedIndex > centerIndex)
+		         	{
+		         		// NOTHING NEED TO DO
+		         		Log.d("TAG", "Remove item: item is after center item");
+		         	}
+		         	else
+			        {
+			        	Log.d("TAG", "Remove item: Hmm, don't update layout" +
+			        			"Check below information. It's out of my guess");
+			        	Log.d("TAG", "center index = " + centerIndex + ", numberthumbnail = " + numberThumbnail);
+			        }
+					        
+			    	Log.i ("Remove Item", "centerIndex = " + centerIndex);
+			        Log.i ("TAG", "Stop Dispear translation");
 		        
-		        /* Last item was removed 
-		         * Then turn back 1 item
-		         * */
-		        else if (centerIndex > numberThumbnail && numberThumbnail > 0)
-		        {
-		        	Log.d("TAG", "Remove item: Last item");
-		        	centerIndex --;
-		        	updateLayout(centerIndex);
-		        }
-		        /* 1 item remain */
-		        else if ( centerIndex == 1 & numberThumbnail == 0)
-		        {
-		        	Log.d("TAG", "Remove item: 1 item remain, centerIndex now is 0");
-		        	centerIndex = 0;
-		        }
-		        else
-		        {
-		        	Log.d("TAG", "Remove item: Hmm, don't update layout" +
-		        			"Check below information");
-		        	Log.d("TAG", "center index = " + centerIndex + ", numberthumbnail = " + numberThumbnail);
-		        }
-		        
-		    	Log.i ("Remove Item", "centerIndex = " + centerIndex);
-		        Log.i ("TAG", "Stop Dispear translation");
 			}
+			
 		}
+		
 	};
 	
 	/**

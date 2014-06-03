@@ -305,6 +305,7 @@ public class HomeFragment extends Fragment
 		@Override
 		public void onTouchFinish(int centerIndex) {
 			//Log.d("musicOnTouchFinish", "centerIndex = " + centerIndex);
+			//Log.d("musicOnTouchFinish", "current playing = " + mSongArrayList.getmAudioPlaying());
 			if (centerIndex != mSongArrayList.getmAudioPlaying())
 				mSongArrayList.playMediaPlayer(centerIndex);
 		}
@@ -329,16 +330,16 @@ public class HomeFragment extends Fragment
 			if (itemRemoved == mSongArrayList.getmAudioPlaying())
 			{
 				/*
-				 * 1 item remain
+				 * 1 item remain, stop play
 				 */
 				if (mSongArrayList.getCount() == 0)
 				{
-					mSongArrayList.pauseMediaPlayer();
+					mSongArrayList.resetPlayer();
 					return;
 				}
 		
 				/*
-				 * Last item, play nearest last item
+				 * Last item, play prevoius item
 				 */
 				if (itemRemoved > mSongArrayList.getCount())
 				{
@@ -346,12 +347,27 @@ public class HomeFragment extends Fragment
 				}
 				
 				/*
-				 * Middle item
+				 * Middle item, play next song
 				 */
 				else
 				{
 					mSongArrayList.playMediaPlayer(itemRemoved);
 				}
+			}
+			
+			/*
+			 * Removed song is not playing song
+			 */
+			else
+			{
+				/*
+				 * Update index of current song is playing
+				 * It happens only when remove song has index less than curren playing song
+				 * */
+				
+				if (itemRemoved < mSongArrayList.getmAudioPlaying())
+					mSongArrayList.setmAudioPlaying(mSongArrayList.getmAudioPlaying() - 1);
+				
 			}
 			
 		}
