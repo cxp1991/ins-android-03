@@ -1,12 +1,13 @@
 package ins.android.app03.home;
 
 import ins.android.app03.listsong.ListSongFragment;
-
-import java.util.ArrayList;
-
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -23,7 +24,6 @@ import android.widget.Toast;
 
 import com.example.myhorizontalscrollview.MyHorizontalScrollView;
 import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnItemRemoveListener;
-import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnThumbnailLongTouchListener;
 import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnTouchFinishListener;
 
 
@@ -112,7 +112,8 @@ public class HomeFragment extends Fragment
          */
         rootView.setFocusableInTouchMode(true);
 		rootView.requestFocus();
-		  
+		final DialogFragment dialog = new ExitAppDialogFragment();
+		
 		rootView.setOnKeyListener(new OnKeyListener() {
 			
 			@Override
@@ -120,19 +121,20 @@ public class HomeFragment extends Fragment
 				
 				if( (keyCode == KeyEvent.KEYCODE_BACK) && (keyEvent.getAction() == KeyEvent.ACTION_DOWN))
 				{
-					Log.e("onKey", "back press");
-					keyBackPressCount --;
-					if (keyBackPressCount  > 0)
-					{
-						Toast toast = Toast.makeText(getActivity(), "Press back again to exit", Toast.LENGTH_SHORT);
-						toast.setGravity(Gravity.CENTER, 0, 0);
-						toast.show();
-						return true;
-					}
-				    return false;
+//					Log.e("onKey", "back press");
+//					keyBackPressCount --;
+//					if (keyBackPressCount  > 0)
+//					{
+//						Toast toast = Toast.makeText(getActivity(), "Press back again to exit", Toast.LENGTH_SHORT);
+//						toast.setGravity(Gravity.CENTER, 0, 0);
+//						toast.show();
+//						return true;
+//					}
+					
+					dialog.show(getFragmentManager(), null);
 				}
 				
-				return false;
+				return true;
 			}
 		  });
         
@@ -143,6 +145,31 @@ public class HomeFragment extends Fragment
 		  
         return rootView;
     }
+	
+	/**
+	 * Dialog show when user press back button
+	 * @author cxphong
+	 */
+	public static class ExitAppDialogFragment extends DialogFragment {
+	    @Override
+	    public Dialog onCreateDialog(Bundle savedInstanceState) {
+	        // Use the Builder class for convenient dialog construction
+	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+	        builder.setMessage("Do you want to exit?")
+	               .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+	                   public void onClick(DialogInterface dialog, int id) {
+	                       getActivity().finish();
+	                   }
+	               })
+	               .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	                   public void onClick(DialogInterface dialog, int id) {
+	                       dismiss();
+	                   }
+	               });
+	        
+	        return builder.create();
+	    }
+	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -295,6 +322,7 @@ public class HomeFragment extends Fragment
 	@Override
 	public void onDestroy() 
 	{
+		Log.i("TAG", "OnDestroy");
 		mSongArrayList.releasePlayer();
 		//mRingtoneArraylist.pauseMediaPlayer();
 		super.onDestroy();
@@ -372,4 +400,5 @@ public class HomeFragment extends Fragment
 			
 		}
 	};
+	
 }
