@@ -281,6 +281,14 @@ public class AudioList {
 	}
 
 	/**
+	 * Set looping
+	 */
+	public void setLooping(boolean value)
+	{
+		this.mMediaPlayer.setLooping(value);
+	}
+	
+	/**
 	 * @param isEndOnePlayback the isEndOnePlayback to set
 	 */
 	public void setEndOnePlayback(boolean isEndOnePlayback) {

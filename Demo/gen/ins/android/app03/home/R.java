@@ -84,14 +84,16 @@ containing a value of this type.
         public static final int ic_drawer=0x7f020009;
         public static final int ic_home=0x7f02000a;
         public static final int ic_launcher=0x7f02000b;
-        public static final int item_select=0x7f02000c;
-        public static final int listview_bg=0x7f02000d;
-        public static final int music=0x7f02000e;
-        public static final int music01=0x7f02000f;
-        public static final int music_icon_01=0x7f020010;
-        public static final int songthumbnail=0x7f020011;
-        public static final int songthumbnailbright=0x7f020012;
-        public static final int songthumbnaildark=0x7f020013;
+        public static final int image_border=0x7f02000c;
+        public static final int image_transparent_border=0x7f02000d;
+        public static final int item_select=0x7f02000e;
+        public static final int listview_bg=0x7f02000f;
+        public static final int music=0x7f020010;
+        public static final int music01=0x7f020011;
+        public static final int music_icon_01=0x7f020012;
+        public static final int songthumbnail=0x7f020013;
+        public static final int songthumbnailbright=0x7f020014;
+        public static final int songthumbnaildark=0x7f020015;
     }
     public static final class id {
         public static final int action_add_song=0x7f090018;

@@ -11,7 +11,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,10 +19,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import com.example.myhorizontalscrollview.MyHorizontalScrollView;
 import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnItemRemoveListener;
+import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnThumbnailLongTouchListener;
 import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnTouchFinishListener;
 
 
@@ -106,6 +106,7 @@ public class HomeFragment extends Fragment
         musicHrScrollView = (MyHorizontalScrollView) rootView.findViewById(R.id.musicscrollview);
         musicHrScrollView.setOnTouchFinishListener(musicOnTouchFinish);
         musicHrScrollView.setOnItemRemoveListener(musicOnItemRemove);
+        musicHrScrollView.setOnThumbnailLongTouchListener(musicOnLongTouchListener);
         
         /*
          * Back press listener 
@@ -331,11 +332,32 @@ public class HomeFragment extends Fragment
 	OnTouchFinishListener musicOnTouchFinish = new OnTouchFinishListener() {
 		
 		@Override
-		public void onTouchFinish(int centerIndex) {
+		public void onTouchFinish(View parrent, int centerIndex) {
 			//Log.d("musicOnTouchFinish", "centerIndex = " + centerIndex);
 			//Log.d("musicOnTouchFinish", "current playing = " + mSongArrayList.getmAudioPlaying());
-			if (centerIndex != mSongArrayList.getmAudioPlaying())
-				mSongArrayList.playMediaPlayer(centerIndex);
+			Log.i("TAG", "onTouchFinish");
+			
+			if (centerIndex != musicHrScrollView.getmLongTouchItemIndex())
+			{
+				/* Has longtouch Item */
+				if(parrent != null)
+				{
+					Log.i("TAG", "onTouchFinish has long touch item");
+					final ImageView img =  (ImageView) parrent.findViewById(R.id.thumbnailImage);
+					
+					getActivity().runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							img.setBackgroundResource(R.drawable.image_transparent_border);
+						}
+					});
+					
+					mSongArrayList.setmPlayMode(AudioList.PLAY_ALL);
+				}
+				if (centerIndex != mSongArrayList.getmAudioPlaying())
+					mSongArrayList.playMediaPlayer(centerIndex);
+			}
 		}
 	};
 	
@@ -400,5 +422,19 @@ public class HomeFragment extends Fragment
 			
 		}
 	};
-	
+
+	OnThumbnailLongTouchListener musicOnLongTouchListener = new OnThumbnailLongTouchListener() {
+		
+		@Override
+		public void onMyLongTouch(View view, int centerIndex) {
+			//FrameLayout itemLayout = (FrameLayout) view;
+			Log.d("TAG", "OnThumbnailLongTouchListener");
+			ImageView thumbnail = (ImageView) view.findViewById(R.id.thumbnailImage);
+			thumbnail.setBackgroundResource(R.drawable.image_border);
+			
+			mSongArrayList.setmPlayMode(AudioList.REPEAT_ONE);
+			mSongArrayList.setLooping(true);
+			
+		}
+	};
 }

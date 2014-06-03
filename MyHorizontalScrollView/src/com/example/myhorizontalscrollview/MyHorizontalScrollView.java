@@ -86,6 +86,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	private Drawable normalThumbnailDrawable;
 	private boolean enableScroll = true;
 	private int mItemRemovedIndex;
+	private int mLongTouchItemIndex = -1;
 	
 	private float x0 = 0, y0 = 0;
     private float x1 = 0, y1 = 0;
@@ -216,7 +217,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	
 	public interface OnTouchFinishListener 
 	{
-	    public void onTouchFinish (int centerIndex);
+	    public void onTouchFinish (View parrent, int centerIndex);
 	}
 	
 	/**
@@ -928,13 +929,29 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		Log.d("longPress", "longPress");
 		
 		int index = findThumbnailIndex(location);
+		Log.d("longPress", "index = " + index + ", centerIndex = " + centerIndex);
 		if (index == centerIndex)
 		{
+			mLongTouchItemIndex  = index;
 			if (thumbnailLongTouchListener != null)
 				this.thumbnailLongTouchListener.onMyLongTouch(topLnLayout.getChildAt(index), centerIndex);
 		}
 	}
 	
+	/**
+	 * @return the mLongTouchItemIndex
+	 */
+	public int getmLongTouchItemIndex() {
+		return mLongTouchItemIndex;
+	}
+
+	/**
+	 * @param mLongTouchItemIndex the mLongTouchItemIndex to set
+	 */
+	public void setmLongTouchItemIndex(int mLongTouchItemIndex) {
+		this.mLongTouchItemIndex = mLongTouchItemIndex;
+	}
+
 	/**
 	 *	Scroll @MyHorizontalScrollView to the chosen item by
 	 *	single-tap event. 
@@ -964,7 +981,12 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		{
 			updateLayout(centerIndex);
 			if (touchFinishListener != null)
-				touchFinishListener.onTouchFinish(instance.centerIndex);
+			{
+				if (mLongTouchItemIndex > 0)
+				touchFinishListener.onTouchFinish(topLnLayout.getChildAt(mLongTouchItemIndex), instance.centerIndex);
+				else
+					touchFinishListener.onTouchFinish(null, instance.centerIndex);
+			}
 		}
 	}
 
@@ -1006,7 +1028,12 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 
 					updateLayout(centerIndex);
 					if (touchFinishListener != null)
-						touchFinishListener.onTouchFinish(instance.centerIndex);
+					{
+						if (mLongTouchItemIndex > 0)
+							touchFinishListener.onTouchFinish(topLnLayout.getChildAt(mLongTouchItemIndex), instance.centerIndex);
+						else
+							touchFinishListener.onTouchFinish(null, instance.centerIndex);
+					}
 					
 					break;
 				}
