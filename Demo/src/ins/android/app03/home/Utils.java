@@ -29,6 +29,7 @@ public class Utils
 	private static CursorLoader mCursorLoader;
 	private static Activity mActivity;
 	private static Cursor mCursor;
+	private static boolean mRequestDone = false;
 	
 	/**
 	 * List all song in external device using cursorLoader
@@ -58,6 +59,7 @@ public class Utils
 			 *  Should not do large work here
 			 */
 			mCursor = cursor;
+			mRequestDone = true;
 		}
 		
 		@Override
@@ -100,7 +102,13 @@ public class Utils
 		/*
 		 * Wait util  onLoadFinished of Loadermanager done
 		 */
-		while (mCursor == null);
+		while (!mRequestDone);
+		
+		/*
+		 * No audio is external storage
+		 */
+		if (mCursor == null)
+			return;
 		
 		Bitmap thumbnail = null;
 		

@@ -1,7 +1,5 @@
 package ins.android.app03.home;
 
-import javax.crypto.Mac;
-
 import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;

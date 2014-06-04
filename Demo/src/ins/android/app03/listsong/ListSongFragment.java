@@ -29,35 +29,6 @@ public class ListSongFragment extends Fragment
 	 private ListView lv;
 	 private  AllSongAdapter adapter;
 	 private static int numberItemIsChecked = 0;
-		/* (non-Javadoc)
-		 * @see android.app.Fragment#onAttach(android.app.Activity)
-		 */
-		@Override
-		public void onAttach(Activity activity) {
-			// TODO Auto-generated method stub
-			Log.i("ListSongFragment", "onAttach");
-			super.onAttach(activity);
-		}
-
-		/* (non-Javadoc)
-		 * @see android.app.Fragment#onResume()
-		 */
-		@Override
-		public void onResume() {
-			Log.i("ListSongFragment", "onResume");
-			// TODO Auto-generated method stub
-			super.onResume();
-		}
-
-		/* (non-Javadoc)
-		 * @see android.app.Fragment#onStart()
-		 */
-		@Override
-		public void onStart() {
-			Log.i("ListSongFragment", "onStart");
-			// TODO Auto-generated method stub
-			super.onStart();
-		}
 		
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -242,14 +213,14 @@ public class ListSongFragment extends Fragment
 		@Override
 		public boolean onQueryTextSubmit(String arg0) 
 		{
-			Log.i("TAG", "onQueryTextSubmit");
+			//Log.i("TAG", "onQueryTextSubmit");
 			return false;
 		}
 		
 		@Override
 		public boolean onQueryTextChange(String newText) 
 		{
-			Log.i("onQueryTextChange", "" + newText);
+			//Log.i("onQueryTextChange", "" + newText);
 			adapter.myGetFilter().filter(newText);
 			return true;
 		}
