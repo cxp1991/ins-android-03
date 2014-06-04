@@ -10,6 +10,7 @@ import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Looper;
+import android.text.GetChars;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.myhorizontalscrollview.MyHorizontalScrollView;
+import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnItemAddListener;
 import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnItemRemoveListener;
 import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnThumbnailLongTouchListener;
 import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnTouchFinishListener;
@@ -30,6 +32,7 @@ import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnTouchFinishLi
 public class HomeFragment extends Fragment
 {
 	private MyHorizontalScrollView musicHrScrollView;
+	private MyHorizontalScrollView ringtoneHrScrollView;
 	
 	/*
 	 * Press 2 times to exit app.
@@ -46,20 +49,61 @@ public class HomeFragment extends Fragment
 	 * RingtoneList & MusicList
 	 * Using static to Save state of data after fragment commit times
 	 * */
-	private static SongList mSongArrayList = new SongList(AudioList.REPEAT_ALL); 
-	//private static RingtoneList mRingtoneArraylist = new RingtoneList(AudioList.REPEAT_ALL); 
+	private static SongList mSongList = new SongList(AudioList.REPEAT_ALL);; 
+	private static RingtoneList mRingtoneList = null; 
 	
 	/*
 	 *	Check if thread to switch to next item
 	 *	when 1 song is ended
 	 */
-	private static boolean isThreadSwitchIemRun = false;
+	private static boolean isThreadSwitchIemMusicRun = false;
+	
+	/*
+	 *	Check if thread to switch to next item
+	 *	when 1 ringtone is ended
+	 */
+	private static boolean isThreadSwitchIemRingtoneRun = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		Log.i("HomeFragment", "onCreate, savedInstanceState = " + savedInstanceState);
 		super.onCreate(null);
+
+		/*
+		 * For the first time we need to request all audio file in
+		 * device (just 1 time)
+		 */
+    	try 
+    	{
+    		//Log.i("HomeFragment", "IS_REQUEST_MUSIC_IN_DEVICE = " + IS_REQUEST_MUSIC_IN_DEVICE);
+    		/* Query to list all song in device */
+        	if (IS_REQUEST_MUSIC_IN_DEVICE == false)
+        	{
+    			Utils.getAllAudio(getActivity());
+        	}
+        	
+    		/* Add result to data container 
+        	 * Using thread to not block UI thread
+        	 * when add audio into our database
+        	 * */
+        	new Thread( new Runnable()
+        	{
+    			@Override
+                public void run()
+                {
+                	if (IS_REQUEST_MUSIC_IN_DEVICE == false)
+                	{
+                		Looper.prepare();
+                        Utils.insertQueryResultIntoSonglist();
+                        IS_REQUEST_MUSIC_IN_DEVICE = true;
+                        Looper.loop();
+                	}
+                }
+            }).start();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -95,18 +139,23 @@ public class HomeFragment extends Fragment
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+		
 		Log.i("HomeFragment", "onCreateView, savedInstanceState = " + savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_main, container, false);
         
-        //MyHorizontalScrollView ringtoneHrScrollView = (MyHorizontalScrollView) rootView.findViewById(R.id.ringtonescrollview);
-//        ringtoneHrScrollView.setOnTouchFinishListener(ringtoneOnTouchFinish);
-//        ringtoneHrScrollView.setOnThumbnailLongTouchListener(ringtoneLongTouchListener);
-//        ringtoneHrScrollView.setOnThumbnailAddListener(ringtoneThumbnailAddListener);
+        if (mRingtoneList == null)
+        	mRingtoneList = new RingtoneList(AudioList.REPEAT_ALL, getActivity());
+        
+        ringtoneHrScrollView = (MyHorizontalScrollView) rootView.findViewById(R.id.ringtonescrollview);
+        
+        ringtoneHrScrollView.setOnTouchFinishListener(ringtoneOnTouchFinishListener);
+        ringtoneHrScrollView.setOnThumbnailLongTouchListener(ringtoneOnLongTouchListener);
         
         musicHrScrollView = (MyHorizontalScrollView) rootView.findViewById(R.id.musicscrollview);
         musicHrScrollView.setOnTouchFinishListener(musicOnTouchFinish);
         musicHrScrollView.setOnItemRemoveListener(musicOnItemRemove);
         musicHrScrollView.setOnThumbnailLongTouchListener(musicOnLongTouchListener);
+        musicHrScrollView.setOnItemAddListener(itemAddListener);
         
         /*
          * Back press listener 
@@ -122,16 +171,6 @@ public class HomeFragment extends Fragment
 				
 				if( (keyCode == KeyEvent.KEYCODE_BACK) && (keyEvent.getAction() == KeyEvent.ACTION_DOWN))
 				{
-//					Log.e("onKey", "back press");
-//					keyBackPressCount --;
-//					if (keyBackPressCount  > 0)
-//					{
-//						Toast toast = Toast.makeText(getActivity(), "Press back again to exit", Toast.LENGTH_SHORT);
-//						toast.setGravity(Gravity.CENTER, 0, 0);
-//						toast.show();
-//						return true;
-//					}
-					
 					dialog.show(getFragmentManager(), null);
 				}
 				
@@ -143,7 +182,7 @@ public class HomeFragment extends Fragment
          * Fragment need it to add item to Actionbar 
          * */
         setHasOptionsMenu(true);
-		  
+        
         return rootView;
     }
 	
@@ -177,41 +216,6 @@ public class HomeFragment extends Fragment
 		super.onActivityCreated(savedInstanceState);
 		
 		Log.i("HomeFragment", "onActivityCreated, savedInstanceState = " + savedInstanceState);
-		
-		/*
-		 * For the first time we need to request all audio file in
-		 * device (just 1 time)
-		 */
-    	try 
-    	{
-    		//Log.i("HomeFragment", "IS_REQUEST_MUSIC_IN_DEVICE = " + IS_REQUEST_MUSIC_IN_DEVICE);
-    		/* Query to list all song in device */
-        	if (IS_REQUEST_MUSIC_IN_DEVICE == false)
-        	{
-    			Utils.getAllAudio(getActivity());
-        	}
-        	
-    		/* Add result to data container 
-        	 * Using thread to not block UI thread
-        	 * when add audio into our database
-        	 * */
-        	new Thread( new Runnable()
-        	{
-    			@Override
-                public void run()
-                {
-                	if (IS_REQUEST_MUSIC_IN_DEVICE == false)
-                	{
-                		Looper.prepare();
-                        Utils.insertQueryResultIntoSonglist();
-                        IS_REQUEST_MUSIC_IN_DEVICE = true;
-                        Looper.loop();
-                	}
-                }
-            }).start();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
     	
     	/*
     	 * Initialize MyHorizontalScrollView for Song
@@ -221,7 +225,7 @@ public class HomeFragment extends Fragment
     	 *  At fragment start up time, we need to re-initialize 
     	 *  item in MyHorizontalSrollView again. 
     	 * */
-		for (int i = 0; i < mSongArrayList.getmAudioList().size(); i++)
+		for (int i = 0; i < mSongList.getmAudioList().size(); i++)
 		{
 			musicHrScrollView.addThumbnailToParent();
 		}
@@ -234,7 +238,7 @@ public class HomeFragment extends Fragment
     		/* Add new selected item */
     		if (Utils.mListAllSong.get(i).ismSelected())
     		{
-    			mSongArrayList.addmAudio(Utils.mListAllSong.get(i));
+    			mSongList.addmAudio(Utils.mListAllSong.get(i));
     			musicHrScrollView.addThumbnailToParent();
     			
     			/* 
@@ -248,15 +252,14 @@ public class HomeFragment extends Fragment
     	/*
     	 * Scroll to previous playing index & highlight it
     	 */
-    	if (mSongArrayList.getCount() > 0)
+    	if (mSongList.getCount() > 0)
     	{
-    		musicHrScrollView.scrollToIndex(mSongArrayList.getmAudioPlaying());
-    		musicHrScrollView.highlightIdex(mSongArrayList.getmAudioPlaying());
+    		musicHrScrollView.highlightIdex(mSongList.getmAudioPlaying());
     		//Log.i("TAG", "center index = " + musicHrScrollView.getCenterIndex());
     		
-    		//Log.i("TAG", "mSongArrayList.getmState() = " + mSongArrayList.getmState());
-    		if (mSongArrayList.getmState() == AudioList.PAUSE)
-    			mSongArrayList.playMediaPlayer(mSongArrayList.getmAudioPlaying());
+    		//Log.i("TAG", "mSongList.getmState() = " + mSongList.getmState());
+    		if (mSongList.getmState() == AudioList.PAUSE)
+    			mSongList.playMediaPlayer(mSongList.getmAudioPlaying());
     	}
     	
     	/*
@@ -264,7 +267,7 @@ public class HomeFragment extends Fragment
     	 * Because we switch between many fragment
     	 * so we use condition to run thread or not
     	 */
-    	if (!isThreadSwitchIemRun)
+    	if (!isThreadSwitchIemMusicRun)
     	{
     		new Thread (new Runnable() 
         	{
@@ -273,20 +276,57 @@ public class HomeFragment extends Fragment
     			{
     				while(true)
     				{
-    					Log.i("TAG", "Switch next item, waiting ...");
-    					while (!mSongArrayList.isEndOnePlayback());
-    					Log.i("TAG", "Switch next item, done");
-    					Log.i("TAG", "current playing = " + mSongArrayList.getmAudioPlaying());
-    					musicHrScrollView.setCenterIndex(mSongArrayList.getmAudioPlaying());
-    					musicHrScrollView.updateLayout(mSongArrayList.getmAudioPlaying());
+    					Log.i("TAG", "Switch next Music item, waiting ...");
+    					while (!mSongList.isEndOnePlayback());
+    					Log.i("TAG", "Switch next musicitem, done");
+    					Log.i("TAG", "current music playing = " + mSongList.getmAudioPlaying());
+    					musicHrScrollView.setCenterIndex(mSongList.getmAudioPlaying());
+    					musicHrScrollView.updateLayout(mSongList.getmAudioPlaying());
     					
-    					mSongArrayList.setEndOnePlayback(false);
+    					mSongList.setEndOnePlayback(false);
     				}
     			}
     		}).start();
     		
-    		isThreadSwitchIemRun = true;
+    		isThreadSwitchIemMusicRun = true;
     	}
+    	
+    	/*
+    	 * Switch next when 1 end of playback
+    	 * Because we switch between many fragment
+    	 * so we use condition to run thread or not
+    	 */
+    	if (!isThreadSwitchIemRingtoneRun)
+    	{
+    		new Thread (new Runnable() 
+        	{
+    			@Override
+    			public void run() 
+    			{
+    				while(true)
+    				{
+    					Log.i("TAG", "Switch next Ringtone item, waiting ...");
+    					Log.i("TAG", "mRingtoneList.isRingtoneItemEnd() = " + mRingtoneList.isRingtoneItemEnd());
+    					while (!mRingtoneList.isRingtoneItemEnd());
+    					Log.i("TAG", "Switch next ringtone item, done");
+    					Log.i("TAG", "current ringtone playing = " + mRingtoneList.getmAudioPlaying());
+    					ringtoneHrScrollView.setCenterIndex(mRingtoneList.getmAudioPlaying());
+    					ringtoneHrScrollView.updateLayout(mRingtoneList.getmAudioPlaying());
+    					
+    					mRingtoneList.setRingtoneItemEnd(false);
+    				}
+    			}
+    		}).start();
+    		
+    		isThreadSwitchIemRingtoneRun = true;
+    	}
+    	
+    	/*
+    	 * Ringtone HorizontalScrollView
+    	 * Return to old playing
+    	 */
+    	ringtoneHrScrollView.unHighlightIdex(1);
+    	ringtoneHrScrollView.highlightIdex(mRingtoneList.getmAudioPlaying());
     	
 	}
 	
@@ -324,8 +364,8 @@ public class HomeFragment extends Fragment
 	public void onDestroy() 
 	{
 		Log.i("TAG", "OnDestroy");
-		mSongArrayList.releasePlayer();
-		//mRingtoneArraylist.pauseMediaPlayer();
+		mSongList.releasePlayer();
+		mRingtoneList.pauseMediaPlayer();
 		super.onDestroy();
 	}
 
@@ -334,7 +374,7 @@ public class HomeFragment extends Fragment
 		@Override
 		public void onTouchFinish(View parrent, int centerIndex) {
 			//Log.d("musicOnTouchFinish", "centerIndex = " + centerIndex);
-			//Log.d("musicOnTouchFinish", "current playing = " + mSongArrayList.getmAudioPlaying());
+			//Log.d("musicOnTouchFinish", "current playing = " + mSongList.getmAudioPlaying());
 			Log.i("TAG", "onTouchFinish");
 			
 			if (centerIndex != musicHrScrollView.getmLongTouchItemIndex())
@@ -353,13 +393,65 @@ public class HomeFragment extends Fragment
 						}
 					});
 					
-					mSongArrayList.setmPlayMode(AudioList.PLAY_ALL);
+					mSongList.setmPlayMode(AudioList.PLAY_ALL);
 				}
-				if (centerIndex != mSongArrayList.getmAudioPlaying())
-					mSongArrayList.playMediaPlayer(centerIndex);
+				
+				/*
+				 * 1. Don't play again the song is playing
+				 * Exception: If playlist is added first time
+				 * centerIndex = mAudioPlaying = 1
+				 */
+				if (centerIndex != mSongList.getmAudioPlaying())
+				{
+					mSongList.playMediaPlayer(centerIndex);
+				}
 			}
 		}
 	};
+	
+	OnTouchFinishListener ringtoneOnTouchFinishListener = new OnTouchFinishListener() {
+		
+		@Override
+		public void onTouchFinish(View parrent, int centerIndex) {
+			if (centerIndex != ringtoneHrScrollView.getmLongTouchItemIndex())
+			{
+				/* Has longtouch Item */
+				if(parrent != null)
+				{
+					Log.i("TAG", "onTouchFinish has long touch item");
+					final ImageView img =  (ImageView) parrent.findViewById(R.id.thumbnailImage);
+					
+					getActivity().runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							img.setBackgroundResource(R.drawable.image_transparent_border);
+						}
+					});
+					
+					mRingtoneList.setmPlayMode(AudioList.PLAY_ALL);
+				}
+				
+				if (centerIndex != mRingtoneList.getmAudioPlaying())
+					mRingtoneList.playMediaPlayer(mRingtoneList.getAudio(centerIndex - 1).getmResSongId(), 
+							getActivity().getBaseContext(), centerIndex);
+			}
+		}
+	};
+	
+	OnThumbnailLongTouchListener ringtoneOnLongTouchListener = new OnThumbnailLongTouchListener() {
+		
+		@Override
+		public void onMyLongTouch(View view, int centerIndex) {
+			//FrameLayout itemLayout = (FrameLayout) view;
+			Log.d("TAG", "OnThumbnailLongTouchListener");
+			ImageView thumbnail = (ImageView) view.findViewById(R.id.thumbnailImage);
+			thumbnail.setBackgroundResource(R.drawable.image_border);
+			
+			mRingtoneList.setmPlayMode(AudioList.REPEAT_ONE);
+			mRingtoneList.setLooping(true);
+		}
+	}; 
 	
 	/**
 	 * Music item is removed out of list
@@ -370,30 +462,30 @@ public class HomeFragment extends Fragment
 		public void onItemRemove(int itemRemoved) 
 		{
 			Log.i("Remove song list", "Item removed = " + itemRemoved);
-			Log.i("Remove song list", "List size = " + mSongArrayList.getCount());
+			Log.i("Remove song list", "List size = " + mSongList.getCount());
 			
-			mSongArrayList.getmAudioList().remove(itemRemoved - 1);
+			mSongList.getmAudioList().remove(itemRemoved - 1);
 			
 			/*
 			 * Removed song is also the song is playing   
 			 */
-			if (itemRemoved == mSongArrayList.getmAudioPlaying())
+			if (itemRemoved == mSongList.getmAudioPlaying())
 			{
 				/*
 				 * 1 item remain, stop play
 				 */
-				if (mSongArrayList.getCount() == 0)
+				if (mSongList.getCount() == 0)
 				{
-					mSongArrayList.resetPlayer();
+					mSongList.pauseMediaPlayer();
 					return;
 				}
 		
 				/*
 				 * Last item, play prevoius item
 				 */
-				if (itemRemoved > mSongArrayList.getCount())
+				if (itemRemoved > mSongList.getCount())
 				{
-					mSongArrayList.playMediaPlayer(itemRemoved - 1);
+					mSongList.playMediaPlayer(itemRemoved - 1);
 				}
 				
 				/*
@@ -401,7 +493,7 @@ public class HomeFragment extends Fragment
 				 */
 				else
 				{
-					mSongArrayList.playMediaPlayer(itemRemoved);
+					mSongList.playMediaPlayer(itemRemoved);
 				}
 			}
 			
@@ -415,12 +507,13 @@ public class HomeFragment extends Fragment
 				 * It happens only when remove song has index less than curren playing song
 				 * */
 				
-				if (itemRemoved < mSongArrayList.getmAudioPlaying())
-					mSongArrayList.setmAudioPlaying(mSongArrayList.getmAudioPlaying() - 1);
+				if (itemRemoved < mSongList.getmAudioPlaying())
+					mSongList.setmAudioPlaying(mSongList.getmAudioPlaying() - 1);
 				
 			}
-			
+			musicHrScrollView.highlightIdex(mSongList.getmAudioPlaying());
 		}
+		
 	};
 
 	OnThumbnailLongTouchListener musicOnLongTouchListener = new OnThumbnailLongTouchListener() {
@@ -432,9 +525,28 @@ public class HomeFragment extends Fragment
 			ImageView thumbnail = (ImageView) view.findViewById(R.id.thumbnailImage);
 			thumbnail.setBackgroundResource(R.drawable.image_border);
 			
-			mSongArrayList.setmPlayMode(AudioList.REPEAT_ONE);
-			mSongArrayList.setLooping(true);
+			mSongList.setmPlayMode(AudioList.REPEAT_ONE);
+			mSongList.setLooping(true);
 			
 		}
 	};
+
+	OnItemAddListener itemAddListener = new OnItemAddListener() {
+		
+		@Override
+		public void onItemnailAdd(int numberThumnail) {
+			Log.i("TAG", "item music added");
+			/*
+			 * Null songlist
+			 */
+			if (mSongList.getmState() == AudioList.PAUSE)
+			{
+				mSongList.playMediaPlayer(1);
+			}
+		}
+	};
+	
+	/**
+	 * Music volume controller
+	 */
 }

@@ -10,6 +10,7 @@ public class MySong
 	private int    mSongDurationSecond;
 	private Bitmap mThumbnail;
 	private boolean mSelected = false;
+	private int mResSongId;
 	
 	/**
 	 * Constructor 
@@ -31,6 +32,13 @@ public class MySong
 		this.mSongDurationSecond = songDurationSecond;
 		this.mSongPath = songPath;
 		this.mThumbnail = thumbnail;
+	}
+	
+	public MySong(String songName, Bitmap thumbnail, int resID)
+	{
+		this.mSongName = songName;
+		this.mThumbnail = thumbnail;
+		this.mResSongId = resID;
 	}
 
 	/**
@@ -81,6 +89,14 @@ public class MySong
 	public void setmSelected(boolean mSelected) {
 		this.mSelected = mSelected;
 	}
+
+	/**
+	 * @return the mResSongId
+	 */
+	public int getmResSongId() {
+		return mResSongId;
+	}
+
 }
 
 

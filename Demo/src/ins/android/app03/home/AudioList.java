@@ -2,6 +2,7 @@ package ins.android.app03.home;
 
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
@@ -26,29 +27,35 @@ public class AudioList {
 	private int mAudioPlaying = 1;
 	private boolean mIsEnableEditList;
 	private MediaPlayer mMediaPlayer;
+
 	private boolean isEndOnePlayback = false;
 	
 	public AudioList(int playingMode, boolean isEnableEditList) 
 	{
 		this.setmPlayMode(playingMode);
 		this.setmIsEnableEditList(isEnableEditList);
-		
+		this.mMediaPlayer = new MediaPlayer(); 
+		this.setmState(PAUSE);
 		initializeMediaPlayer();
 	}
 	
+	public AudioList(int playingMode) 
+	{
+		this.setmPlayMode(playingMode);
+		this.setmState(PAUSE);
+	}
+
 	/**
 	 * Initialize Mediaplayer
 	 */
-	private void initializeMediaPlayer() 
+	public void initializeMediaPlayer() 
 	{
-		this.mMediaPlayer = new MediaPlayer(); 
-		this.setmState(PAUSE);
-		this.mPlayMode = REPEAT_ALL;
+		Log.i("TAG", "Audiolist constructor");
 		
 		/*
 		 * Configure when end of 1 playback
 		 */
-		mMediaPlayer.setOnCompletionListener(new OnCompletionListener() 
+		this.mMediaPlayer.setOnCompletionListener(new OnCompletionListener() 
 		{
 			@Override
 			public void onCompletion(MediaPlayer mp) {
@@ -129,6 +136,7 @@ public class AudioList {
 	public MySong getAudio(int index) {
 		
 		/* Invalid request */
+		Log.d("TAG", "mAudioList.size() = " + mAudioList.size() + ", index = " + index );
 		if(mAudioList.size() == 0 || index < 0)
 			return null;
 		
@@ -140,11 +148,11 @@ public class AudioList {
 	 * @param mAudioSongList the mAudioSongList to set
 	 */
 	public void addmAudio(MySong audio) {
-		if (ismIsEnableEditList())
+		//if (ismIsEnableEditList())
 			this.mAudioList.add(audio);
-		else {
-			Log.w("setmAudioList", "Could not edit this List");
-		}
+		//else {
+		//	Log.w("setmAudioList", "Could not edit this List");
+		//}
 	}
 
 
@@ -295,4 +303,17 @@ public class AudioList {
 		this.isEndOnePlayback = isEndOnePlayback;
 	}
 	
+	/**
+	 * @return the mMediaPlayer
+	 */
+	public MediaPlayer getmMediaPlayer() {
+		return mMediaPlayer;
+	}
+	
+	/**
+	 * @param mMediaPlayer the mMediaPlayer to set
+	 */
+	public void setmMediaPlayer(MediaPlayer mMediaPlayer) {
+		this.mMediaPlayer = mMediaPlayer;
+	}
 }

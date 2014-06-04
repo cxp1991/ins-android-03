@@ -94,6 +94,7 @@ public class Main extends Activity
 			// on first time display view for first nav item
 			displayView(0);
 		}
+		
 				
 	}
 	

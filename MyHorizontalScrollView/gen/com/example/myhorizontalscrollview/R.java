@@ -33,6 +33,14 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static int Thumbnail_width=0x7f010001;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static int isEditable=0x7f010005;
         /**  0 = top, 1 = middle, 2 = bottom 
          <p>Must be an integer value, such as "<code>100</code>".
 <p>This may also be a reference to a resource (in the form
@@ -41,7 +49,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static int layout_location=0x7f010005;
+        public static int layout_location=0x7f010006;
         /** <p>Must be an integer value, such as "<code>100</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -132,6 +140,7 @@ containing a value of this type.
            <tr><td><code>{@link #numberThumbnail_NormalThumbnailImage com.example.myhorizontalscrollview:NormalThumbnailImage}</code></td><td></td></tr>
            <tr><td><code>{@link #numberThumbnail_Thumbnail_height com.example.myhorizontalscrollview:Thumbnail_height}</code></td><td></td></tr>
            <tr><td><code>{@link #numberThumbnail_Thumbnail_width com.example.myhorizontalscrollview:Thumbnail_width}</code></td><td></td></tr>
+           <tr><td><code>{@link #numberThumbnail_isEditable com.example.myhorizontalscrollview:isEditable}</code></td><td></td></tr>
            <tr><td><code>{@link #numberThumbnail_layout_location com.example.myhorizontalscrollview:layout_location}</code></td><td> 0 = top, 1 = middle, 2 = bottom </td></tr>
            <tr><td><code>{@link #numberThumbnail_numberThumbnail com.example.myhorizontalscrollview:numberThumbnail}</code></td><td></td></tr>
            </table>
@@ -139,12 +148,13 @@ containing a value of this type.
            @see #numberThumbnail_NormalThumbnailImage
            @see #numberThumbnail_Thumbnail_height
            @see #numberThumbnail_Thumbnail_width
+           @see #numberThumbnail_isEditable
            @see #numberThumbnail_layout_location
            @see #numberThumbnail_numberThumbnail
          */
         public static final int[] numberThumbnail = {
             0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003,
-            0x7f010004, 0x7f010005
+            0x7f010004, 0x7f010005, 0x7f010006
         };
         /**
           <p>This symbol is the offset where the {@link com.example.myhorizontalscrollview.R.attr#HighlightThumbnailImage}
@@ -195,6 +205,20 @@ containing a value of this type.
         */
         public static final int numberThumbnail_Thumbnail_width = 1;
         /**
+          <p>This symbol is the offset where the {@link com.example.myhorizontalscrollview.R.attr#isEditable}
+          attribute's value can be found in the {@link #numberThumbnail} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.example.myhorizontalscrollview:isEditable
+        */
+        public static final int numberThumbnail_isEditable = 5;
+        /**
           <p>
           @attr description
            0 = top, 1 = middle, 2 = bottom 
@@ -209,7 +233,7 @@ containing a value of this type.
           <p>This is a private symbol.
           @attr name com.example.myhorizontalscrollview:layout_location
         */
-        public static final int numberThumbnail_layout_location = 5;
+        public static final int numberThumbnail_layout_location = 6;
         /**
           <p>This symbol is the offset where the {@link com.example.myhorizontalscrollview.R.attr#numberThumbnail}
           attribute's value can be found in the {@link #numberThumbnail} array.

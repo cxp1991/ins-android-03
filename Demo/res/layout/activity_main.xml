@@ -7,14 +7,16 @@
         android:id="@+id/ringtonescrollview"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        custom:numberThumbnail="5"
+        custom:numberThumbnail="8"
 		custom:Thumbnail_width="90"
 		custom:Thumbnail_height="90"
 		custom:NormalThumbnailImage="@drawable/songthumbnaildark"
         custom:HighlightThumbnailImage="@drawable/songthumbnailbright"
         custom:layout_location="0"
+        custom:isEditable="false"
         android:scrollbars="none"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        >
     </com.example.myhorizontalscrollview.MyHorizontalScrollView>
     
     <com.example.myhorizontalscrollview.MyHorizontalScrollView 

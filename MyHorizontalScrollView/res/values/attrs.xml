@@ -6,6 +6,7 @@
         <attr name="Thumbnail_height" format="integer"/>
         <attr name="HighlightThumbnailImage" format="reference"/>
         <attr name="NormalThumbnailImage" format="reference"/>
+         <attr name="isEditable" format="boolean"/>
         
         <!-- 0 = top, 1 = middle, 2 = bottom -->
         <attr name="layout_location" format="integer"/>

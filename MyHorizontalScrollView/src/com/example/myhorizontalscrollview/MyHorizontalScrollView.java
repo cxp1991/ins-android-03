@@ -47,6 +47,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	private FrameLayout itemLayout;
 	private LinearLayout topLnLayout;
 	private FrameLayout addItemLayout;
+	private boolean isEditable;
 	private int centerIndex;
 	private float initialLocation, newLocation;
 	private long intinialTime, newTime;
@@ -114,6 +115,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
             normalThumbnailDrawable = a.getDrawable(R.styleable.numberThumbnail_NormalThumbnailImage);
             hilighLightThumbnailDrawable = a.getDrawable(R.styleable.numberThumbnail_HighlightThumbnailImage);
             layoutLocation = a.getInt(R.styleable.numberThumbnail_layout_location, 1); // Default is middle
+            isEditable = a.getBoolean(R.styleable.numberThumbnail_isEditable, true);
         } finally {
             if (a != null) {
                 a.recycle(); // ensure this is always called
@@ -450,7 +452,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		
 		try
 		{
-			//this.scrollToIndex(index);
+			this.scrollToIndex(index);
 			Log.d("TAG", "highlightIdex = " + index);
 			/* Then, highlight @centerIndex item */
 			ImageView imgView = (ImageView) topLnLayout.getChildAt(index).findViewById(R.id.thumbnailImage);
@@ -459,6 +461,23 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		catch(Exception e)
 		{
 			Log.e("TAG", "highlightIdex exaption");
+		}
+	}
+	
+	/**
+	 * UnHighlight item at @index
+	 */
+	public void unHighlightIdex(int index)
+	{
+		try
+		{
+			/* Then, highlight @centerIndex item */
+			ImageView imgView = (ImageView) topLnLayout.getChildAt(index).findViewById(R.id.thumbnailImage);
+			imgView.setImageDrawable(normalThumbnailDrawable);
+		}
+		catch(Exception e)
+		{
+			Log.e("TAG", "unhighlightIdex exaption");
 		}
 	}
 	
@@ -579,6 +598,9 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	 */ 
 	public void addThumbnailToParent() 
 	{
+		if (!isEditable)
+			return;
+		
 		Log.i("TAG", "addThumbnailToParent");
 		/* Insert thumbnail at the end */ 
 		itemLayout = (FrameLayout) inflater.inflate(R.layout.item, null, false);
@@ -602,6 +624,10 @@ public class MyHorizontalScrollView extends HorizontalScrollView
             }
         }
         
+        if (itemAddListener != null)
+        {
+        	this.itemAddListener.onItemnailAdd(numberThumbnail);
+        }
         /* 
          * Scroll to end 
          * Using animation
@@ -620,7 +646,9 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	 */
 	private void removeThumbnailFromParent (final View v, final int action, final int index)
 	{
-		this.mItemRemovedIndex = index;
+		if (!isEditable)
+			return;
+		
 		/*
 		 * Framelayout contains item will be removed
 		 */
@@ -706,6 +734,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 							numberThumbnail--;
 							Log.i ("Remove Item", "item = " + index);
 							
+							mItemRemovedIndex = index;
 							/* Auto call LayoutTranslation listener */
 							
 							/* Enale scroll */
@@ -735,6 +764,8 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	/**
 	 * LayoutTranslation Listener for 2 event:
 	 * Add item & remove item
+	 * Don't updatye layout here for bugs in fast removing
+	 * Update layout in onItemAddListener() instead
 	 */
 	LayoutTransition.TransitionListener OnLayoutTranslation = new TransitionListener() {
 
@@ -753,7 +784,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		@Override
 		public void endTransition(LayoutTransition transition, ViewGroup container,
 				View view, int transitionType) {
-			
+		
 			/* End dispear animation */
 			if (transitionType == LayoutTransition.CHANGE_DISAPPEARING
 					&& container.getId() == instance.getId())
@@ -775,14 +806,14 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		        
 	        	if (mItemRemovedIndex < centerIndex)
 	        	{
-	        		Log.d("TAG", "Remove item: item before center item");
+	        		Log.d("REMOVING", "Remove item: item before center item");
 	        		centerIndex --;
-	        		updateLayout(centerIndex);
+	        		//updateLayout(centerIndex);
 	        	}
 		        	/* Item removed's index = centerIndex */
 		            if (mItemRemovedIndex == centerIndex)
 		         	{
-		         		Log.d("TAG", "Remove item: item is center item");
+		         		Log.d("REMOVING", "Remove item: item is center item");
 		         		
 		         		/* 1 item remain */
 		         		if (numberThumbnail == 0)
@@ -793,28 +824,31 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		         		/* The last item was removed */
 		         		else if (centerIndex > numberThumbnail)
 		         		{
-		         			Log.d("TAG", "Remove item: Last item");
+		         			Log.d("REMOVING", "Remove item: Last item");
 				        	centerIndex --;
-				        	updateLayout(centerIndex);
+				        	//updateLayout(centerIndex);
 		         		}
 		         		else
-		         			updateLayout(centerIndex);
+		         			//updateLayout(centerIndex);
 			         		
 		         	}
 		         	else if (mItemRemovedIndex > centerIndex)
 		         	{
 		         		// NOTHING NEED TO DO
-		         		Log.d("TAG", "Remove item: item is after center item");
+		         		Log.d("REMOVING", "mItemRemovedIndex = " + mItemRemovedIndex 
+		         				+ ", centerIndex = " + centerIndex);
+		         		
+		         		Log.d("REMOVING", "Remove item: item is after center item");
 		         	}
 		         	else
 			        {
-			        	Log.d("TAG", "Remove item: Hmm, don't update layout" +
+			        	Log.d("REMOVING", "Remove item: Hmm, don't update layout" +
 			        			"Check below information. It's out of my guess");
-			        	Log.d("TAG", "center index = " + centerIndex + ", numberthumbnail = " + numberThumbnail);
+			        	Log.d("REMOVING", "center index = " + centerIndex + ", numberthumbnail = " + numberThumbnail);
 			        }
 					        
-			    	Log.i ("Remove Item", "centerIndex = " + centerIndex);
-			        Log.i ("TAG", "Stop Dispear translation");
+			    	Log.i ("REMOVING", "centerIndex = " + centerIndex);
+			        Log.i ("REMOVING", "Stop Dispear translation");
 		        
 			}
 			
@@ -879,8 +913,8 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 						
 						@Override
 						public void onAnimationEnd(Animator animation) {
-								Log.i ("updateLayout", "New center index = " + index);
-								Log.i ("updateLayout", "numberThumbnail = " + numberThumbnail);
+								Log.i ("REMOVING", "New center index = " + index);
+								Log.i ("REMOVING", "numberThumbnail = " + numberThumbnail);
 								ImageView imgView = null;
 								
 								try 
@@ -903,7 +937,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 								catch (NullPointerException e)
 								{
 								}
-								Log.i("updateLayout", "Update Layout finish");
+								Log.i("REMOVING", "Update Layout finish");
 						}
 						
 						@Override
