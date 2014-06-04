@@ -620,7 +620,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
         	for (int i = 1; i < numberThumbnail + 1; i++)
             {
             	setThumbnailTitle(i,"" + i);
-            	setThumbnailImageResourceFromDrawable(i, normalThumbnailDrawable);
+            	//setThumbnailImageResourceFromDrawable(i, normalThumbnailDrawable);
             }
         }
         
@@ -787,7 +787,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		
 			/* End dispear animation */
 			if (transitionType == LayoutTransition.CHANGE_DISAPPEARING
-					&& container.getId() == instance.getId())
+					&& container.getId() == instance.getId() && numberThumbnail > 0)
 			{
 				/* Set all title again */ 
 		        if (numberThumbnail >= 1)
@@ -828,7 +828,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 				        	centerIndex --;
 				        	//updateLayout(centerIndex);
 		         		}
-		         		else
+		         		//else
 		         			//updateLayout(centerIndex);
 			         		
 		         	}
@@ -928,7 +928,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 									}
 									
 									/* Then, highlight @centerIndex item */
-									imgView = (ImageView) topLnLayout.getChildAt(centerIndex).findViewById(R.id.thumbnailImage);
+									imgView = (ImageView) topLnLayout.getChildAt(index).findViewById(R.id.thumbnailImage);
 									if (imgView != null) // fast removing
 									{
 										imgView.setImageDrawable(hilighLightThumbnailDrawable);
@@ -1203,5 +1203,25 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 			return this.distanceFromCenter;
 		}
 	}
+	
+	/**
+	 * @return the numberThumbnail
+	 */
+	public int getNumberThumbnail() {
+		return numberThumbnail;
+	}
 
+	/**
+	 * @param numberThumbnail the numberThumbnail to set
+	 */
+	public void setNumberThumbnail(int numberThumbnail) {
+		this.numberThumbnail = numberThumbnail;
+	}
+	
+	/**
+	 * @return the topLnLayout
+	 */
+	public LinearLayout getTopLnLayout() {
+		return topLnLayout;
+	}
 }

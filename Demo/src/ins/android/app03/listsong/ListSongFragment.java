@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
@@ -27,8 +28,8 @@ public class ListSongFragment extends Fragment
 	 private SearchView mSearchView;
 	 private ListView lv;
 	 private  AllSongAdapter adapter;
-
-	 /* (non-Javadoc)
+	 private static int numberItemIsChecked = 0;
+		/* (non-Javadoc)
 		 * @see android.app.Fragment#onAttach(android.app.Activity)
 		 */
 		@Override
@@ -61,10 +62,8 @@ public class ListSongFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
-		  while (!HomeFragment.IS_REQUEST_MUSIC_IN_DEVICE);
-		  
 		  Log.i("ListSongFragment", "oncreateView");
+		  while (!HomeFragment.IS_REQUEST_MUSIC_IN_DEVICE);
 		  final View rootView = inflater.inflate(R.layout.listviewlayout, container, false);
 		  
 		  adapter = new AllSongAdapter(getActivity(), Utils.mListAllSong, getActivity());
@@ -101,9 +100,13 @@ public class ListSongFragment extends Fragment
 			CheckBox checkbox = (CheckBox) viewItem.findViewById(R.id.checkbox);
 			
 			if (checkbox.isChecked())
+			{
 				checkbox.setChecked(false);
+			}
 			else
+			{
 				checkbox.setChecked(true);
+			}
 		}
 	};
 	
@@ -214,6 +217,20 @@ public class ListSongFragment extends Fragment
 		
 		adapter.notifyDataSetChanged();
 		
+	}
+
+	/**
+	 * @return the numberItemIsChecked
+	 */
+	public static int getNumberItemIsChecked() {
+		return numberItemIsChecked;
+	}
+	
+	 /**
+	 * @param numberItemIsChecked the numberItemIsChecked to set
+	 */
+	public static void setNumberItemIsChecked(int numberItemIsChecked) {
+		ListSongFragment.numberItemIsChecked = numberItemIsChecked;
 	}
 
 	/**

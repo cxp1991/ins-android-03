@@ -10,7 +10,7 @@ android:id="@+id/itemFrLayout">
 		android:layout_height="match_parent"
 		android:adjustViewBounds="true"
 		android:padding="5dp"
-		android:src="@drawable/add_1"
+		android:src="@drawable/songthumbnaildark"
 		android:layout_gravity="bottom"
 	/> 
 

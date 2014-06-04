@@ -1,4 +1,5 @@
 package ins.android.app03.main;
+import ins.android.app03.home.AudioList;
 import ins.android.app03.home.HomeFragment;
 import ins.android.app03.home.R;
 import ins.android.app03.listsong.ListSongFragment;
@@ -12,13 +13,12 @@ import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -48,6 +48,8 @@ public class Main extends Activity
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.main);
 		
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -95,7 +97,6 @@ public class Main extends Activity
 			displayView(0);
 		}
 		
-				
 	}
 	
 	
@@ -219,6 +220,18 @@ public class Main extends Activity
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+
+	/**
+	 * Stop 2 players
+	 */
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		HomeFragment.mRingtoneList.pauseMediaPlayer();
+		HomeFragment.mSongList.pauseMediaPlayer();
 	}
 
 	

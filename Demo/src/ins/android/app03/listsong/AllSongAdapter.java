@@ -180,6 +180,9 @@ public class AllSongAdapter extends BaseAdapter
 					// Here we get the position that we have set for the checkbox using setTag.
 					int getPosition = (Integer) buttonView.getTag();  
 					// Set the value of checkbox to maintain its state
+					
+					if (buttonView.isChecked()) ListSongFragment.setNumberItemIsChecked(ListSongFragment.getNumberItemIsChecked() + 1);
+					else	ListSongFragment.setNumberItemIsChecked(ListSongFragment.getNumberItemIsChecked() - 1);
 					Utils.mListAllSong.get(getPosition).setmSelected(buttonView.isChecked()); 
 					
 						mActivity.runOnUiThread(new Runnable() {

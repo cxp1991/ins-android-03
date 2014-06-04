@@ -24,7 +24,7 @@ public class AudioList {
 
 	private int mPlayMode = SINGLE;
 	private int mState = PAUSE;
-	private int mAudioPlaying = 1;
+	private int mAudioPlaying = 0;
 	private boolean mIsEnableEditList;
 	private MediaPlayer mMediaPlayer;
 
@@ -59,7 +59,8 @@ public class AudioList {
 		{
 			@Override
 			public void onCompletion(MediaPlayer mp) {
-				Log.i("TAG", "setOnCompletionListener");
+				Log.i("onCompletion", "setOnCompletionListener");
+				Log.i("onCompletion", "Play mode = " + getmPlayMode());
 				switch (getmPlayMode()) {
 				
 				case SINGLE:
@@ -75,14 +76,20 @@ public class AudioList {
 					/*
 					 * End of playlist
 					 */
+					Log.i("onCompletion", "Audio plauing index = " + getmAudioPlaying());
+					Log.i("onCompletion", "Count = " + getCount());
 					if(getmAudioPlaying() == getCount())
+					{
+						Log.i("onCompletion", "End of playlist");
 						playMediaPlayer(1);
+					}
 					
 					/*
 					 * Normal, switch to next song
 					 */
 					else
 					{
+						Log.i("onCompletion", "Not end of playlist");
 						playMediaPlayer(getmAudioPlaying() + 1);
 					}
 					

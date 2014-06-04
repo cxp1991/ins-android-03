@@ -71,11 +71,11 @@ containing a value of this type.
     }
     public static final class drawable {
         public static int add=0x7f020000;
-        public static int add_1=0x7f020001;
-        public static int add_2=0x7f020002;
-        public static int balloon_dark=0x7f020003;
-        public static int balloon_light=0x7f020004;
-        public static int ic_launcher=0x7f020005;
+        public static int add_2=0x7f020001;
+        public static int balloon_dark=0x7f020002;
+        public static int balloon_light=0x7f020003;
+        public static int ic_launcher=0x7f020004;
+        public static int songthumbnaildark=0x7f020005;
     }
     public static final class id {
         public static int action_settings=0x7f080007;

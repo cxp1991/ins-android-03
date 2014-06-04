@@ -81,27 +81,26 @@ containing a value of this type.
     }
     public static final class drawable {
         public static final int add=0x7f020000;
-        public static final int add_1=0x7f020001;
-        public static final int add_2=0x7f020002;
-        public static final int background_item=0x7f020003;
-        public static final int balloon_dark=0x7f020004;
-        public static final int balloon_light=0x7f020005;
-        public static final int ic_action_accept=0x7f020006;
-        public static final int ic_action_overflow=0x7f020007;
-        public static final int ic_communities=0x7f020008;
-        public static final int ic_drawer=0x7f020009;
-        public static final int ic_home=0x7f02000a;
-        public static final int ic_launcher=0x7f02000b;
-        public static final int image_border=0x7f02000c;
-        public static final int image_transparent_border=0x7f02000d;
-        public static final int item_select=0x7f02000e;
-        public static final int listview_bg=0x7f02000f;
-        public static final int music=0x7f020010;
-        public static final int music01=0x7f020011;
-        public static final int music_icon_01=0x7f020012;
-        public static final int songthumbnail=0x7f020013;
-        public static final int songthumbnailbright=0x7f020014;
-        public static final int songthumbnaildark=0x7f020015;
+        public static final int add_2=0x7f020001;
+        public static final int background_item=0x7f020002;
+        public static final int balloon_dark=0x7f020003;
+        public static final int balloon_light=0x7f020004;
+        public static final int ic_action_accept=0x7f020005;
+        public static final int ic_action_overflow=0x7f020006;
+        public static final int ic_communities=0x7f020007;
+        public static final int ic_drawer=0x7f020008;
+        public static final int ic_home=0x7f020009;
+        public static final int ic_launcher=0x7f02000a;
+        public static final int image_border=0x7f02000b;
+        public static final int image_transparent_border=0x7f02000c;
+        public static final int item_select=0x7f02000d;
+        public static final int listview_bg=0x7f02000e;
+        public static final int music=0x7f02000f;
+        public static final int music01=0x7f020010;
+        public static final int music_icon_01=0x7f020011;
+        public static final int songthumbnail=0x7f020012;
+        public static final int songthumbnailbright=0x7f020013;
+        public static final int songthumbnaildark=0x7f020014;
     }
     public static final class id {
         public static final int action_add_song=0x7f0a0018;
@@ -122,7 +121,6 @@ containing a value of this type.
         public static final int headerfooterlayout=0x7f0a0008;
         public static final int hrScrollview=0x7f0a0003;
         public static final int icondrawer=0x7f0a0006;
-        public static final int imageView1=0x7f0a0002;
         public static final int itemFrLayout=0x7f0a0009;
         public static final int left_drawer=0x7f0a0016;
         public static final int lnthumbnail=0x7f0a000c;
@@ -137,6 +135,7 @@ containing a value of this type.
         public static final int tv=0x7f0a000b;
         public static final int tvartist=0x7f0a0012;
         public static final int tvduration=0x7f0a000f;
+        public static final int tvloading=0x7f0a0002;
         public static final int tvsongname=0x7f0a0011;
     }
     public static final class layout {

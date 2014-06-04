@@ -8,7 +8,7 @@
 		android:id="@+id/additemImgV"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:src="@drawable/add_2"
+		android:src="@drawable/songthumbnaildark"
 		android:adjustViewBounds="true"
 		android:layout_gravity="bottom"
 		android:padding="15dp"
