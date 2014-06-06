@@ -48,7 +48,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	private LinearLayout topLnLayout;
 	private FrameLayout addItemLayout;
 	private boolean isEditable;
-	private int centerIndex;
+	private int centerIndex = -1;
 	private float initialLocation, newLocation;
 	private long intinialTime, newTime;
 	private MyHorizontalScrollView instance;

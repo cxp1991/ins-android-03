@@ -151,26 +151,11 @@ public class Main extends Activity
 		Fragment fragment = null;
 		final FragmentTransaction ft = getFragmentManager().beginTransaction(); 
 		
-		/*
-		 * When press back button from listsongfragment, I want to come back to homefragment
-		 * insteads of exit program
-		 * */
-		Fragment mListSongFragment = (Fragment)getFragmentManager().findFragmentByTag("LIST_SONG_FRAGMENT");
 		
 		switch (position) {
 		case 0:
 			fragment = new HomeFragment();
-			/*
-			 * If current fragment is HomeFragment then save current app state
-			 * into backstack
-			 * */
-			if (mListSongFragment != null)
-			{
-				FragmentManager fragmentManager = getFragmentManager();
-				fragmentManager.popBackStack();
-			}
-				
-			
+			ft.addToBackStack(null);
 			ft.replace(R.id.content_frame, fragment, "HOME_FRAGMENT").commit();
 			break;
 		case 1:
@@ -229,7 +214,8 @@ public class Main extends Activity
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
+		HomeFragment.mRingtoneList.setmState(AudioList.PAUSE);
+		HomeFragment.mSongList.setmState(AudioList.PAUSE);
 		HomeFragment.mRingtoneList.pauseMediaPlayer();
 		HomeFragment.mSongList.pauseMediaPlayer();
 	}

@@ -40,5 +40,12 @@
        android:layout_centerInParent="true"
        android:text="Loading ..."
        android:textSize="15sp"/>
+
+   <Button
+       android:id="@+id/btplayall"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+	   android:layout_centerInParent="true"
+       android:text="Play"/>
     
 </RelativeLayout>

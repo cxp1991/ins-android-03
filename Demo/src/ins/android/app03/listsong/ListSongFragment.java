@@ -6,6 +6,7 @@ import ins.android.app03.home.Utils;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,7 +35,7 @@ public class ListSongFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		  Log.i("ListSongFragment", "oncreateView");
-		  while (!HomeFragment.IS_REQUEST_MUSIC_IN_DEVICE);
+		  while (!HomeFragment.isMusicListed);
 		  final View rootView = inflater.inflate(R.layout.listviewlayout, container, false);
 		  
 		  adapter = new AllSongAdapter(getActivity(), Utils.mListAllSong, getActivity());
@@ -54,7 +55,10 @@ public class ListSongFragment extends Fragment
 	{
 		Log.i("TAG", "SwitchToHomeFragment");
 		FragmentManager fragm = getFragmentManager();
-		fragm.popBackStack();
+		//fragm.popBackStack();
+		FragmentTransaction ft = fragm.beginTransaction();
+		ft.replace(R.id.content_frame, new HomeFragment());
+		ft.commit();
 	}
 	
 	/**

@@ -43,7 +43,7 @@ public class RingtoneList extends AudioList
 	 */
 	public RingtoneList(int playingMode, Activity activity) 
 	{
-		super(playingMode);
+		super(REPEAT_ONE);
 		mActivity = activity;
 		initializeRingtone(activity);
 	}
@@ -74,67 +74,73 @@ public class RingtoneList extends AudioList
 		if (getmMediaPlayer() == null)
 			return;
 		
+		if (getmPlayMode() == REPEAT_ONE){
+			Log.i("TAG", "ringtoe looping");
+			getmMediaPlayer().setLooping(true);
+		}
+		
 		/*
 		 * Configure when end of 1 playback
 		 */
-		getmMediaPlayer().setOnCompletionListener(new OnCompletionListener() 
-		{
-			@Override
-			public void onCompletion(MediaPlayer mp) {
-				Log.i("TAG", "Ringtone setOnCompletionListener");
-				switch (getmPlayMode()) {
-				
-				case SINGLE:
-					break;
-					
-				case REPEAT_ONE:
-					break;
-					
-				case REPEAT_ALL:
-					
-					resetPlayer();
-					
-					Log.d("TAG", "mplaying = " + getmAudioPlaying());
-					
-					/*
-					 * End of playlist
-					 */
-					if(getmAudioPlaying() == getCount())
-						playMediaPlayer(getAudio(0).getmResSongId(), mActivity.getBaseContext(), 1);
-					
-					/*
-					 * Normal, switch to next song
-					 */
-					else
-					{
-						playMediaPlayer(getAudio(getmAudioPlaying()).getmResSongId(), mActivity.getBaseContext(), getmAudioPlaying() + 1);
-					}
-					
-					break;
-					
-				case PLAY_ALL:
-					
-					resetPlayer();
-					
-					if(getmAudioPlaying() < getCount())
-					{
-						Log.d("TAG", "mplaying = " + getmAudioPlaying());
-						playMediaPlayer(getAudio(getmAudioPlaying()).getmResSongId(), mActivity.getBaseContext(), getmAudioPlaying() + 1);
-					}
-					
-					/*
-					 *	Last song stop play 
-					 */
-					
-					break;
-					
-				default:
-					break;
-				}
-				
-				setRingtoneItemEnd(true);
-			}
-		});
+//		getmMediaPlayer().setOnCompletionListener(new OnCompletionListener() 
+//		{
+//			@Override
+//			public void onCompletion(MediaPlayer mp) {
+//				Log.i("TAG", "Ringtone setOnCompletionListener");
+//				switch (getmPlayMode()) {
+//				
+//				case SINGLE:
+//					break;
+//					
+//				case REPEAT_ONE:
+//					getmMediaPlayer().setLooping(true);
+//					break;
+//					
+//				case REPEAT_ALL:
+//					
+//					resetPlayer();
+//					
+//					Log.d("TAG", "mplaying = " + getmAudioPlaying());
+//					
+//					/*
+//					 * End of playlist
+//					 */
+//					if(getmAudioPlaying() == getCount())
+//						playMediaPlayer(getAudio(0).getmResSongId(), mActivity.getBaseContext(), 1);
+//					
+//					/*
+//					 * Normal, switch to next song
+//					 */
+//					else
+//					{
+//						playMediaPlayer(getAudio(getmAudioPlaying()).getmResSongId(), mActivity.getBaseContext(), getmAudioPlaying() + 1);
+//					}
+//					
+//					break;
+//					
+//				case PLAY_ALL:
+//					
+//					resetPlayer();
+//					
+//					if(getmAudioPlaying() < getCount())
+//					{
+//						Log.d("TAG", "mplaying = " + getmAudioPlaying());
+//						playMediaPlayer(getAudio(getmAudioPlaying()).getmResSongId(), mActivity.getBaseContext(), getmAudioPlaying() + 1);
+//					}
+//					
+//					/*
+//					 *	Last song stop play 
+//					 */
+//					
+//					break;
+//					
+//				default:
+//					break;
+//				}
+//				
+//				setRingtoneItemEnd(true);
+//			}
+//		});
 		
 	}
 

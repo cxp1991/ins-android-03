@@ -19,12 +19,13 @@ public class AudioList {
 	public static final int SHUFFLE = 0x04; // random
 	public static final int PAUSE = 0x05;
 	public static final int PLAYING = 0x06;
+	public static final int STOP = 0x07;
 	
 	private ArrayList<MySong> mAudioList = new ArrayList<MySong>();
 
 	private int mPlayMode = SINGLE;
 	private int mState = PAUSE;
-	private int mAudioPlaying = 0;
+	private int mAudioPlaying = -1;
 	private boolean mIsEnableEditList;
 	private MediaPlayer mMediaPlayer;
 
@@ -35,14 +36,14 @@ public class AudioList {
 		this.setmPlayMode(playingMode);
 		this.setmIsEnableEditList(isEnableEditList);
 		this.mMediaPlayer = new MediaPlayer(); 
-		this.setmState(PAUSE);
+		this.setmState(STOP);
 		initializeMediaPlayer();
 	}
 	
 	public AudioList(int playingMode) 
 	{
 		this.setmPlayMode(playingMode);
-		this.setmState(PAUSE);
+		this.setmState(STOP);
 	}
 
 	/**
@@ -242,9 +243,10 @@ public class AudioList {
 			/*
 			 * Stop old player
 			 */
-			if (this.mMediaPlayer.isPlaying())
-				this.pauseMediaPlayer();
+			if (getmState() == PLAYING || getmState() == PAUSE)
+				this.stopMediaPlayer();
 			
+			Log.i("TAG", "song " + song + " index " + index);
 			mMediaPlayer.setDataSource(song.getmSongPath());
 			mMediaPlayer.prepare();
 			mMediaPlayer.start();
@@ -260,15 +262,43 @@ public class AudioList {
 	}
 	
 	/**
-	 * Stop player
+	 * Pause player
 	 */
 	public void pauseMediaPlayer()
 	{
 		if (mMediaPlayer != null){
 			if (mMediaPlayer.isPlaying())
-				mMediaPlayer.reset();
-			Log.e("TAG", "Pause");
+				mMediaPlayer.pause();
+			//Log.e("TAG", "Pause");
 			this.setmState(PAUSE);
+		}
+	}
+	
+	/**
+	 * Stop player
+	 */
+	public void stopMediaPlayer()
+	{
+		if (mMediaPlayer != null){
+			if (getmState() != STOP)
+			{
+				mMediaPlayer.stop();
+				mMediaPlayer.reset();
+			}
+			//Log.e("TAG", "Pause");
+			this.setmState(STOP);
+		}
+	}
+	
+	/**
+	 * Resume player
+	 */
+	public void resumePlayer()
+	{
+		if (mMediaPlayer != null){
+			mMediaPlayer.start();
+			//Log.e("TAG", "Pause");
+			this.setmState(PLAYING);
 		}
 	}
 	
