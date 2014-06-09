@@ -38,6 +38,8 @@ public class RingtoneList extends AudioList
 	
 	private boolean isRingtoneItemEnd = false; 
 	
+	private float mVolume = 0.0f;
+	
 	/**
 	 * Disable edit list 
 	 */
@@ -156,7 +158,6 @@ public class RingtoneList extends AudioList
 			if (mplayer != null && mplayer.isPlaying())
 				this.pauseMediaPlayer();
 			
-			Log.d("TAG", "song id = "+ songId);
 			mplayer = MediaPlayer.create(context, songId);
 			setmMediaPlayer(mplayer);
 			initializeMediaPlayer();
@@ -186,8 +187,17 @@ public class RingtoneList extends AudioList
 	public void setRingtoneItemEnd(boolean isRingtoneItemEnd) {
 		this.isRingtoneItemEnd = isRingtoneItemEnd;
 	}
-	
-	
-	
+
+	/**
+	 * @param mVolume the mVolume to set
+	 */
+	public void setmVolume(float mVolume) {
+		
+		try {
+			this.getmMediaPlayer().setVolume(mVolume, mVolume);
+		} catch (Exception e) {
+			
+		}
+	}
 	
 }

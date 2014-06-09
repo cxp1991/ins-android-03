@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -151,14 +152,16 @@ public class Main extends Activity
 		Fragment fragment = null;
 		final FragmentTransaction ft = getFragmentManager().beginTransaction(); 
 		
-		
 		switch (position) {
 		case 0:
 			fragment = new HomeFragment();
-			ft.addToBackStack(null);
+			//ft.addToBackStack(null);
 			ft.replace(R.id.content_frame, fragment, "HOME_FRAGMENT").commit();
 			break;
 		case 1:
+			fragment = new ListSongFragment();
+			//ft.addToBackStack(null);
+			ft.replace(R.id.content_frame, fragment, "LIST_SONG_FRAGMENT").commit();
 			break;
 		default:
 			break;
@@ -220,5 +223,4 @@ public class Main extends Activity
 		HomeFragment.mSongList.pauseMediaPlayer();
 	}
 
-	
 }

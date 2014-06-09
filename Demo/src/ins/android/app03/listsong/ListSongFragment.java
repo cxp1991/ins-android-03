@@ -38,16 +38,28 @@ public class ListSongFragment extends Fragment
 		  while (!HomeFragment.isMusicListed);
 		  final View rootView = inflater.inflate(R.layout.listviewlayout, container, false);
 		  
-		  adapter = new AllSongAdapter(getActivity(), Utils.mListAllSong, getActivity());
+		/*  adapter = new AllSongAdapter(getActivity(), Utils.mListAllSong, getActivity());
 		  lv = (ListView) rootView.findViewById(R.id.lv);
 		  lv.setOnItemClickListener(itemClickListener);
-		  lv.setAdapter(adapter);
+		  lv.setAdapter(adapter);*/
 
 		  /* Fragment need it to add item to Actionbar */
 		  setHasOptionsMenu(true);
 		  return rootView;
 	}
 
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		
+		//while (!HomeFragment.isMusicListed);
+		adapter = new AllSongAdapter(getActivity(), Utils.mListAllSong, getActivity());
+		lv = (ListView) getView().findViewById(R.id.lv);
+  		lv.setOnItemClickListener(itemClickListener);
+  		lv.setAdapter(adapter);
+		
+	}
+	
 	/**
 	 *  Switch back to Homefragment insteads of exit app.
 	 */

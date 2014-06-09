@@ -28,6 +28,8 @@ public class AudioList {
 	private int mAudioPlaying = -1;
 	private boolean mIsEnableEditList;
 	private MediaPlayer mMediaPlayer;
+	
+	private boolean isEditted = false;
 
 	private boolean isEndOnePlayback = false;
 	

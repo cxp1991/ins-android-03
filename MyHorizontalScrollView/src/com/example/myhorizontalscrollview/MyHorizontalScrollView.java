@@ -646,32 +646,33 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	 */
 	private void removeThumbnailFromParent (final View v, final int action, final int index)
 	{
-		if (!isEditable)
+		return; // disable remove
+		/*if (!isEditable)
 			return;
 		
-		/*
+		
 		 * Framelayout contains item will be removed
-		 */
+		 
 		final FrameLayout view = (FrameLayout)v;
 		
 		Log.d ("removeThumbnailFromParent", "removeThumbnailFromParent");
 
-		/* 
+		 
 		 * Alpha & Translate animation 
 		 * to display how item will be removed
-		 */
+		 
 		
-		/* Alpha animation */
+		 Alpha animation 
 		Animation fadeOut = new AlphaAnimation(1, 0);
 		fadeOut.setInterpolator(new AccelerateInterpolator()); //and this
 		fadeOut.setDuration(750);
 		
-		/* Translate animation */
+		 Translate animation 
 		Animation translate = null;
 		
-		/* Check user gesture is valid */
+		 Check user gesture is valid 
 		
-		/* Our horizontalscrollview is in top of screen */
+		 Our horizontalscrollview is in top of screen 
 		if (layoutLocation == 0 && (action == ACTION_REMOVE_DOWN))
 			translate = new TranslateAnimation(0,0,0, THUMBNAIL_WIDTH);
 		else if (layoutLocation == 0 && (action == ACTION_REMOVE_UP))
@@ -680,7 +681,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 			return;
 		}
 		
-		/* Our horizontalscrollview is in bottom of screen */
+		 Our horizontalscrollview is in bottom of screen 
 		if (layoutLocation == 2 && (action == ACTION_REMOVE_UP))
 			translate = new TranslateAnimation(0,0,0, THUMBNAIL_WIDTH*(-1));
 		else if (layoutLocation == 2 && (action == ACTION_REMOVE_DOWN))
@@ -691,13 +692,13 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		
 		translate.setDuration(750);
 		
-		/* Merge 2 animations using Animationset*/
+		 Merge 2 animations using Animationset
 		AnimationSet animationSet = new AnimationSet(true);
 		animationSet.addAnimation(fadeOut);
 		animationSet.addAnimation(translate);
 		
 		try {
-			/* Thumbnail & text will use above animation */
+			 Thumbnail & text will use above animation 
 			ImageView thumbnail = (ImageView) view.findViewById(R.id.thumbnailImage);
 			TextView title = (TextView) view.findViewById(R.id.tv);
 			
@@ -706,7 +707,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 			thumbnail.startAnimation(animationSet);
 			title.startAnimation(animationSet);
 			
-			/* Wait until animation terminate, then remove item out of our horizontal scrollview */
+			 Wait until animation terminate, then remove item out of our horizontal scrollview 
 			animationSet.setAnimationListener(new AnimationListener() {
 				
 				@Override
@@ -726,24 +727,24 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 						public void run() {
 							int indexOfView = topLnLayout.indexOfChild(view);
 							
-							/* Remove imageview & textview are inside removing item */
+							 Remove imageview & textview are inside removing item 
 							view.removeAllViews();
 							
-							/* Remove item */
+							 Remove item 
 							topLnLayout.removeView(view);
 							numberThumbnail--;
 							Log.i ("Remove Item", "item = " + index);
 							
 							mItemRemovedIndex = index;
-							/* Auto call LayoutTranslation listener */
+							 Auto call LayoutTranslation listener 
 							
-							/* Enale scroll */
+							 Enale scroll 
 							enableScroll = true;
 
-							/*
+							
 							 * Call item removing listener
 							 * Don't use index, use index of removed view instead 
-							 */
+							 
 							if (itemRemoveListener != null)
 					        	itemRemoveListener.onItemRemove(indexOfView);
 					        
@@ -758,7 +759,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		}catch (NullPointerException ex)
 		{
 			
-		}
+		}*/
 	}
 
 	/**
