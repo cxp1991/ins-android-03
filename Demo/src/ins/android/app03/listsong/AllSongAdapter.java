@@ -23,15 +23,14 @@ import android.widget.TextView;
 
 public class AllSongAdapter extends BaseAdapter
 {
-	private Context mContext;
 	private Filter mFilter;
 	private ArrayList<MySong> mArraylist;
 	private AllSongAdapter mAdapter;
 	private Activity mActivity;
+	private int mNumberItemIsChecked = 0;
 	 
-	public AllSongAdapter(Context context, ArrayList<MySong> listSong, Activity activity)
+	public AllSongAdapter(ArrayList<MySong> listSong, Activity activity)
 	{
-		this.mContext = context;
 		this.mArraylist = listSong;
 		this.mAdapter = this;
 		this.mActivity = activity;
@@ -181,8 +180,11 @@ public class AllSongAdapter extends BaseAdapter
 					int getPosition = (Integer) buttonView.getTag();  
 					// Set the value of checkbox to maintain its state
 					
-					if (buttonView.isChecked()) ListSongFragment.setNumberItemIsChecked(ListSongFragment.getNumberItemIsChecked() + 1);
-					else	ListSongFragment.setNumberItemIsChecked(ListSongFragment.getNumberItemIsChecked() - 1);
+					if (buttonView.isChecked()) 
+						mNumberItemIsChecked ++;
+					else	
+						mNumberItemIsChecked --;
+							
 					Utils.mListAllSong.get(getPosition).setmSelected(buttonView.isChecked()); 
 					
 						mActivity.runOnUiThread(new Runnable() {
@@ -212,7 +214,7 @@ public class AllSongAdapter extends BaseAdapter
         /* Times to do is equal number item displays at start time */
         if (convertView == null) 
         {  
-             LayoutInflater li = (LayoutInflater) mContext  
+             LayoutInflater li = (LayoutInflater) mActivity  
                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);  
              convertView = li.inflate(R.layout.itemlistviewlayout, null);  
 
@@ -249,6 +251,13 @@ public class AllSongAdapter extends BaseAdapter
         viewHolder.mCheckbox.setChecked(Utils.mListAllSong.get(position).ismSelected()); 
         
         return convertView;
+	}
+
+	/**
+	 * @return the mNumberItemIsChecked
+	 */
+	public int getmNumberItemIsChecked() {
+		return mNumberItemIsChecked;
 	}
 
 }

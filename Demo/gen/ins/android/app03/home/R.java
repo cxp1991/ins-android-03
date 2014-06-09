@@ -105,16 +105,17 @@ containing a value of this type.
         public static final int volume_controller_background=0x7f020016;
     }
     public static final class id {
-        public static final int action_done=0x7f0a0021;
-        public static final int action_more=0x7f0a0022;
+        public static final int action_add_song=0x7f0a001d;
+        public static final int action_done=0x7f0a0022;
+        public static final int action_more=0x7f0a0023;
         public static final int action_overflow=0x7f0a001c;
-        public static final int action_remove_all_song=0x7f0a001d;
-        public static final int action_scroll_to_end=0x7f0a001e;
-        public static final int action_scroll_to_head=0x7f0a001f;
-        public static final int action_search=0x7f0a0020;
-        public static final int action_selectall=0x7f0a0023;
-        public static final int action_settings=0x7f0a0025;
-        public static final int action_unselectall=0x7f0a0024;
+        public static final int action_remove_all_song=0x7f0a001e;
+        public static final int action_scroll_to_end=0x7f0a001f;
+        public static final int action_scroll_to_head=0x7f0a0020;
+        public static final int action_search=0x7f0a0021;
+        public static final int action_selectall=0x7f0a0024;
+        public static final int action_settings=0x7f0a0026;
+        public static final int action_unselectall=0x7f0a0025;
         public static final int action_volume=0x7f0a001b;
         public static final int additemImgV=0x7f0a0009;
         public static final int btplayall=0x7f0a0003;

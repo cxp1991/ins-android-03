@@ -8,6 +8,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -77,13 +78,15 @@ public class HomeFragment extends Fragment
 	
 	private LinearLayout mVolumeLayout = null;
 	
-	private int mFutureInMillis = 4000;
+	private int mFutureInMillis = 5000;
 	
 	private SeekBar mRingtoneSeekBar = null;
 	
 	private SeekBar mMusicSeekBar = null;
 	
 	private AudioManager mAudioManager = null;
+	
+	private int mNumberSongChecked = 0;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -134,10 +137,285 @@ public class HomeFragment extends Fragment
 	}
 
 	
+	
+	
+	/* (non-Javadoc)
+	 * @see android.app.Fragment#onDestroy()
+	 */
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.i("", "onDestroy");
+	}
+
+
+
+
+	/* (non-Javadoc)
+	 * @see android.app.Fragment#onDestroyView()
+	 */
+	@Override
+	public void onDestroyView() {
+		// TODO Auto-generated method stub
+		super.onDestroyView();
+		Log.i("", "onDestroyView");
+	}
+
+
+
+
+	/* (non-Javadoc)
+	 * @see android.app.Fragment#onDetach()
+	 */
+	@Override
+	public void onDetach() {
+		// TODO Auto-generated method stub
+		super.onDetach();
+		Log.i("", "onDetach");
+	}
+
+
+
+
+	/* (non-Javadoc)
+	 * @see android.app.Fragment#onPause()
+	 */
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		Log.i("", "onPause");
+	}
+
+
+
+
+	/* (non-Javadoc)
+	 * @see android.app.Fragment#onStop()
+	 */
+	@Override
+	public void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		Log.i("", "onStop");
+	}
+
+
+
+
+	/* (non-Javadoc)
+	 * @see android.app.Fragment#onAttach(android.app.Activity)
+	 */
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+		Log.i("", "onAttach");
+	}
+
+
+
+
+	/* (non-Javadoc)
+	 * @see android.app.Fragment#onResume()
+	 */
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Log.i("FRAGMENT", "onResume");
+		 ringtoneHrScrollView = (MyHorizontalScrollView) rootView.findViewById(R.id.ringtonescrollview);
+	        ringtoneHrScrollView.setOnTouchFinishListener(ringtoneOnTouchFinishListener);
+	        ringtoneHrScrollView.setOnThumbnailLongTouchListener(ringtoneOnLongTouchListener);
+	        
+	        musicHrScrollView = (MyHorizontalScrollView) rootView.findViewById(R.id.musicscrollview);
+	        musicHrScrollView.setOnTouchFinishListener(musicOnTouchFinish);
+	        musicHrScrollView.setOnItemRemoveListener(musicOnItemRemove);
+	        musicHrScrollView.setOnThumbnailLongTouchListener(musicOnLongTouchListener);
+		        
+	        Log.i("FRAGMENT", "onResume, mNumberSongChecked = " + mNumberSongChecked);
+	        if(mNumberSongChecked > 0)
+	        {
+	    		/*
+	    		 * Add new item selected
+	    		 */
+	        	for (int i = 0; i < Utils.mListAllSong.size(); i++)
+	        	{
+	        		/* Add new selected item */
+	        		if (Utils.mListAllSong.get(i).ismSelected())
+	        		{
+	        			mSongList.addmAudio(Utils.mListAllSong.get(i));
+	        			musicHrScrollView.addThumbnailToParent();
+	        			
+	        			/* 
+	        			 * To add 1 song after, 
+	        			 * we uncheck slected item in listview
+	        			 */
+	        			Utils.mListAllSong.get(i).setmSelected(false);
+	        		}
+	        	}
+	        	
+	        }
+	    	
+	    	/*
+	    	 * TextView is to show when ListSongFragment's data
+	    	 * is still not available.
+	    	 */
+	        mTextViewLoading = (TextView) rootView.findViewById(R.id.tvloading);
+	        mTextViewLoading.setVisibility(View.INVISIBLE);
+	        
+	        /*
+	         * Button stop play/pause both ringtone & music
+	         */
+	        buttonPlayAll = (Button) rootView.findViewById(R.id.btplayall);
+	        buttonPlayAll.setOnClickListener(buttonPlayAllOnClickListener);
+	        if (mSongList.getmState() == AudioList.PLAYING || 
+					mRingtoneList.getmState() == AudioList.PLAYING)
+	        	buttonPlayAll.setText("Pause");
+	        else if(mSongList.getmState() == AudioList.PAUSE && 
+					mRingtoneList.getmState() == AudioList.PAUSE)
+	        	buttonPlayAll.setActivated(false);
+	        	
+	        else
+	        	buttonPlayAll.setText("Play");
+	        
+	        if (!isShowRingtoneThreadRun){
+	        	mShowRingtoneThread = new Thread(new ShowUpRingtone());
+	        	mShowRingtoneThread.start();
+	        }
+	        
+	        /*
+	         * Volume controller
+	         */
+	        mVolumeLayout = (LinearLayout) getView().findViewById(R.id.ln_volume);
+	        mVolumeLayout.setVisibility(View.GONE);
+	        
+	        getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
+	        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+	        
+	        mRingtoneSeekBar = (SeekBar) getView().findViewById(R.id.ringtone_volume_seekbar);
+	        mMusicSeekBar = (SeekBar) getView().findViewById(R.id.music_volume_seekbar);
+	        
+	        mRingtoneSeekBar.setMax(mAudioManager
+	                .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+	        mRingtoneSeekBar.setProgress(mAudioManager
+	                .getStreamVolume(AudioManager.STREAM_MUSIC)); 
+	        
+	        mMusicSeekBar.setMax(mAudioManager
+	                .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+	        mMusicSeekBar.setProgress(mAudioManager
+	                .getStreamVolume(AudioManager.STREAM_MUSIC)); 
+	        
+	        /*
+	    	 * Again this Fragment is switch multiple times.
+	    	 * And we want to these threads runs during app is running so
+	    	 * we do not set condition to stop these threads.
+	    	 * Therefore, to not run them again we must to check
+	    	 * if they already run or not.
+	    	 */
+			
+			/* Music */
+	    	if (!isThreadSwitchIemMusicRun)
+	    	{
+	    		new Thread (new Runnable() 
+	        	{
+	    			@Override
+	    			public void run() 
+	    			{
+	    				while(true)
+	    				{
+	    					int index;
+	    					
+	    					while (!mSongList.isEndOnePlayback());
+	    					
+	    					Log.i("", "End 1 song");
+	    					
+	    					/*
+	    					 * Update GUI
+	    					 */
+	    					if (musicHrScrollView.getCenterIndex() + 1 >
+	    						musicHrScrollView.getNumberThumbnail())
+	    					{
+	    						index = 1;
+	    					}
+	    					else
+	    					{
+	    						index = musicHrScrollView.getCenterIndex() + 1;
+	    					}
+	    					
+							musicHrScrollView.updateLayout(index);
+	    					musicHrScrollView.setCenterIndex(index);
+	    					mSongList.setEndOnePlayback(false);
+	    					
+	    					if (ringtoneHrScrollView.getCenterIndex() == 
+	    							ringtoneHrScrollView.getmLongTouchItemIndex())
+	    						continue;
+	    					
+	    					if (ringtoneHrScrollView.getCenterIndex() + 1 > 
+	    						ringtoneHrScrollView.getNumberThumbnail())
+	    					{
+	    						index = 1;
+	    					}
+	    					else
+	    					{
+	    						index = ringtoneHrScrollView.getCenterIndex() + 1;
+	    					}
+	    					
+							ringtoneHrScrollView.updateLayout(index);
+	    					ringtoneHrScrollView.setCenterIndex(index);
+	    					
+	    					/*
+	    					 * Update ringtone
+	    					 */
+	    					mRingtoneList.resetPlayer();
+	    					if(mRingtoneList.getmAudioPlaying() == 
+	    							mRingtoneList.getCount()) {
+	    						
+	    						mRingtoneList.playMediaPlayer(mRingtoneList.
+	    								getAudio(0).getmResSongId(), mContext, 1);
+	    					}
+	    					else
+	    					{
+	    						mRingtoneList.playMediaPlayer(mRingtoneList.getAudio(mRingtoneList.
+	    								getmAudioPlaying()).getmResSongId(),
+	    								mContext, mRingtoneList.getmAudioPlaying() + 1);
+	    					}
+	    				}
+	    			}
+	    		}).start();
+	    		
+	    		isThreadSwitchIemMusicRun = true;
+	    	}
+	    	
+	    	/*
+	    	 * This is implemented because our library highlight
+	    	 * 1st in every time fragment is visible.
+	    	 */
+	    	ringtoneHrScrollView.unHighlightIdex(1);
+	    	//ringtoneHrScrollView.highlightIdex(mRingtoneList.getmAudioPlaying());
+	    	
+	}
+
+
+
+
+	/* (non-Javadoc)
+	 * @see android.app.Fragment#onStart()
+	 */
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		Log.i("FRAGMENT", "onStart");
+	}
+
+
+
+
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-		
+		Log.i("", "oncreateView");
 		/*
 		 * Because user will switch bween many fragments usually, we
 		 * want this HomeFragment's layout is stable. Then my solution is 
@@ -160,89 +438,7 @@ public class HomeFragment extends Fragment
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		
-		 ringtoneHrScrollView = (MyHorizontalScrollView) rootView.findViewById(R.id.ringtonescrollview);
-        ringtoneHrScrollView.setOnTouchFinishListener(ringtoneOnTouchFinishListener);
-        ringtoneHrScrollView.setOnThumbnailLongTouchListener(ringtoneOnLongTouchListener);
-        
-        musicHrScrollView = (MyHorizontalScrollView) rootView.findViewById(R.id.musicscrollview);
-        musicHrScrollView.setOnTouchFinishListener(musicOnTouchFinish);
-        musicHrScrollView.setOnItemRemoveListener(musicOnItemRemove);
-        musicHrScrollView.setOnThumbnailLongTouchListener(musicOnLongTouchListener);
-	        
-        if(ListSongFragment.getNumberItemIsChecked() > 0)
-        {
-    		/*
-    		 * Add new item selected
-    		 */
-        	for (int i = 0; i < Utils.mListAllSong.size(); i++)
-        	{
-        		/* Add new selected item */
-        		if (Utils.mListAllSong.get(i).ismSelected())
-        		{
-        			mSongList.addmAudio(Utils.mListAllSong.get(i));
-        			musicHrScrollView.addThumbnailToParent();
-        			
-        			/* 
-        			 * To add 1 song after, 
-        			 * we uncheck slected item in listview
-        			 */
-        			Utils.mListAllSong.get(i).setmSelected(false);
-        		}
-        	}
-        	
-        	ListSongFragment.setNumberItemIsChecked(0);
-        }
-    	
-    	/*
-    	 * TextView is to show when ListSongFragment's data
-    	 * is still not available.
-    	 */
-        mTextViewLoading = (TextView) rootView.findViewById(R.id.tvloading);
-        mTextViewLoading.setVisibility(View.INVISIBLE);
-        
-        /*
-         * Button stop play/pause both ringtone & music
-         */
-        buttonPlayAll = (Button) rootView.findViewById(R.id.btplayall);
-        buttonPlayAll.setOnClickListener(buttonPlayAllOnClickListener);
-        if (mSongList.getmState() == AudioList.PLAYING || 
-				mRingtoneList.getmState() == AudioList.PLAYING)
-        	buttonPlayAll.setText("Pause");
-        else if(mSongList.getmState() == AudioList.PAUSE && 
-				mRingtoneList.getmState() == AudioList.PAUSE)
-        	buttonPlayAll.setActivated(false);
-        	
-        else
-        	buttonPlayAll.setText("Play");
-        
-        if (!isShowRingtoneThreadRun){
-        	mShowRingtoneThread = new Thread(new ShowUpRingtone());
-        	mShowRingtoneThread.start();
-        }
-        
-        /*
-         * Volume controller
-         */
-        mVolumeLayout = (LinearLayout) getView().findViewById(R.id.ln_volume);
-        mVolumeLayout.setVisibility(View.GONE);
-        
-        getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-        
-        mRingtoneSeekBar = (SeekBar) getView().findViewById(R.id.ringtone_volume_seekbar);
-        mMusicSeekBar = (SeekBar) getView().findViewById(R.id.music_volume_seekbar);
-        
-        mRingtoneSeekBar.setMax(mAudioManager
-                .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-        mRingtoneSeekBar.setProgress(mAudioManager
-                .getStreamVolume(AudioManager.STREAM_MUSIC)); 
-        
-        mMusicSeekBar.setMax(mAudioManager
-                .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-        mMusicSeekBar.setProgress(mAudioManager
-                .getStreamVolume(AudioManager.STREAM_MUSIC)); 
-        
+		Log.i("","onViewCreated");
 	}
 	
 	class ShowUpRingtone extends Thread implements Runnable {
@@ -387,94 +583,6 @@ public class HomeFragment extends Fragment
 		
 		//Log.i("HomeFragment", "onActivityCreated, savedInstanceState = " + savedInstanceState);
     	
-    	/*
-    	 * Again this Fragment is switch multiple times.
-    	 * And we want to these threads runs during app is running so
-    	 * we do not set condition to stop these threads.
-    	 * Therefore, to not run them again we must to check
-    	 * if they already run or not.
-    	 */
-		
-		/* Music */
-    	if (!isThreadSwitchIemMusicRun)
-    	{
-    		new Thread (new Runnable() 
-        	{
-    			@Override
-    			public void run() 
-    			{
-    				while(true)
-    				{
-    					int index;
-    					
-    					while (!mSongList.isEndOnePlayback());
-    					
-    					Log.i("", "End 1 song");
-    					
-    					/*
-    					 * Update GUI
-    					 */
-    					if (musicHrScrollView.getCenterIndex() + 1 >
-    						musicHrScrollView.getNumberThumbnail())
-    					{
-    						index = 1;
-    					}
-    					else
-    					{
-    						index = musicHrScrollView.getCenterIndex() + 1;
-    					}
-    					
-						musicHrScrollView.updateLayout(index);
-    					musicHrScrollView.setCenterIndex(index);
-    					mSongList.setEndOnePlayback(false);
-    					
-    					if (ringtoneHrScrollView.getCenterIndex() == 
-    							ringtoneHrScrollView.getmLongTouchItemIndex())
-    						continue;
-    					
-    					if (ringtoneHrScrollView.getCenterIndex() + 1 > 
-    						ringtoneHrScrollView.getNumberThumbnail())
-    					{
-    						index = 1;
-    					}
-    					else
-    					{
-    						index = ringtoneHrScrollView.getCenterIndex() + 1;
-    					}
-    					
-						ringtoneHrScrollView.updateLayout(index);
-    					ringtoneHrScrollView.setCenterIndex(index);
-    					
-    					/*
-    					 * Update ringtone
-    					 */
-    					mRingtoneList.resetPlayer();
-    					if(mRingtoneList.getmAudioPlaying() == 
-    							mRingtoneList.getCount()) {
-    						
-    						mRingtoneList.playMediaPlayer(mRingtoneList.
-    								getAudio(0).getmResSongId(), mContext, 1);
-    					}
-    					else
-    					{
-    						mRingtoneList.playMediaPlayer(mRingtoneList.getAudio(mRingtoneList.
-    								getmAudioPlaying()).getmResSongId(),
-    								mContext, mRingtoneList.getmAudioPlaying() + 1);
-    					}
-    				}
-    			}
-    		}).start();
-    		
-    		isThreadSwitchIemMusicRun = true;
-    	}
-    	
-    	/*
-    	 * This is implemented because our library highlight
-    	 * 1st in every time fragment is visible.
-    	 */
-    	ringtoneHrScrollView.unHighlightIdex(1);
-    	//ringtoneHrScrollView.highlightIdex(mRingtoneList.getmAudioPlaying());
-    	
 	}
 	
 	/**
@@ -491,11 +599,22 @@ public class HomeFragment extends Fragment
 		
 		switch (item.getItemId()) {
 			
+		case R.id.action_add_song:
+			Intent intent = new Intent(getActivity(), ListSongFragment.class);
+			intent.putExtra("LIST_SONG_DONE", isMusicListed);
+			startActivityForResult(intent, 0);
+			break;
+			
 		case R.id.action_volume:
 			
 			if (mVolumeLayout.getVisibility() == View.GONE) {
 				
 				mVolumeLayout.setVisibility(View.VISIBLE);
+				
+				mRingtoneSeekBar.setProgress(mAudioManager
+    	                .getStreamVolume(AudioManager.STREAM_MUSIC));
+				mMusicSeekBar.setProgress(mAudioManager
+    	                .getStreamVolume(AudioManager.STREAM_MUSIC));
 				
 				/*
 				 * User not touch in 5s, then close
@@ -506,6 +625,7 @@ public class HomeFragment extends Fragment
 					
 		            public void onTick(long millisUntilFinished) {
 		            	
+		            	
 		            	mMusicSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 							
 							@Override
@@ -515,13 +635,12 @@ public class HomeFragment extends Fragment
 							
 							@Override
 							public void onStartTrackingTouch(SeekBar arg0) {
-								
 							}
 							
 							@Override
 							public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) {
 								Log.i("","onProgressChanged");
-								mFutureInMillis = 2000;
+								mFutureInMillis = 5000;
 								mCountDownTimer.start();
 								
 								mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
@@ -539,13 +658,12 @@ public class HomeFragment extends Fragment
 							
 							@Override
 							public void onStartTrackingTouch(SeekBar arg0) {
-								
 							}
 							
 							@Override
 							public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) {
 								Log.i("","max= " + mRingtoneSeekBar.getMax());
-								mFutureInMillis = 2000;
+								mFutureInMillis = 5000;
 								mCountDownTimer.start();
 								mRingtoneList.setmVolume((float)progress/mRingtoneSeekBar.getMax());
 							}
@@ -794,4 +912,9 @@ public class HomeFragment extends Fragment
 		}
 	};
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.i("","onActivityResult, resultCode = " + resultCode);
+		mNumberSongChecked = resultCode;
+	};
 }

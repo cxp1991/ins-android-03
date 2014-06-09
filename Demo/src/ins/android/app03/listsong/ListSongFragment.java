@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,53 +25,25 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
-public class ListSongFragment extends Fragment
+public class ListSongFragment extends Activity
 {
 	 private SearchView mSearchView;
 	 private ListView lv;
-	 private  AllSongAdapter adapter;
-	 private static int numberItemIsChecked = 0;
+	 private AllSongAdapter adapter;
 		
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		  Log.i("ListSongFragment", "oncreateView");
-		  while (!HomeFragment.isMusicListed);
-		  final View rootView = inflater.inflate(R.layout.listviewlayout, container, false);
-		  
-		/*  adapter = new AllSongAdapter(getActivity(), Utils.mListAllSong, getActivity());
-		  lv = (ListView) rootView.findViewById(R.id.lv);
-		  lv.setOnItemClickListener(itemClickListener);
-		  lv.setAdapter(adapter);*/
+	 @Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		
+		while (!HomeFragment.isMusicListed);
+		setContentView(R.layout.listviewlayout);
 
-		  /* Fragment need it to add item to Actionbar */
-		  setHasOptionsMenu(true);
-		  return rootView;
-	}
+		adapter = new AllSongAdapter(Utils.mListAllSong, this);
+		lv = (ListView) findViewById(R.id.lv);
+		lv.setOnItemClickListener(itemClickListener);
+		lv.setAdapter(adapter);
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		
-		//while (!HomeFragment.isMusicListed);
-		adapter = new AllSongAdapter(getActivity(), Utils.mListAllSong, getActivity());
-		lv = (ListView) getView().findViewById(R.id.lv);
-  		lv.setOnItemClickListener(itemClickListener);
-  		lv.setAdapter(adapter);
-		
-	}
-	
-	/**
-	 *  Switch back to Homefragment insteads of exit app.
-	 */
-	private void SwitchToHomeFragment()
-	{
-		Log.i("TAG", "SwitchToHomeFragment");
-		FragmentManager fragm = getFragmentManager();
-		//fragm.popBackStack();
-		FragmentTransaction ft = fragm.beginTransaction();
-		ft.replace(R.id.content_frame, new HomeFragment());
-		ft.commit();
 	}
 	
 	/**
@@ -97,13 +70,11 @@ public class ListSongFragment extends Fragment
 		}
 	};
 	
-	
-	
 	/**
 	 * Add Search item into Actionbar
 	 */
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.list_song_menu, menu);
         
         /* Search View */
@@ -119,9 +90,11 @@ public class ListSongFragment extends Fragment
 				Log.d("TAG", "Huraaaaaaaaaa");
 			}
 		});
-        
-		super.onCreateOptionsMenu(menu,inflater);
+		
+		return super.onCreateOptionsMenu(menu);
 	}
+	
+	
 	
 	/**
 	 * Actionbar listener
@@ -130,7 +103,8 @@ public class ListSongFragment extends Fragment
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_done:
-			SwitchToHomeFragment();
+			setResult(adapter.getmNumberItemIsChecked());
+			finish();
 			break;
 		case R.id.action_selectall:
 			Log.i("onQueryTextChange", "Select all");
@@ -205,21 +179,7 @@ public class ListSongFragment extends Fragment
 		adapter.notifyDataSetChanged();
 		
 	}
-
-	/**
-	 * @return the numberItemIsChecked
-	 */
-	public static int getNumberItemIsChecked() {
-		return numberItemIsChecked;
-	}
 	
-	 /**
-	 * @param numberItemIsChecked the numberItemIsChecked to set
-	 */
-	public static void setNumberItemIsChecked(int numberItemIsChecked) {
-		ListSongFragment.numberItemIsChecked = numberItemIsChecked;
-	}
-
 	/**
 	 * SearchView listener 
 	 */

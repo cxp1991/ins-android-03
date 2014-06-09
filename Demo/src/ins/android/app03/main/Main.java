@@ -159,9 +159,9 @@ public class Main extends Activity
 			ft.replace(R.id.content_frame, fragment, "HOME_FRAGMENT").commit();
 			break;
 		case 1:
-			fragment = new ListSongFragment();
+			//fragment = new ListSongFragment();
 			//ft.addToBackStack(null);
-			ft.replace(R.id.content_frame, fragment, "LIST_SONG_FRAGMENT").commit();
+			//ft.replace(R.id.content_frame, fragment, "LIST_SONG_FRAGMENT").commit();
 			break;
 		default:
 			break;
