@@ -49,8 +49,8 @@ public class Main extends Activity
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.main);
 		
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -62,9 +62,10 @@ public class Main extends Activity
 		/* Add item on navigation drawer */
 		mDrawerItem = new ArrayList<DrawerItem>();
 		mDrawerItem.add(new DrawerItem(navMenuTitles[0], R.drawable.ic_home));
-		mDrawerItem.add(new DrawerItem(navMenuTitles[1], R.drawable.ic_communities));
-		mDrawerItem.add(new DrawerItem(navMenuTitles[2], R.drawable.ic_communities));
-		mDrawerItem.add(new DrawerItem(navMenuTitles[3], R.drawable.ic_communities));
+		mDrawerItem.add(new DrawerItem(navMenuTitles[1], android.R.drawable.ic_menu_share));
+		mDrawerItem.add(new DrawerItem(navMenuTitles[2], android.R.drawable.btn_star));
+		mDrawerItem.add(new DrawerItem(navMenuTitles[3], android.R.drawable.ic_menu_set_as));
+		mDrawerItem.add(new DrawerItem(navMenuTitles[4], R.drawable.ic_communities));
 		
 		mDrawerAdapter = new DrawerListAdapter(this, mDrawerItem);
 		mDrawerList.setAdapter(mDrawerAdapter);

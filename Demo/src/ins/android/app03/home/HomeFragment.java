@@ -94,46 +94,44 @@ public class HomeFragment extends Fragment
 		Log.i("HomeFragment", "savedInstanceState = " + savedInstanceState);
 		super.onCreate(savedInstanceState);
 		
-		setRetainInstance(true);
-		
-		mContext = getActivity().getBaseContext();
-		mActivity = getActivity();
-		/*
-		 * For the first time we need to request all audio file in
-		 * device (just 1 time).
-		 * 
-		 * As this app, we can do it at onCreate() in Activity, but It's not logic. 
-		 * From Fragment's lifecycle this method will just call when user choose "Home" 
-		 * on Navigation Drawer.
-		 */
-		
-		if (!isMusicListed){
-			try {
-	    		Log.i("HomeFragment", "List music");
-	    		
-	    		/* 
-	    		 * Query to list all song in device 
-	    		 */
-    			Utils.getAllAudio(getActivity());
-	        	
-	    		/* Add result to data container 
-	        	 * Using thread to not block UI thread
-	        	 * when add audio into our database
-	        	 * */
-	        	new Thread( new Runnable() {
-	        		
-	    			@Override
-	                public void run() {
-                		Looper.prepare();
-                        Utils.insertQueryResultIntoSonglist();
-                        isMusicListed = true;
-                        Looper.loop();
-	                }
-	            }).start();
-	        	
-			} catch (Exception e) {
-			}
-		}
+//		mContext = getActivity().getBaseContext();
+//		mActivity = getActivity();
+//		/*
+//		 * For the first time we need to request all audio file in
+//		 * device (just 1 time).
+//		 * 
+//		 * As this app, we can do it at onCreate() in Activity, but It's not logic. 
+//		 * From Fragment's lifecycle this method will just call when user choose "Home" 
+//		 * on Navigation Drawer.
+//		 */
+//		
+//		if (!isMusicListed){
+//			try {
+//	    		Log.i("HomeFragment", "List music");
+//	    		
+//	    		/* 
+//	    		 * Query to list all song in device 
+//	    		 */
+//    			Utils.getAllAudio(getActivity());
+//	        	
+//	    		/* Add result to data container 
+//	        	 * Using thread to not block UI thread
+//	        	 * when add audio into our database
+//	        	 * */
+//	        	new Thread( new Runnable() {
+//	        		
+//	    			@Override
+//	                public void run() {
+//                		Looper.prepare();
+//                        Utils.insertQueryResultIntoSonglist();
+//                        isMusicListed = true;
+//                        Looper.loop();
+//	                }
+//	            }).start();
+//	        	
+//			} catch (Exception e) {
+//			}
+//		}
 	}
 
 	
@@ -317,6 +315,7 @@ public class HomeFragment extends Fragment
 			/* Music */
 	    	if (!isThreadSwitchIemMusicRun)
 	    	{
+	    		Log.i("", "run tis thread");
 	    		new Thread (new Runnable() 
 	        	{
 	    			@Override
@@ -439,6 +438,44 @@ public class HomeFragment extends Fragment
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		Log.i("","onViewCreated");
+		mContext = getActivity().getBaseContext();
+		mActivity = getActivity();
+		/*
+		 * For the first time we need to request all audio file in
+		 * device (just 1 time).
+		 * 
+		 * As this app, we can do it at onCreate() in Activity, but It's not logic. 
+		 * From Fragment's lifecycle this method will just call when user choose "Home" 
+		 * on Navigation Drawer.
+		 */
+		
+		if (!isMusicListed){
+			try {
+	    		Log.i("HomeFragment", "List music");
+	    		
+	    		/* 
+	    		 * Query to list all song in device 
+	    		 */
+    			Utils.getAllAudio(getActivity());
+	        	
+	    		/* Add result to data container 
+	        	 * Using thread to not block UI thread
+	        	 * when add audio into our database
+	        	 * */
+	        	new Thread( new Runnable() {
+	        		
+	    			@Override
+	                public void run() {
+                		Looper.prepare();
+                        Utils.insertQueryResultIntoSonglist();
+                        isMusicListed = true;
+                        Looper.loop();
+	                }
+	            }).start();
+	        	
+			} catch (Exception e) {
+			}
+		}
 	}
 	
 	class ShowUpRingtone extends Thread implements Runnable {
