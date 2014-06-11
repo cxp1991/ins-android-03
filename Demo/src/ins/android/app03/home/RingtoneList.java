@@ -34,11 +34,7 @@ public class RingtoneList extends AudioList
 	
 	private int NUMER_RINGTOMES = 8;
 	
-	private Activity mActivity;
-	
-	private boolean isRingtoneItemEnd = false; 
-	
-	private float mVolume = 0.0f;
+	private MediaPlayer mPlayer;
 	
 	/**
 	 * Disable edit list 
@@ -46,7 +42,7 @@ public class RingtoneList extends AudioList
 	public RingtoneList(int playingMode, Activity activity) 
 	{
 		super(REPEAT_ONE);
-		mActivity = activity;
+		this.setmMediaPlayer(mPlayer);
 		initializeRingtone(activity);
 	}
 	
@@ -67,84 +63,17 @@ public class RingtoneList extends AudioList
 		Log.i("TAG", "Init ringtone done!");
 	}
 
-	/* (non-Javadoc)
-	 * @see ins.android.app03.home.AudioList#initializeMediaPlayer()
-	 */
 	@Override
-	public void initializeMediaPlayer() 
-	{
+	public void initialize() {
 		if (getmMediaPlayer() == null)
 			return;
 		
 		if (getmPlayMode() == REPEAT_ONE){
 			Log.i("TAG", "ringtoe looping");
 			getmMediaPlayer().setLooping(true);
-		}
-		
-		/*
-		 * Configure when end of 1 playback
-		 */
-//		getmMediaPlayer().setOnCompletionListener(new OnCompletionListener() 
-//		{
-//			@Override
-//			public void onCompletion(MediaPlayer mp) {
-//				Log.i("TAG", "Ringtone setOnCompletionListener");
-//				switch (getmPlayMode()) {
-//				
-//				case SINGLE:
-//					break;
-//					
-//				case REPEAT_ONE:
-//					getmMediaPlayer().setLooping(true);
-//					break;
-//					
-//				case REPEAT_ALL:
-//					
-//					resetPlayer();
-//					
-//					Log.d("TAG", "mplaying = " + getmAudioPlaying());
-//					
-//					/*
-//					 * End of playlist
-//					 */
-//					if(getmAudioPlaying() == getCount())
-//						playMediaPlayer(getAudio(0).getmResSongId(), mActivity.getBaseContext(), 1);
-//					
-//					/*
-//					 * Normal, switch to next song
-//					 */
-//					else
-//					{
-//						playMediaPlayer(getAudio(getmAudioPlaying()).getmResSongId(), mActivity.getBaseContext(), getmAudioPlaying() + 1);
-//					}
-//					
-//					break;
-//					
-//				case PLAY_ALL:
-//					
-//					resetPlayer();
-//					
-//					if(getmAudioPlaying() < getCount())
-//					{
-//						Log.d("TAG", "mplaying = " + getmAudioPlaying());
-//						playMediaPlayer(getAudio(getmAudioPlaying()).getmResSongId(), mActivity.getBaseContext(), getmAudioPlaying() + 1);
-//					}
-//					
-//					/*
-//					 *	Last song stop play 
-//					 */
-//					
-//					break;
-//					
-//				default:
-//					break;
-//				}
-//				
-//				setRingtoneItemEnd(true);
-//			}
-//		});
-		
+		}		
 	}
+	
 
 	public void playMediaPlayer(int songId, Context context, int index)
 	{
@@ -160,7 +89,7 @@ public class RingtoneList extends AudioList
 			
 			mplayer = MediaPlayer.create(context, songId);
 			setmMediaPlayer(mplayer);
-			initializeMediaPlayer();
+			initialize();
 			mplayer.start();
 			Log.e("TAG", "Playing");
 			this.setmState(PLAYING);
@@ -175,20 +104,6 @@ public class RingtoneList extends AudioList
 	}
 
 	/**
-	 * @return the isRingtoneItemEnd
-	 */
-	public boolean isRingtoneItemEnd() {
-		return isRingtoneItemEnd;
-	}
-
-	/**
-	 * @param isRingtoneItemEnd the isRingtoneItemEnd to set
-	 */
-	public void setRingtoneItemEnd(boolean isRingtoneItemEnd) {
-		this.isRingtoneItemEnd = isRingtoneItemEnd;
-	}
-
-	/**
 	 * @param mVolume the mVolume to set
 	 */
 	public void setmVolume(float mVolume) {
@@ -199,5 +114,5 @@ public class RingtoneList extends AudioList
 			
 		}
 	}
-	
+
 }

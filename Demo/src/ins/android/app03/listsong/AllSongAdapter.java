@@ -2,7 +2,7 @@ package ins.android.app03.listsong;
 
 import ins.android.app03.home.MySong;
 import ins.android.app03.home.R;
-import ins.android.app03.home.Utils;
+import ins.android.app03.home.SongManager;
 
 import java.util.ArrayList;
 
@@ -42,13 +42,13 @@ public class AllSongAdapter extends BaseAdapter
 	@Override
 	public int getCount()
 	{
-		return Utils.mListAllSong.size();
+		return SongManager.mListAllSong.size();
 	}
 
 	@Override
 	public Object getItem(int position)
 	{
-		return Utils.mListAllSong.get(position);
+		return SongManager.mListAllSong.get(position);
 	}
 
 	@Override
@@ -84,41 +84,40 @@ public class AllSongAdapter extends BaseAdapter
 			ArrayList<MySong> valueArraylist = new ArrayList<MySong>();                              
 			
 			/* reset data */
-			if (Utils.mListAllSong.size() < mArraylist.size())
+			if (SongManager.mListAllSong.size() < mArraylist.size())
 			{
-				Utils.mListAllSong.clear();
-				Utils.mListAllSong.addAll(mArraylist);
+				SongManager.mListAllSong.clear();
+				SongManager.mListAllSong.addAll(mArraylist);
 				
-//				new Thread(new Runnable() 
-//				{
-//					@Override
-//					public void run() 
-//					{
-//						mAdapter.notifyDataSetChanged();
-//					}
-//				}).start();
+				mActivity.runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						mAdapter.notifyDataSetChanged();						
+					}
+				});
 			}	
 				
-            for (int i = 0; i < Utils.mListAllSong.size(); i++) 
+            for (MySong song : SongManager.mListAllSong) 
             {
-            	final String value = Utils.mListAllSong.get(i).getmSongName().toLowerCase();
+            	final String value = song.getmSongName().toLowerCase();
                 final String valueText = value.toString().toLowerCase();
 
 				if (valueText.startsWith(prefix)) 
 				{
-					valueArraylist.add(Utils.mListAllSong.get(i));
+					valueArraylist.add(song);
 				} 
 				else 
 				{
 					final String[] words = valueText.split(" ");
 					final int wordCount = words.length;
 				 
-					// Start at index 0, in case valueText starts with space(s)
+					 //Start at index 0, in case valueText starts with space(s)
 					for (int k = 0; k < wordCount; k++) 
 					{
 						if (words[k].startsWith(prefix)) 
 						{
-							valueArraylist.add(Utils.mListAllSong.get(i));
+							valueArraylist.add(song);
 							break;
 						}
 					}
@@ -137,7 +136,7 @@ public class AllSongAdapter extends BaseAdapter
 				FilterResults results) 
 		{
 			Log.i("TAG", "publishResults");
-			 Utils.mListAllSong = (ArrayList<MySong>) results.values;
+			 SongManager.mListAllSong = (ArrayList<MySong>) results.values;
 			 
 			 if (results.count > 0) 
 			 {
@@ -185,7 +184,7 @@ public class AllSongAdapter extends BaseAdapter
 					else	
 						mNumberItemIsChecked --;
 							
-					Utils.mListAllSong.get(getPosition).setmSelected(buttonView.isChecked()); 
+					SongManager.mListAllSong.get(getPosition).setmSelected(buttonView.isChecked()); 
 					
 						mActivity.runOnUiThread(new Runnable() {
 							
@@ -226,14 +225,14 @@ public class AllSongAdapter extends BaseAdapter
              viewHolder = (CompleteListViewHolder) convertView.getTag();  
         }  
 
-        viewHolder.mSongName.setText(Utils.mListAllSong.get(position).getmSongName());
+        viewHolder.mSongName.setText(SongManager.mListAllSong.get(position).getmSongName());
         viewHolder.mSongName.setTypeface(Typeface.SERIF);
-        viewHolder.mArtist.setText(Utils.mListAllSong.get(position).getmSongArtist());
+        viewHolder.mArtist.setText(SongManager.mListAllSong.get(position).getmSongArtist());
         viewHolder.mArtist.setTypeface(Typeface.SERIF);
         
         String time;
-        String minute = Utils.mListAllSong.get(position).getmSongDurationSecond()/60 + "";
-        int second = Utils.mListAllSong.get(position).getmSongDurationSecond()%60;
+        String minute = SongManager.mListAllSong.get(position).getmSongDurationSecond()/60 + "";
+        int second = SongManager.mListAllSong.get(position).getmSongDurationSecond()%60;
         if (second < 10)
         	time = minute + ":" + "0" + second;
         else
@@ -242,13 +241,13 @@ public class AllSongAdapter extends BaseAdapter
         viewHolder.mDuration.setText(time);
         viewHolder.mDuration.setTypeface(Typeface.SERIF);
         
-        if (Utils.mListAllSong.get(position).getmThumbnail() != null)
-        	viewHolder.mThumbnail.setImageBitmap(Utils.mListAllSong.get(position).getmThumbnail());
+        if (SongManager.mListAllSong.get(position).getmThumbnail() != null)
+        	viewHolder.mThumbnail.setImageBitmap(SongManager.mListAllSong.get(position).getmThumbnail());
         else
         	viewHolder.mThumbnail.setImageResource(R.drawable.music_icon_01);
         
         viewHolder.mCheckbox.setTag(position); 
-        viewHolder.mCheckbox.setChecked(Utils.mListAllSong.get(position).ismSelected()); 
+        viewHolder.mCheckbox.setChecked(SongManager.mListAllSong.get(position).ismSelected()); 
         
         return convertView;
 	}

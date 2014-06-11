@@ -1,27 +1,20 @@
 package ins.android.app03.listsong;
 
-import ins.android.app03.home.HomeFragment;
+import ins.android.app03.home.MySong;
 import ins.android.app03.home.R;
-import ins.android.app03.home.Utils;
+import ins.android.app03.home.SongManager;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
@@ -33,13 +26,10 @@ public class ListSongFragment extends Activity
 		
 	 @Override
 	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
-		while (!HomeFragment.isMusicListed);
 		setContentView(R.layout.listviewlayout);
-
-		adapter = new AllSongAdapter(Utils.mListAllSong, this);
+		
+		adapter = new AllSongAdapter(SongManager.mListAllSong, this);
 		lv = (ListView) findViewById(R.id.lv);
 		lv.setOnItemClickListener(itemClickListener);
 		lv.setAdapter(adapter);
@@ -144,9 +134,9 @@ public class ListSongFragment extends Activity
 			}
 		}
 		
-		for (int i = 0; i < Utils.mListAllSong.size(); i++)
+		for (MySong song : SongManager.mListAllSong)
 		{
-			Utils.mListAllSong.get(i).setmSelected(true); 
+			song.setmSelected(true); 
 		}
 		
 		adapter.notifyDataSetChanged();
@@ -171,9 +161,10 @@ public class ListSongFragment extends Activity
 			}
 		}
 		
-		for (int i = 0; i < Utils.mListAllSong.size(); i++)
+
+		for (MySong song : SongManager.mListAllSong)
 		{
-			Utils.mListAllSong.get(i).setmSelected(false); 
+			song.setmSelected(false); 
 		}
 		
 		adapter.notifyDataSetChanged();
@@ -196,7 +187,7 @@ public class ListSongFragment extends Activity
 		@Override
 		public boolean onQueryTextChange(String newText) 
 		{
-			//Log.i("onQueryTextChange", "" + newText);
+//			//Log.i("onQueryTextChange", "" + newText);
 			adapter.myGetFilter().filter(newText);
 			return true;
 		}

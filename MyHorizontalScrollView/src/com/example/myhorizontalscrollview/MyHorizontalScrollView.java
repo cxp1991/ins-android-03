@@ -181,24 +181,12 @@ public class MyHorizontalScrollView extends HorizontalScrollView
         		LayoutParams.MATCH_PARENT));
         topLnLayout.addView(footerlayout);
         
-        /* Set thumbnail's title */
-        /* Highlight 1st thumbnail */
-        if (numberThumbnail >= 1)
+    	for (int i = 1; i < numberThumbnail + 1; i++)
         {
-        	setThumbnailTitle(1, "1");
-        	setThumbnailImageResourceFromDrawable(1, hilighLightThumbnailDrawable);
-        	centerIndex = 1;
+        	setThumbnailTitle(i,"" + i);
+        	setThumbnailImageResourceFromDrawable(i, normalThumbnailDrawable);
         }
-        
-        if (numberThumbnail >= 2)
-        {
-        	for (int i = 2; i < numberThumbnail + 1; i++)
-            {
-            	setThumbnailTitle(i,"" + i);
-            	setThumbnailImageResourceFromDrawable(i, normalThumbnailDrawable);
-            }
-        }
-        
+    
         /* Gesture detector for "long press" event */
         gesturedetector = new GestureDetector(context, GestureDetectorListener);
         
@@ -1152,11 +1140,11 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		int minIndex =arrLocation.get(0).getIndex();
 		int minValue = arrLocation.get(0).getdistanceFromCenter();
 		
-		for(int i=1; i < arrLocation.size() ;i++)
+		for(xLocation location : arrLocation)
 		{
-			if(arrLocation.get(i).getdistanceFromCenter() < minValue){
-				minValue = arrLocation.get(i).getdistanceFromCenter();
-				minIndex = arrLocation.get(i).getIndex();
+			if (location.getdistanceFromCenter() < minValue) {
+				minValue = location.getdistanceFromCenter();
+				minIndex = location.getIndex();
 			}
 		}
 

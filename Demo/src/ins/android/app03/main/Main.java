@@ -1,7 +1,10 @@
 package ins.android.app03.main;
 import ins.android.app03.home.AudioList;
 import ins.android.app03.home.HomeFragment;
+import ins.android.app03.home.MySong;
 import ins.android.app03.home.R;
+import ins.android.app03.home.SongList;
+import ins.android.app03.home.SongManager;
 import ins.android.app03.listsong.ListSongFragment;
 
 import java.util.ArrayList;
@@ -11,7 +14,9 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.res.Configuration;
+import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -45,6 +50,11 @@ public class Main extends Activity
 	private ArrayList<DrawerItem> mDrawerItem;
 	private DrawerListAdapter mDrawerAdapter;
 	
+	private ArrayList<MySong> mMySongList = new ArrayList<MySong>();
+	private SongManager mSongManager = new SongManager();
+	private Thread mAddSongIntoDatabase;
+	private boolean isInitializeListSongDone = false;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -52,6 +62,13 @@ public class Main extends Activity
 		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.main);
+		
+		/*
+		 * Get song from external
+		 */
+		mSongManager.getAllAudio(this);
+		mAddSongIntoDatabase = new Thread(new AddSongIntoDatabase());
+		mAddSongIntoDatabase.start();
 		
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -97,6 +114,16 @@ public class Main extends Activity
 		if (savedInstanceState == null) {
 			// on first time display view for first nav item
 			displayView(0);
+		}
+		
+	}
+	
+	class AddSongIntoDatabase extends Thread implements Runnable {
+		
+		@Override
+		public void run() {
+          mSongManager.insertQueryResultIntoSonglist();
+          isInitializeListSongDone = true;
 		}
 		
 	}
@@ -218,10 +245,29 @@ public class Main extends Activity
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		
+		try {
+			mAddSongIntoDatabase.join();
+		} catch (Exception e) {
+		}
+		
 		HomeFragment.mRingtoneList.setmState(AudioList.PAUSE);
 		HomeFragment.mSongList.setmState(AudioList.PAUSE);
 		HomeFragment.mRingtoneList.pauseMediaPlayer();
 		HomeFragment.mSongList.pauseMediaPlayer();
+		
+		SongManager.mListAllSong.clear();
+		HomeFragment.mRingtoneList.getmAudioList().clear();
+		HomeFragment.mSongList.getmAudioList().clear();
+		HomeFragment.rootView = null;
 	}
 
+
+	/**
+	 * @return the isInitializeListSongDone
+	 */
+	public boolean isInitializeListSongDone() {
+		return isInitializeListSongDone;
+	}
+	
 }

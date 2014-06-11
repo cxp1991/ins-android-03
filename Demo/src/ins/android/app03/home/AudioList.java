@@ -7,7 +7,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
 
-public class AudioList {
+public abstract class AudioList {
 	
 	/*
 	 *  Playing Mode
@@ -23,102 +23,17 @@ public class AudioList {
 	
 	private ArrayList<MySong> mAudioList = new ArrayList<MySong>();
 
-	private int mPlayMode = SINGLE;
-	private int mState = PAUSE;
-	private int mAudioPlaying = -1;
+	private int mPlayMode;
+	private int mState;
+	private int mAudioPlaying;
 	private boolean mIsEnableEditList;
 	private MediaPlayer mMediaPlayer;
 	
-	private boolean isEditted = false;
-
-	private boolean isEndOnePlayback = false;
-	
-	public AudioList(int playingMode, boolean isEnableEditList) 
-	{
-		this.setmPlayMode(playingMode);
-		this.setmIsEnableEditList(isEnableEditList);
-		this.mMediaPlayer = new MediaPlayer(); 
-		this.setmState(STOP);
-		initializeMediaPlayer();
-	}
-	
 	public AudioList(int playingMode) 
 	{
-		this.setmPlayMode(playingMode);
-		this.setmState(STOP);
-	}
-
-	/**
-	 * Initialize Mediaplayer
-	 */
-	public void initializeMediaPlayer() 
-	{
-		Log.i("TAG", "Audiolist constructor");
-		
-		/*
-		 * Configure when end of 1 playback
-		 */
-		this.mMediaPlayer.setOnCompletionListener(new OnCompletionListener() 
-		{
-			@Override
-			public void onCompletion(MediaPlayer mp) {
-				Log.i("onCompletion", "setOnCompletionListener");
-				Log.i("onCompletion", "Play mode = " + getmPlayMode());
-				switch (getmPlayMode()) {
-				
-				case SINGLE:
-					break;
-					
-				case REPEAT_ONE:
-					break;
-					
-				case REPEAT_ALL:
-					
-					resetPlayer();
-					
-					/*
-					 * End of playlist
-					 */
-					Log.i("onCompletion", "Audio plauing index = " + getmAudioPlaying());
-					Log.i("onCompletion", "Count = " + getCount());
-					if(getmAudioPlaying() == getCount())
-					{
-						Log.i("onCompletion", "End of playlist");
-						playMediaPlayer(1);
-					}
-					
-					/*
-					 * Normal, switch to next song
-					 */
-					else
-					{
-						Log.i("onCompletion", "Not end of playlist");
-						playMediaPlayer(getmAudioPlaying() + 1);
-					}
-					
-					break;
-					
-				case PLAY_ALL:
-					
-					resetPlayer();
-					
-					if(getmAudioPlaying() < getCount())
-						playMediaPlayer(getmAudioPlaying() + 1);
-					
-					/*
-					 *	Last song stop play 
-					 */
-					
-					break;
-					
-				default:
-					break;
-				}
-				
-				isEndOnePlayback = true;
-			}
-		});
-		
+		this.mPlayMode = playingMode;
+		this.mState = STOP;
+		this.mAudioPlaying = -1;
 	}
 
 	public int getCount()
@@ -253,7 +168,7 @@ public class AudioList {
 			mMediaPlayer.prepare();
 			mMediaPlayer.start();
 			Log.e("TAG", "Playing");
-			this.setmState(PLAYING);
+			mState = PLAYING;
 		} 
 		catch (Exception e) 
 		{
@@ -272,7 +187,7 @@ public class AudioList {
 			if (mMediaPlayer.isPlaying())
 				mMediaPlayer.pause();
 			//Log.e("TAG", "Pause");
-			this.setmState(PAUSE);
+			mState = PAUSE;
 		}
 	}
 	
@@ -288,7 +203,7 @@ public class AudioList {
 				mMediaPlayer.reset();
 			}
 			//Log.e("TAG", "Pause");
-			this.setmState(STOP);
+			mState = STOP;
 		}
 	}
 	
@@ -300,7 +215,7 @@ public class AudioList {
 		if (mMediaPlayer != null){
 			mMediaPlayer.start();
 			//Log.e("TAG", "Pause");
-			this.setmState(PLAYING);
+			mState = PLAYING;
 		}
 	}
 	
@@ -309,7 +224,8 @@ public class AudioList {
 	 * */
 	public void resetPlayer()
 	{
-		this.mMediaPlayer.reset();
+		if (mMediaPlayer != null)
+			this.mMediaPlayer.reset();
 	}
 	
 	/**
@@ -317,16 +233,10 @@ public class AudioList {
 	 */
 	public void releasePlayer()
 	{
-		this.mMediaPlayer.release();
+		if (mMediaPlayer != null)
+			this.mMediaPlayer.release();
 	}
 	
-	/**
-	 * @return the isEndOnePlayback
-	 */
-	public boolean isEndOnePlayback() {
-		return isEndOnePlayback;
-	}
-
 	/**
 	 * Set looping
 	 */
@@ -335,12 +245,6 @@ public class AudioList {
 		this.mMediaPlayer.setLooping(value);
 	}
 	
-	/**
-	 * @param isEndOnePlayback the isEndOnePlayback to set
-	 */
-	public void setEndOnePlayback(boolean isEndOnePlayback) {
-		this.isEndOnePlayback = isEndOnePlayback;
-	}
 	
 	/**
 	 * @return the mMediaPlayer
@@ -355,4 +259,7 @@ public class AudioList {
 	public void setmMediaPlayer(MediaPlayer mMediaPlayer) {
 		this.mMediaPlayer = mMediaPlayer;
 	}
+	
+	public abstract void initialize ();
+	
 }
