@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.provider.MediaStore.Audio;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,7 +45,7 @@ public class HomeFragment extends Fragment
 	 * RingtoneList & MusicList
 	 * Using static to Save state of data after fragment commit times
 	 * */
-	public static SongList mSongList = new SongList(AudioList.REPEAT_ALL);
+	public static SongList mSongList = null; 
 	public static RingtoneList mRingtoneList = null; 
 	
 	public static View rootView = null;
@@ -68,6 +69,12 @@ public class HomeFragment extends Fragment
 	private AudioManager mAudioManager = null;
 	
 	private int mNumberSongChecked = 0;
+	
+	private final int PLAYBACK_PAUSE = 0x01;
+	private final int PLAYBACK_PLAYING = 0x02;
+	private final int PLAYBACK_STOP = 0x03;
+	
+	private int systemPlaybackState = PLAYBACK_STOP;
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,6 +93,7 @@ public class HomeFragment extends Fragment
 		{
 			rootView = inflater.inflate(R.layout.activity_main, container, false);
 			mRingtoneList = new RingtoneList(AudioList.REPEAT_ONE, getActivity());
+			mSongList = new SongList(AudioList.REPEAT_ALL, getActivity());
 		}
         
         /* 
@@ -99,8 +107,9 @@ public class HomeFragment extends Fragment
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		ringtoneHrScrollView = (MyHorizontalScrollView) rootView.findViewById(R.id.ringtonescrollview);
         ringtoneHrScrollView.setOnTouchFinishListener(ringtoneOnTouchFinishListener);
-        ringtoneHrScrollView.setOnThumbnailLongTouchListener(ringtoneOnLongTouchListener);
-        ringtoneHrScrollView.setVisibility(View.GONE);
+        if (mSongList.getCount() == 0) {
+        	ringtoneHrScrollView.setVisibility(View.INVISIBLE);
+        }
         
         musicHrScrollView = (MyHorizontalScrollView) rootView.findViewById(R.id.musicscrollview);
         musicHrScrollView.setOnTouchFinishListener(musicOnTouchFinish);
@@ -112,15 +121,12 @@ public class HomeFragment extends Fragment
          */
         buttonPlayAll = (Button) rootView.findViewById(R.id.btplayall);
         buttonPlayAll.setOnClickListener(buttonPlayAllOnClickListener);
-        if (mSongList.getmState() == AudioList.PLAYING || 
-				mRingtoneList.getmState() == AudioList.PLAYING)
+        
+        if (mSongList.getmState() == AudioList.PLAYING) {
         	buttonPlayAll.setText("Pause");
-        else if(mSongList.getmState() == AudioList.PAUSE && 
-				mRingtoneList.getmState() == AudioList.PAUSE)
-        	buttonPlayAll.setActivated(false);
-        	
-        else
+        } else {
         	buttonPlayAll.setText("Play");
+        }
 
         /*
          * Volume controller
@@ -135,6 +141,11 @@ public class HomeFragment extends Fragment
                 .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
         mMusicSeekBar.setMax(mAudioManager
                 .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+		mRingtoneSeekBar.setProgress(mAudioManager
+        .getStreamVolume(AudioManager.STREAM_MUSIC));
+mMusicSeekBar.setProgress(mAudioManager
+        .getStreamVolume(AudioManager.STREAM_MUSIC));
+
         
         mSongList.setEndSongListener(new OnEndSongListener() {
 			
@@ -145,42 +156,6 @@ public class HomeFragment extends Fragment
 				musicHrScrollView.updateLayout(index);
 				musicHrScrollView.setCenterIndex(index);
 
-				/*
-				* Update ringtone
-				*/
-				
-				if (mRingtoneList.getmState() == AudioList.PLAYING) {
-					if (ringtoneHrScrollView.getCenterIndex() ==
-							ringtoneHrScrollView.getmLongTouchItemIndex())
-						return;
-
-					if (ringtoneHrScrollView.getCenterIndex() + 1 >
-					ringtoneHrScrollView.getNumberThumbnail())
-					{
-						index = 1;
-					}
-					else
-					{
-						index = ringtoneHrScrollView.getCenterIndex() + 1;
-					}
-
-					ringtoneHrScrollView.updateLayout(index);
-					ringtoneHrScrollView.setCenterIndex(index);
-							
-					mRingtoneList.resetPlayer();
-					if(mRingtoneList.getmAudioPlaying() ==
-					mRingtoneList.getCount()) {
-	
-						mRingtoneList.playMediaPlayer(mRingtoneList.
-								getAudio(0).getmResSongId(), mContext, 1);
-					}
-					else
-					{
-						mRingtoneList.playMediaPlayer(mRingtoneList.getAudio(mRingtoneList.
-								getmAudioPlaying()).getmResSongId(),
-								mContext, mRingtoneList.getmAudioPlaying() + 1);
-					}
-				}
 			}
         });
 	}
@@ -221,65 +196,62 @@ public class HomeFragment extends Fragment
 		
 		@Override
 		public void onClick(View v) {
-			switch (v.getId()) {
-			case R.id.btplayall:
+			
+			/* From STOP state */
+			if (mSongList.getmState() == AudioList.STOP) {
 				
-				/*
-				 * Song playing -> pause
-				 */
-				if (mSongList.getmState() == AudioList.PLAYING)
-				{
-					mSongList.pauseMediaPlayer();
-					mRingtoneList.pauseMediaPlayer();
-					buttonPlayAll.setText("Play");
+				mSongList.playMediaPlayer(1);
+				musicHrScrollView.updateLayout(1);
+				musicHrScrollView.setCenterIndex(1);
+				
+				for (MySong song : mRingtoneList.getmAudioList()) {
+					if (song.isChoose()) {
+						if (song.getmPlayerState() == AudioList.PAUSE) {
+							mRingtoneList.resumePlayer(song);
+						} else {
+							mRingtoneList.playMediaPlayer(getActivity().getBaseContext(), song);
+						}
+					}
 				}
-				/*
-				 * Song pause -> playing
-				 */
-				else if (mSongList.getmState() == AudioList.PAUSE)
-				{
-					/*
-					 * No songs anymore
-					 */
-					if (mSongList.getCount() == 0){
-						mSongList.stopMediaPlayer();
-						buttonPlayAll.setText("Play");
-						break;
-					}
+			
+			/* From PAUSE state */
+			} else if (mSongList.getmState() == AudioList.PAUSE) {
 				
-					/*
-					 * Song
-					 * Choose another song
-					 */
-					if (mSongList.getmAudioPlaying() != musicHrScrollView.getCenterIndex()){
-						mSongList.playMediaPlayer(musicHrScrollView.getCenterIndex());
-					}
-					else{
-						mSongList.resumePlayer();
-						buttonPlayAll.setText("Pause");
-					}
-					
-					/*
-					 * Ringtone
-					 * Choose another song
-					 */
-					if (mRingtoneList.getmAudioPlaying() != ringtoneHrScrollView.getCenterIndex()){
-						mRingtoneList.playMediaPlayer(mRingtoneList.getAudio(
-								ringtoneHrScrollView.getCenterIndex()-1).getmResSongId(), getActivity().
-								getBaseContext(), ringtoneHrScrollView.getCenterIndex());
-					} else {
-						mRingtoneList.resumePlayer();
-						buttonPlayAll.setText("Pause");
-					}
-					
+				if (mSongList.getmAudioPlaying() == musicHrScrollView.getCenterIndex()) {
+					mSongList.resumePlayer();
+				} else {
+					mSongList.playMediaPlayer(musicHrScrollView.getCenterIndex());
 				}
-
 				
-				break;
-
-			default:
-				break;
+				for (MySong song : mRingtoneList.getmAudioList()) {
+					if (song.isChoose()) {
+						Log.i("", "song = " + song.getmSongName());
+						Log.i("", "song = " + song.getmPlayerState());
+						if (song.getmPlayerState() == AudioList.PAUSE) {
+							mRingtoneList.resumePlayer(song);
+						} else {
+							mRingtoneList.playMediaPlayer(getActivity().getBaseContext(), song);
+						}
+					}
+				}
+				
+				buttonPlayAll.setText("Pause");
+				
+			/* From PLAYING state */
+			} else if (mSongList.getmState() == AudioList.PLAYING) {
+				
+				mSongList.pauseMediaPlayer();
+			
+				for (MySong song : mRingtoneList.getmAudioList()) {
+					if (song.isChoose()) {
+						mRingtoneList.pausePlayer(song);
+					}
+				}
+				
+				buttonPlayAll.setText("Play");
+				
 			}
+			
 		}
 	};
 	
@@ -310,7 +282,7 @@ public class HomeFragment extends Fragment
 				mVolumeLayout.setVisibility(View.VISIBLE);
 				
 				mRingtoneSeekBar.setProgress(mAudioManager
-    	                .getStreamVolume(AudioManager.STREAM_MUSIC));
+ 	                .getStreamVolume(AudioManager.STREAM_MUSIC));
 				mMusicSeekBar.setProgress(mAudioManager
     	                .getStreamVolume(AudioManager.STREAM_MUSIC));
 				
@@ -338,12 +310,10 @@ public class HomeFragment extends Fragment
 							@Override
 							public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) {
 								Log.i("","onProgressChanged");
-								mFutureInMillis = 5000;
-								mCountDownTimer.start();
-								
 								mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
 			                            progress, 0);
-								
+								mFutureInMillis = 5000;
+								mCountDownTimer.start();
 							}
 						});
 		            	
@@ -361,9 +331,9 @@ public class HomeFragment extends Fragment
 							@Override
 							public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) {
 								Log.i("","max= " + mRingtoneSeekBar.getMax());
+								mRingtoneList.setVolume((float)progress/mRingtoneSeekBar.getMax());
 								mFutureInMillis = 5000;
 								mCountDownTimer.start();
-								mRingtoneList.setmVolume((float)progress/mRingtoneSeekBar.getMax());
 							}
 						});
 		            }
@@ -458,7 +428,8 @@ public class HomeFragment extends Fragment
 			/*
 			 * Only play this song if selected item is different.
 			 */
-			if (centerIndex != mSongList.getmAudioPlaying())
+			if ((centerIndex != mSongList.getmAudioPlaying())
+					&& (mSongList.getmState() != AudioList.PAUSE))
 			{
 				mSongList.stopMediaPlayer();
 				mSongList.playMediaPlayer(centerIndex);
@@ -470,34 +441,45 @@ public class HomeFragment extends Fragment
 	OnTouchFinishListener ringtoneOnTouchFinishListener = new OnTouchFinishListener() {
 		
 		@Override
-		public void onTouchFinish(View parrent, int centerIndex) {
-			if (centerIndex == ringtoneHrScrollView.getmLongTouchItemIndex())
-				return;
+		public void onTouchFinish(View parrent, int index) {
+//			if (centerIndex == ringtoneHrScrollView.getmLongTouchItemIndex())
+//				return;
+//			
+//			/* Has longtouch Item */
+//			if(parrent != null)
+//			{
+//				Log.i("TAG", "onTouchFinish has long touch item");
+//				final ImageView img =  (ImageView) parrent.findViewById(R.id.thumbnailImage);
+//				
+//				getActivity().runOnUiThread(new Runnable() {
+//					
+//					@Override
+//					public void run() {
+//						// TODO Auto-generated method stub
+//						img.setBackgroundResource(R.drawable.image_transparent_border);
+//					}
+//				});
+//				
+//				mRingtoneList.setmPlayMode(AudioList.PLAY_ALL);
+//			}
 			
-			/* Has longtouch Item */
-			if(parrent != null)
-			{
-				Log.i("TAG", "onTouchFinish has long touch item");
-				final ImageView img =  (ImageView) parrent.findViewById(R.id.thumbnailImage);
-				
-				getActivity().runOnUiThread(new Runnable() {
+				if (ringtoneHrScrollView.isItemHighLight(index)) {
 					
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						img.setBackgroundResource(R.drawable.image_transparent_border);
+					mRingtoneList.stopPlayer(index);
+					ringtoneHrScrollView.unHighlightIdex(index);
+					mRingtoneList.getAudio(index-1).setChoose(false);
+					
+				} else {
+					
+					if (mSongList.getmState() == AudioList.PLAYING) {
+						mRingtoneList.playMediaPlayer(getActivity().getBaseContext(), index);
 					}
-				});
-				
-				mRingtoneList.setmPlayMode(AudioList.PLAY_ALL);
-			}
-			
-			if (centerIndex != mRingtoneList.getmAudioPlaying() &&
-					mSongList.getmState() == AudioList.PLAYING)
-				mRingtoneList.stopMediaPlayer();
-				mRingtoneList.playMediaPlayer(mRingtoneList.getAudio(centerIndex - 1).getmResSongId(), 
-						getActivity().getBaseContext(), centerIndex);
-			}
+					
+					ringtoneHrScrollView.highlightIdex(index);
+					mRingtoneList.getAudio(index-1).setChoose(true);
+					
+				}
+		}
 	};
 
 	/**
@@ -536,7 +518,7 @@ public class HomeFragment extends Fragment
 		
 		@Override
 		public void onItemnailAdd(int numberThumnail) {
-			if (ringtoneHrScrollView.getVisibility() == View.GONE)
+			if (ringtoneHrScrollView.getVisibility() == View.INVISIBLE)
 				ringtoneHrScrollView.setVisibility(View.VISIBLE);
 		}
 	};

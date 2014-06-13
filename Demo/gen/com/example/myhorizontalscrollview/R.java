@@ -12,8 +12,10 @@ public final class R {
 		public static final int NormalThumbnailImage = 0x7f010004;
 		public static final int Thumbnail_height = 0x7f010002;
 		public static final int Thumbnail_width = 0x7f010001;
+		public static final int enableScrollListener = 0x7f010007;
 		public static final int isEditable = 0x7f010005;
-		public static final int layout_location = 0x7f010006;
+		public static final int isResetHighLight = 0x7f010006;
+		public static final int layout_location = 0x7f010008;
 		public static final int numberThumbnail = 0x7f010000;
 	}
 	public static final class dimen {
@@ -29,14 +31,14 @@ public final class R {
 		public static final int songthumbnaildark = 0x7f020015;
 	}
 	public static final class id {
-		public static final int action_settings = 0x7f0a0026;
-		public static final int additemImgV = 0x7f0a0009;
-		public static final int headerfooterlayout = 0x7f0a000c;
-		public static final int hrScrollview = 0x7f0a0007;
-		public static final int itemFrLayout = 0x7f0a000d;
-		public static final int thumbnailImage = 0x7f0a000e;
-		public static final int toplinearlayout = 0x7f0a0008;
-		public static final int tv = 0x7f0a000f;
+		public static final int action_settings = 0x7f0a0025;
+		public static final int additemImgV = 0x7f0a0008;
+		public static final int headerfooterlayout = 0x7f0a000b;
+		public static final int hrScrollview = 0x7f0a0006;
+		public static final int itemFrLayout = 0x7f0a000c;
+		public static final int thumbnailImage = 0x7f0a000d;
+		public static final int toplinearlayout = 0x7f0a0007;
+		public static final int tv = 0x7f0a000e;
 	}
 	public static final class layout {
 		public static final int activity_my_horizontal_scroll_view = 0x7f030001;
@@ -57,13 +59,15 @@ public final class R {
 		public static final int AppTheme = 0x7f070001;
 	}
 	public static final class styleable {
-		public static final int[] numberThumbnail = { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006 };
+		public static final int[] numberThumbnail = { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007, 0x7f010008 };
 		public static final int numberThumbnail_HighlightThumbnailImage = 3;
 		public static final int numberThumbnail_NormalThumbnailImage = 4;
 		public static final int numberThumbnail_Thumbnail_height = 2;
 		public static final int numberThumbnail_Thumbnail_width = 1;
+		public static final int numberThumbnail_enableScrollListener = 7;
 		public static final int numberThumbnail_isEditable = 5;
-		public static final int numberThumbnail_layout_location = 6;
+		public static final int numberThumbnail_isResetHighLight = 6;
+		public static final int numberThumbnail_layout_location = 8;
 		public static final int numberThumbnail_numberThumbnail = 0;
 	}
 }

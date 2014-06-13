@@ -59,6 +59,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	private int layoutLocation; // 0 = top, 1 = middle, 2 = bottom
 	private LayoutParams params;
 	private LayoutTransition layoutTransition;
+	private boolean isResetHighLight;
 	
 	private int THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT;// pixel
 	private int SCREEN_WIDTH;
@@ -94,6 +95,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
     private float dx, dy;
     private int count = 0;
     private boolean isActionRemove = false;
+	private boolean isEnableScrollListener;
     
 	public MyHorizontalScrollView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -116,6 +118,9 @@ public class MyHorizontalScrollView extends HorizontalScrollView
             hilighLightThumbnailDrawable = a.getDrawable(R.styleable.numberThumbnail_HighlightThumbnailImage);
             layoutLocation = a.getInt(R.styleable.numberThumbnail_layout_location, 1); // Default is middle
             isEditable = a.getBoolean(R.styleable.numberThumbnail_isEditable, true);
+            isResetHighLight = a.getBoolean(R.styleable.numberThumbnail_isResetHighLight, true);
+            isEnableScrollListener = a.getBoolean(R.styleable.numberThumbnail_enableScrollListener, true);
+            
         } finally {
             if (a != null) {
                 a.recycle(); // ensure this is always called
@@ -440,7 +445,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		
 		try
 		{
-			this.scrollToIndex(index);
+			//this.scrollToIndex(index);
 			Log.d("TAG", "highlightIdex = " + index);
 			/* Then, highlight @centerIndex item */
 			ImageView imgView = (ImageView) topLnLayout.getChildAt(index).findViewById(R.id.thumbnailImage);
@@ -634,120 +639,124 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	 */
 	private void removeThumbnailFromParent (final View v, final int action, final int index)
 	{
-		return; // disable remove
-		/*if (!isEditable)
-			return;
+		return; 
 		
-		
-		 * Framelayout contains item will be removed
-		 
-		final FrameLayout view = (FrameLayout)v;
-		
-		Log.d ("removeThumbnailFromParent", "removeThumbnailFromParent");
-
-		 
-		 * Alpha & Translate animation 
-		 * to display how item will be removed
-		 
-		
-		 Alpha animation 
-		Animation fadeOut = new AlphaAnimation(1, 0);
-		fadeOut.setInterpolator(new AccelerateInterpolator()); //and this
-		fadeOut.setDuration(750);
-		
-		 Translate animation 
-		Animation translate = null;
-		
-		 Check user gesture is valid 
-		
-		 Our horizontalscrollview is in top of screen 
-		if (layoutLocation == 0 && (action == ACTION_REMOVE_DOWN))
-			translate = new TranslateAnimation(0,0,0, THUMBNAIL_WIDTH);
-		else if (layoutLocation == 0 && (action == ACTION_REMOVE_UP))
-		{
-			Log.w ("removeThumbnailFromParent", "Invalid motion");
-			return;
-		}
-		
-		 Our horizontalscrollview is in bottom of screen 
-		if (layoutLocation == 2 && (action == ACTION_REMOVE_UP))
-			translate = new TranslateAnimation(0,0,0, THUMBNAIL_WIDTH*(-1));
-		else if (layoutLocation == 2 && (action == ACTION_REMOVE_DOWN))
-		{
-			Log.w ("removeThumbnailFromParent", "Invalid motion");
-			return;
-		}
-		
-		translate.setDuration(750);
-		
-		 Merge 2 animations using Animationset
-		AnimationSet animationSet = new AnimationSet(true);
-		animationSet.addAnimation(fadeOut);
-		animationSet.addAnimation(translate);
-		
-		try {
-			 Thumbnail & text will use above animation 
-			ImageView thumbnail = (ImageView) view.findViewById(R.id.thumbnailImage);
-			TextView title = (TextView) view.findViewById(R.id.tv);
-			
-			thumbnail.setAnimation(animationSet);
-			title.setAnimation(animationSet);
-			thumbnail.startAnimation(animationSet);
-			title.startAnimation(animationSet);
-			
-			 Wait until animation terminate, then remove item out of our horizontal scrollview 
-			animationSet.setAnimationListener(new AnimationListener() {
-				
-				@Override
-				public void onAnimationStart(Animation animation) {
-					Log.i ("TAG", "Start animationset");
-				}
-				
-				@Override
-				public void onAnimationRepeat(Animation animation) {
-				}
-				
-				@Override
-				public void onAnimationEnd(Animation animation) {
-					instance.post(new Runnable() {
-						
-						@Override
-						public void run() {
-							int indexOfView = topLnLayout.indexOfChild(view);
-							
-							 Remove imageview & textview are inside removing item 
-							view.removeAllViews();
-							
-							 Remove item 
-							topLnLayout.removeView(view);
-							numberThumbnail--;
-							Log.i ("Remove Item", "item = " + index);
-							
-							mItemRemovedIndex = index;
-							 Auto call LayoutTranslation listener 
-							
-							 Enale scroll 
-							enableScroll = true;
-
-							
-							 * Call item removing listener
-							 * Don't use index, use index of removed view instead 
-							 
-							if (itemRemoveListener != null)
-					        	itemRemoveListener.onItemRemove(indexOfView);
-					        
-							
-						}
-					});
-				
-					Log.i ("TAG", "End animationset");
-				}
-			});
-
-		}catch (NullPointerException ex)
-		{
-			
-		}*/
+//		if (!isEditable)
+//			return;
+//		
+//		 /* 
+//		  * Framelayout contains item will be removed
+//		  */
+//		 
+//		final FrameLayout view = (FrameLayout)v;
+//		
+//		Log.d ("removeThumbnailFromParent", "removeThumbnailFromParent");
+//
+//		 
+//		 /* Alpha & Translate animation 
+//		 * to display how item will be removed
+//		 */
+//		 
+//		
+//		// Alpha animation 
+//		Animation fadeOut = new AlphaAnimation(1, 0);
+//		fadeOut.setInterpolator(new AccelerateInterpolator()); //and this
+//		fadeOut.setDuration(750);
+//		
+//		 //Translate animation 
+//		Animation translate = null;
+//		
+//		// Check user gesture is valid 
+//		//
+//		// Our horizontalscrollview is in top of screen 
+//		if (layoutLocation == 0 && (action == ACTION_REMOVE_DOWN))
+//			translate = new TranslateAnimation(0,0,0, THUMBNAIL_WIDTH);
+//		else if (layoutLocation == 0 && (action == ACTION_REMOVE_UP))
+//		{
+//			Log.w ("removeThumbnailFromParent", "Invalid motion");
+//			return;
+//		}
+//		
+//		// Our horizontalscrollview is in bottom of screen 
+//		if (layoutLocation == 2 && (action == ACTION_REMOVE_UP))
+//			translate = new TranslateAnimation(0,0,0, THUMBNAIL_WIDTH*(-1));
+//		else if (layoutLocation == 2 && (action == ACTION_REMOVE_DOWN))
+//		{
+//			Log.w ("removeThumbnailFromParent", "Invalid motion");
+//			return;
+//		}
+//		
+//		translate.setDuration(750);
+//		
+//		// Merge 2 animations using Animationset
+//		AnimationSet animationSet = new AnimationSet(true);
+//		animationSet.addAnimation(fadeOut);
+//		animationSet.addAnimation(translate);
+//		
+//		try {
+//			 //Thumbnail & text will use above animation 
+//			ImageView thumbnail = (ImageView) view.findViewById(R.id.thumbnailImage);
+//			TextView title = (TextView) view.findViewById(R.id.tv);
+//			
+//			thumbnail.setAnimation(animationSet);
+//			title.setAnimation(animationSet);
+//			thumbnail.startAnimation(animationSet);
+//			title.startAnimation(animationSet);
+//			
+//			// Wait until animation terminate, then remove item out of our horizontal scrollview 
+//			animationSet.setAnimationListener(new AnimationListener() {
+//				
+//				@Override
+//				public void onAnimationStart(Animation animation) {
+//					Log.i ("TAG", "Start animationset");
+//				}
+//				
+//				@Override
+//				public void onAnimationRepeat(Animation animation) {
+//				}
+//				
+//				@Override
+//				public void onAnimationEnd(Animation animation) {
+//					instance.post(new Runnable() {
+//						
+//						@Override
+//						public void run() {
+//							int indexOfView = topLnLayout.indexOfChild(view);
+//							
+//							// Remove imageview & textview are inside removing item 
+//							view.removeAllViews();
+//							
+//							// Remove item 
+//							topLnLayout.removeView(view);
+//							numberThumbnail--;
+//							Log.i ("Remove Item", "item = " + index);
+//							
+//							mItemRemovedIndex = index;
+//							// Auto call LayoutTranslation listener 
+//							
+//							// Enale scroll 
+//							enableScroll = true;
+//
+//							
+//							 /* Call item removing listener
+//							 * Don't use index, use index of removed view instead 
+//							 */
+//							 
+//							if (itemRemoveListener != null)
+//					        	itemRemoveListener.onItemRemove(indexOfView);
+//					        
+//							
+//						}
+//					});
+//				
+//					Log.i ("TAG", "End animationset");
+//				}
+//			});
+//
+//		}catch (NullPointerException ex)
+//		{
+//			
+//		}
 	}
 
 	/**
@@ -902,31 +911,34 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 						
 						@Override
 						public void onAnimationEnd(Animator animation) {
-								Log.i ("REMOVING", "New center index = " + index);
-								Log.i ("REMOVING", "numberThumbnail = " + numberThumbnail);
-								ImageView imgView = null;
-								
-								try 
-								{
-									/* First reset highlight */
-									for (int i = 1; i <= numberThumbnail; i ++)
-									{
-										imgView = (ImageView) topLnLayout.getChildAt(i).findViewById(R.id.thumbnailImage);
-										if (imgView != null) // fast removing
-											imgView.setImageDrawable(normalThumbnailDrawable);
-									}
+								if (isResetHighLight) {
+									Log.i ("REMOVING", "New center index = " + index);
+									Log.i ("REMOVING", "numberThumbnail = " + numberThumbnail);
+									ImageView imgView = null;
 									
-									/* Then, highlight @centerIndex item */
-									imgView = (ImageView) topLnLayout.getChildAt(index).findViewById(R.id.thumbnailImage);
-									if (imgView != null) // fast removing
+									try 
 									{
-										imgView.setImageDrawable(hilighLightThumbnailDrawable);
+											/* First reset highlight */
+											for (int i = 1; i <= numberThumbnail; i ++)
+											{
+												imgView = (ImageView) topLnLayout.getChildAt(i).findViewById(R.id.thumbnailImage);
+												if (imgView != null) // fast removing
+												imgView.setImageDrawable(normalThumbnailDrawable);
+											}
+										
+										
+											/* Then, highlight @centerIndex item */
+											imgView = (ImageView) topLnLayout.getChildAt(index).findViewById(R.id.thumbnailImage);
+											if (imgView != null) // fast removing
+											{
+												imgView.setImageDrawable(hilighLightThumbnailDrawable);
+											}
 									}
+									catch (NullPointerException e)
+									{
+									}
+									Log.i("REMOVING", "Update Layout finish");
 								}
-								catch (NullPointerException e)
-								{
-								}
-								Log.i("REMOVING", "Update Layout finish");
 						}
 						
 						@Override
@@ -990,27 +1002,24 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	{
 		Log.d("singleTapConfirmed", "singleTapConfirmed");
 		
-		centerIndex = findThumbnailIndex(stopLocation);
+		int index = findThumbnailIndex(stopLocation);
 		
-		/* "Add" item 
-		if (centerIndex == numberThumbnail + 1)
-		{
-			addThumbnailToParent();
-			if (thumbnailAddListener != null)
-				thumbnailAddListener.onThumbnailAdd(instance.numberThumbnail);
-		}*/
-		/* Normal item */
-		if (centerIndex != MOVE_TO_TOP_OR_BOTTOM)
-		{
-			updateLayout(centerIndex);
-			if (touchFinishListener != null)
-			{
-				if (mLongTouchItemIndex > 0)
-				touchFinishListener.onTouchFinish(topLnLayout.getChildAt(mLongTouchItemIndex), instance.centerIndex);
-				else
-					touchFinishListener.onTouchFinish(null, instance.centerIndex);
-			}
+		if ((index != centerIndex) && (index != MOVE_TO_TOP_OR_BOTTOM)) {
+				centerIndex = index;
+				updateLayout(centerIndex);
+		} else if (index == MOVE_TO_TOP_OR_BOTTOM) {
+			return;
 		}
+			
+		if (touchFinishListener != null)
+		{
+			if (mLongTouchItemIndex > 0)
+				touchFinishListener.onTouchFinish(topLnLayout.
+						getChildAt(mLongTouchItemIndex), instance.centerIndex);
+			else
+				touchFinishListener.onTouchFinish(null, instance.centerIndex);
+		}
+		
 	}
 
 	/**
@@ -1050,12 +1059,15 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 						centerIndex = numberThumbnail;
 
 					updateLayout(centerIndex);
-					if (touchFinishListener != null)
-					{
-						if (mLongTouchItemIndex > 0)
-							touchFinishListener.onTouchFinish(topLnLayout.getChildAt(mLongTouchItemIndex), instance.centerIndex);
-						else
-							touchFinishListener.onTouchFinish(null, instance.centerIndex);
+					
+					if (isEnableScrollListener) {
+						if (touchFinishListener != null)
+						{
+							if (mLongTouchItemIndex > 0)
+								touchFinishListener.onTouchFinish(topLnLayout.getChildAt(mLongTouchItemIndex), instance.centerIndex);
+							else
+								touchFinishListener.onTouchFinish(null, instance.centerIndex);
+						}
 					}
 					
 					break;
@@ -1212,5 +1224,15 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	 */
 	public LinearLayout getTopLnLayout() {
 		return topLnLayout;
+	}
+	
+	public boolean isItemHighLight(int index) {
+		ImageView img = (ImageView) topLnLayout.getChildAt(index).
+				findViewById(R.id.thumbnailImage);
+		
+		if (img.getDrawable() == hilighLightThumbnailDrawable)
+			return true;
+		else
+			return false;
 	}
 }

@@ -1,6 +1,7 @@
 package ins.android.app03.home;
 
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 
 public class MySong
 {
@@ -11,6 +12,11 @@ public class MySong
 	private Bitmap mThumbnail;
 	private boolean mSelected = false;
 	private int mResSongId;
+	
+	/*For only ringtone */
+	private MediaPlayer mPlayer;
+	private boolean isChoose = false;
+	private int mPlayerState = AudioList.STOP;
 	
 	/**
 	 * Constructor 
@@ -97,6 +103,48 @@ public class MySong
 		return mResSongId;
 	}
 
+	/**
+	 * @return the mPlayer
+	 */
+	public MediaPlayer getmPlayer() {
+		return mPlayer;
+	}
+
+	/**
+	 * @param mPlayer the mPlayer to set
+	 */
+	public void setmPlayer(MediaPlayer mPlayer) {
+		this.mPlayer = mPlayer;
+	}
+
+	/**
+	 * @return the isChoose
+	 */
+	public boolean isChoose() {
+		return isChoose;
+	}
+
+	/**
+	 * @param isChoose the isChoose to set
+	 */
+	public void setChoose(boolean isChoose) {
+		this.isChoose = isChoose;
+	}
+
+	/**
+	 * @return the mPlayerState
+	 */
+	public int getmPlayerState() {
+		return mPlayerState;
+	}
+
+	/**
+	 * @param mPlayerState the mPlayerState to set
+	 */
+	public void setmPlayerState(int mPlayerState) {
+		this.mPlayerState = mPlayerState;
+	}
+	
 }
 
 

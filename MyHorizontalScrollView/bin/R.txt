@@ -2,8 +2,10 @@ int attr HighlightThumbnailImage 0x7f010003
 int attr NormalThumbnailImage 0x7f010004
 int attr Thumbnail_height 0x7f010002
 int attr Thumbnail_width 0x7f010001
+int attr enableScrollListener 0x7f010007
 int attr isEditable 0x7f010005
-int attr layout_location 0x7f010006
+int attr isResetHighLight 0x7f010006
+int attr layout_location 0x7f010008
 int attr numberThumbnail 0x7f010000
 int dimen activity_horizontal_margin 0x7f040000
 int dimen activity_vertical_margin 0x7f040001
@@ -31,11 +33,13 @@ int string app_name 0x7f050000
 int string hello_world 0x7f050002
 int style AppBaseTheme 0x7f060000
 int style AppTheme 0x7f060001
-int[] styleable numberThumbnail { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006 }
+int[] styleable numberThumbnail { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007, 0x7f010008 }
 int styleable numberThumbnail_HighlightThumbnailImage 3
 int styleable numberThumbnail_NormalThumbnailImage 4
 int styleable numberThumbnail_Thumbnail_height 2
 int styleable numberThumbnail_Thumbnail_width 1
+int styleable numberThumbnail_enableScrollListener 7
 int styleable numberThumbnail_isEditable 5
-int styleable numberThumbnail_layout_location 6
+int styleable numberThumbnail_isResetHighLight 6
+int styleable numberThumbnail_layout_location 8
 int styleable numberThumbnail_numberThumbnail 0

@@ -3,7 +3,6 @@ package ins.android.app03.home;
 import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
 
 public class RingtoneList extends AudioList
@@ -65,53 +64,75 @@ public class RingtoneList extends AudioList
 
 	@Override
 	public void initialize() {
-		if (getmMediaPlayer() == null)
-			return;
-		
-		if (getmPlayMode() == REPEAT_ONE){
-			Log.i("TAG", "ringtoe looping");
-			getmMediaPlayer().setLooping(true);
-		}		
 	}
 	
 
-	public void playMediaPlayer(int songId, Context context, int index)
+	public void playMediaPlayer(Context context, int index)
 	{
 		try 
 		{
-			MediaPlayer mplayer = getmMediaPlayer();
-			
-			/*
-			 * Stop old player
-			 */
-			if (mplayer != null && mplayer.isPlaying())
-				this.pauseMediaPlayer();
-			
-			mplayer = MediaPlayer.create(context, songId);
-			setmMediaPlayer(mplayer);
-			initialize();
+			int songId = getAudio(index-1).getmResSongId();
+			MediaPlayer mplayer = MediaPlayer.create(context, songId);
+			getAudio(index-1).setmPlayer(mplayer);
+			mplayer.setLooping(true);
 			mplayer.start();
-			Log.e("TAG", "Playing");
-			this.setmState(PLAYING);
 		} 
 		catch (Exception e) 
 		{
 			e.printStackTrace();
 		}
-		this.setmAudioPlaying(index);
+		return;
+		
+	}
+	
+	public void playMediaPlayer(Context context, MySong song)
+	{
+		try 
+		{
+			int songId = song.getmResSongId();
+			MediaPlayer mplayer = MediaPlayer.create(context, songId);
+			song.setmPlayer(mplayer);
+			mplayer.setLooping(true);
+			mplayer.start();
+		} 
+		catch (Exception e) 
+		{}
+		
 		return;
 		
 	}
 
-	/**
-	 * @param mVolume the mVolume to set
-	 */
-	public void setmVolume(float mVolume) {
+		public void stopPlayer(int index) {
+		MediaPlayer player = getAudio(index-1).getmPlayer();
+		if (player != null) {
+			player.stop();
+			player.reset();
+			getAudio(index-1).setmPlayerState(STOP);
+		}
+	}
+	
+	public void pausePlayer (MySong song) {
+			if (song.getmPlayer() != null) {
+				song.getmPlayer().pause();
+				song.setmPlayerState(PAUSE);
+			}
+	}
+	
+	public void resumePlayer (MySong song) {
+		if (song.getmPlayer() != null) {
+			song.getmPlayer().start();
+			song.setmPlayerState(PLAYING);
+		}
 		
-		try {
-			this.getmMediaPlayer().setVolume(mVolume, mVolume);
-		} catch (Exception e) {
-			
+	}
+
+	@Override
+	public void setVolume(float value) {
+		Log.i("", "Ringtone set volume");
+		for (MySong song : getmAudioList()) {
+			if (song.getmPlayer() != null) {
+				song.getmPlayer().setVolume(value, value);
+			}
 		}
 	}
 

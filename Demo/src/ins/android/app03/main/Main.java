@@ -1,30 +1,22 @@
 package ins.android.app03.main;
-import ins.android.app03.home.AudioList;
 import ins.android.app03.home.HomeFragment;
 import ins.android.app03.home.MySong;
 import ins.android.app03.home.R;
-import ins.android.app03.home.SongList;
 import ins.android.app03.home.SongManager;
-import ins.android.app03.listsong.ListSongFragment;
 
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.res.Configuration;
-import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -251,10 +243,11 @@ public class Main extends Activity
 		} catch (Exception e) {
 		}
 		
-		HomeFragment.mRingtoneList.setmState(AudioList.PAUSE);
-		HomeFragment.mSongList.setmState(AudioList.PAUSE);
-		HomeFragment.mRingtoneList.pauseMediaPlayer();
-		HomeFragment.mSongList.pauseMediaPlayer();
+		HomeFragment.mSongList.stopMediaPlayer();
+		int size = HomeFragment.mRingtoneList.getmAudioList().size();
+		for (int i = 1; i <= size; i++) {
+			HomeFragment.mRingtoneList.stopPlayer(i);
+		}
 		
 		SongManager.mListAllSong.clear();
 		HomeFragment.mRingtoneList.getmAudioList().clear();

@@ -28,12 +28,13 @@ public abstract class AudioList {
 	private int mAudioPlaying;
 	private boolean mIsEnableEditList;
 	private MediaPlayer mMediaPlayer;
+	private float mVolume;
 	
 	public AudioList(int playingMode) 
 	{
 		this.mPlayMode = playingMode;
 		this.mState = STOP;
-		this.mAudioPlaying = -1;
+		this.mAudioPlaying = -2;
 	}
 
 	public int getCount()
@@ -212,9 +213,8 @@ public abstract class AudioList {
 	 */
 	public void resumePlayer()
 	{
-		if (mMediaPlayer != null){
+		if (mMediaPlayer != null) {
 			mMediaPlayer.start();
-			//Log.e("TAG", "Pause");
 			mState = PLAYING;
 		}
 	}
@@ -261,5 +261,6 @@ public abstract class AudioList {
 	}
 	
 	public abstract void initialize ();
+	public abstract void setVolume(float value);
 	
 }

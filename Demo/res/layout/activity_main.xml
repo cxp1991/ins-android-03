@@ -12,8 +12,10 @@
 		custom:Thumbnail_height="90"
 		custom:NormalThumbnailImage="@drawable/songthumbnaildark"
         custom:HighlightThumbnailImage="@drawable/songthumbnailbright"
+        custom:isResetHighLight="false"
         custom:layout_location="0"
         custom:isEditable="false"
+        custom:enableScrollListener="false"
         android:scrollbars="none"
         android:layout_alignParentTop="true"
         >
@@ -33,71 +35,57 @@
         android:layout_alignParentBottom="true">
     </com.example.myhorizontalscrollview.MyHorizontalScrollView>
 
-   <TextView 
-       android:id="@+id/tvloading"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_centerInParent="true"
-       android:text="Loading ..."
-       android:textSize="15sp"/>
 
    <Button
        android:id="@+id/btplayall"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
+       android:layout_width="100dp"
+       android:layout_height="100dp"
 	   android:layout_centerInParent="true"
        android:text="Play"/> 
        
       <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" 
-    android:background="@drawable/volume_controller_background"
-	android:layout_centerInParent="true"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:id="@+id/ln_volume"
-    android:padding="10dp">
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical" 
+	    android:background="@drawable/volume_controller_background"
+	    android:layout_marginLeft="10dp"
+	    android:layout_marginRight="10dp"
+	    android:id="@+id/ln_volume"
+	    android:padding="10dp"
+	    android:layout_below="@id/ringtonescrollview">
 
-    <LinearLayout 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-        <TextView 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-			android:text="RINGTONE"
-			android:layout_gravity="center_vertical|center_horizontal"
-			android:textColor="#ffffff"
-            />
-        <SeekBar 
-            android:id="@+id/ringtone_volume_seekbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-    />
-        
-    </LinearLayout>
-    
- 	   <LinearLayout 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-        <TextView 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-			android:text="MUSIC"
-			android:layout_gravity="center_vertical|center_horizontal"
-			android:textColor="#ffffff"
-            />
-        <SeekBar 
-            android:id="@+id/music_volume_seekbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-    />
-    </LinearLayout>
-
-</LinearLayout>
+	    <LinearLayout 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical">
+	        <TextView 
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+				android:text="RINGTONE"
+				android:layout_gravity="center_vertical|center_horizontal"
+				android:textColor="#ffffff" />
+	        <SeekBar 
+	            android:id="@+id/ringtone_volume_seekbar"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content" />
+	    </LinearLayout>
+	    
+	    <LinearLayout 
+	      android:layout_width="match_parent"
+	      android:layout_height="wrap_content"
+	      android:orientation="vertical"
+	      android:layout_marginTop="5dp">
+	        <TextView 
+	          android:layout_width="match_parent"
+	          android:layout_height="wrap_content"
+			  android:text="MUSIC"
+			  android:layout_gravity="center_vertical|center_horizontal"
+			  android:textColor="#ffffff"/>
+	      	<SeekBar 
+	          android:id="@+id/music_volume_seekbar"
+	          android:layout_width="match_parent"
+	          android:layout_height="wrap_content"/>
+	  	</LinearLayout>
+	</LinearLayout> 
     
 </RelativeLayout>

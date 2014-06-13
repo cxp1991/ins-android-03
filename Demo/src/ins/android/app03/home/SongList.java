@@ -1,15 +1,18 @@
 package ins.android.app03.home;
 
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
+import android.widget.MediaController;
+import android.widget.MediaController.MediaPlayerControl;
 
 public class SongList extends AudioList
 {
 	private MediaPlayer mPlayer;
 	private OnEndSongListener mEndSongListener = null;
 
-	public SongList(int playingMode) 
+	public SongList(int playingMode, Context context) 
 	{
 		super(REPEAT_ALL);
 		mPlayer = new MediaPlayer();
@@ -95,5 +98,13 @@ public class SongList extends AudioList
 	public interface OnEndSongListener 
 	{
 	    public void onEndSong (int newIndex);
+	}
+
+	@Override
+	public void setVolume(float value) {
+		Log.i("", "Song set volume");
+		if (getmMediaPlayer() != null) {
+			getmMediaPlayer().setVolume(value, value);
+		}
 	}
 }

@@ -45,7 +45,23 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
+        public static final int enableScrollListener=0x7f010007;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
         public static final int isEditable=0x7f010005;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int isResetHighLight=0x7f010006;
         /**  0 = top, 1 = middle, 2 = bottom 
          <p>Must be an integer value, such as "<code>100</code>".
 <p>This may also be a reference to a resource (in the form
@@ -54,7 +70,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int layout_location=0x7f010006;
+        public static final int layout_location=0x7f010008;
         /** <p>Must be an integer value, such as "<code>100</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -105,45 +121,44 @@ containing a value of this type.
         public static final int volume_controller_background=0x7f020016;
     }
     public static final class id {
-        public static final int action_add_song=0x7f0a001d;
-        public static final int action_done=0x7f0a0022;
-        public static final int action_more=0x7f0a0023;
-        public static final int action_overflow=0x7f0a001c;
-        public static final int action_remove_all_song=0x7f0a001e;
-        public static final int action_scroll_to_end=0x7f0a001f;
-        public static final int action_scroll_to_head=0x7f0a0020;
-        public static final int action_search=0x7f0a0021;
-        public static final int action_selectall=0x7f0a0024;
-        public static final int action_settings=0x7f0a0026;
-        public static final int action_unselectall=0x7f0a0025;
-        public static final int action_volume=0x7f0a001b;
-        public static final int additemImgV=0x7f0a0009;
-        public static final int btplayall=0x7f0a0003;
-        public static final int checkbox=0x7f0a0012;
-        public static final int content_frame=0x7f0a0019;
-        public static final int drawer_layout=0x7f0a0018;
-        public static final int headerfooterlayout=0x7f0a000c;
-        public static final int hrScrollview=0x7f0a0007;
-        public static final int icondrawer=0x7f0a000a;
-        public static final int itemFrLayout=0x7f0a000d;
-        public static final int left_drawer=0x7f0a001a;
-        public static final int ln_volume=0x7f0a0004;
-        public static final int lnthumbnail=0x7f0a0010;
-        public static final int lntitle=0x7f0a0014;
-        public static final int lv=0x7f0a0017;
-        public static final int music_volume_seekbar=0x7f0a0006;
+        public static final int action_add_song=0x7f0a001c;
+        public static final int action_done=0x7f0a0021;
+        public static final int action_more=0x7f0a0022;
+        public static final int action_overflow=0x7f0a001b;
+        public static final int action_remove_all_song=0x7f0a001d;
+        public static final int action_scroll_to_end=0x7f0a001e;
+        public static final int action_scroll_to_head=0x7f0a001f;
+        public static final int action_search=0x7f0a0020;
+        public static final int action_selectall=0x7f0a0023;
+        public static final int action_settings=0x7f0a0025;
+        public static final int action_unselectall=0x7f0a0024;
+        public static final int action_volume=0x7f0a001a;
+        public static final int additemImgV=0x7f0a0008;
+        public static final int btplayall=0x7f0a0002;
+        public static final int checkbox=0x7f0a0011;
+        public static final int content_frame=0x7f0a0018;
+        public static final int drawer_layout=0x7f0a0017;
+        public static final int headerfooterlayout=0x7f0a000b;
+        public static final int hrScrollview=0x7f0a0006;
+        public static final int icondrawer=0x7f0a0009;
+        public static final int itemFrLayout=0x7f0a000c;
+        public static final int left_drawer=0x7f0a0019;
+        public static final int ln_volume=0x7f0a0003;
+        public static final int lnthumbnail=0x7f0a000f;
+        public static final int lntitle=0x7f0a0013;
+        public static final int lv=0x7f0a0016;
+        public static final int music_volume_seekbar=0x7f0a0005;
         public static final int musicscrollview=0x7f0a0001;
-        public static final int ringtone_volume_seekbar=0x7f0a0005;
+        public static final int ringtone_volume_seekbar=0x7f0a0004;
         public static final int ringtonescrollview=0x7f0a0000;
-        public static final int thumbnail=0x7f0a0011;
-        public static final int thumbnailImage=0x7f0a000e;
-        public static final int titledrawer=0x7f0a000b;
-        public static final int toplinearlayout=0x7f0a0008;
-        public static final int tv=0x7f0a000f;
-        public static final int tvartist=0x7f0a0016;
-        public static final int tvduration=0x7f0a0013;
-        public static final int tvloading=0x7f0a0002;
-        public static final int tvsongname=0x7f0a0015;
+        public static final int thumbnail=0x7f0a0010;
+        public static final int thumbnailImage=0x7f0a000d;
+        public static final int titledrawer=0x7f0a000a;
+        public static final int toplinearlayout=0x7f0a0007;
+        public static final int tv=0x7f0a000e;
+        public static final int tvartist=0x7f0a0015;
+        public static final int tvduration=0x7f0a0012;
+        public static final int tvsongname=0x7f0a0014;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -241,7 +256,9 @@ containing a value of this type.
            <tr><td><code>{@link #numberThumbnail_NormalThumbnailImage ins.android.app03.home:NormalThumbnailImage}</code></td><td></td></tr>
            <tr><td><code>{@link #numberThumbnail_Thumbnail_height ins.android.app03.home:Thumbnail_height}</code></td><td></td></tr>
            <tr><td><code>{@link #numberThumbnail_Thumbnail_width ins.android.app03.home:Thumbnail_width}</code></td><td></td></tr>
+           <tr><td><code>{@link #numberThumbnail_enableScrollListener ins.android.app03.home:enableScrollListener}</code></td><td></td></tr>
            <tr><td><code>{@link #numberThumbnail_isEditable ins.android.app03.home:isEditable}</code></td><td></td></tr>
+           <tr><td><code>{@link #numberThumbnail_isResetHighLight ins.android.app03.home:isResetHighLight}</code></td><td></td></tr>
            <tr><td><code>{@link #numberThumbnail_layout_location ins.android.app03.home:layout_location}</code></td><td> 0 = top, 1 = middle, 2 = bottom </td></tr>
            <tr><td><code>{@link #numberThumbnail_numberThumbnail ins.android.app03.home:numberThumbnail}</code></td><td></td></tr>
            </table>
@@ -249,13 +266,16 @@ containing a value of this type.
            @see #numberThumbnail_NormalThumbnailImage
            @see #numberThumbnail_Thumbnail_height
            @see #numberThumbnail_Thumbnail_width
+           @see #numberThumbnail_enableScrollListener
            @see #numberThumbnail_isEditable
+           @see #numberThumbnail_isResetHighLight
            @see #numberThumbnail_layout_location
            @see #numberThumbnail_numberThumbnail
          */
         public static final int[] numberThumbnail = {
             0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003,
-            0x7f010004, 0x7f010005, 0x7f010006
+            0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007,
+            0x7f010008
         };
         /**
           <p>This symbol is the offset where the {@link ins.android.app03.home.R.attr#HighlightThumbnailImage}
@@ -306,6 +326,20 @@ containing a value of this type.
         */
         public static final int numberThumbnail_Thumbnail_width = 1;
         /**
+          <p>This symbol is the offset where the {@link ins.android.app03.home.R.attr#enableScrollListener}
+          attribute's value can be found in the {@link #numberThumbnail} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name ins.android.app03.home:enableScrollListener
+        */
+        public static final int numberThumbnail_enableScrollListener = 7;
+        /**
           <p>This symbol is the offset where the {@link ins.android.app03.home.R.attr#isEditable}
           attribute's value can be found in the {@link #numberThumbnail} array.
 
@@ -319,6 +353,20 @@ containing a value of this type.
           @attr name ins.android.app03.home:isEditable
         */
         public static final int numberThumbnail_isEditable = 5;
+        /**
+          <p>This symbol is the offset where the {@link ins.android.app03.home.R.attr#isResetHighLight}
+          attribute's value can be found in the {@link #numberThumbnail} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name ins.android.app03.home:isResetHighLight
+        */
+        public static final int numberThumbnail_isResetHighLight = 6;
         /**
           <p>
           @attr description
@@ -334,7 +382,7 @@ containing a value of this type.
           <p>This is a private symbol.
           @attr name ins.android.app03.home:layout_location
         */
-        public static final int numberThumbnail_layout_location = 6;
+        public static final int numberThumbnail_layout_location = 8;
         /**
           <p>This symbol is the offset where the {@link ins.android.app03.home.R.attr#numberThumbnail}
           attribute's value can be found in the {@link #numberThumbnail} array.
