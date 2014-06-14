@@ -27,11 +27,11 @@ public final class R {
 		public static final int add_2 = 0x7f020001;
 		public static final int balloon_dark = 0x7f020003;
 		public static final int balloon_light = 0x7f020004;
-		public static final int ic_launcher = 0x7f02000e;
+		public static final int ic_launcher = 0x7f02000f;
 		public static final int songthumbnaildark = 0x7f02001c;
 	}
 	public static final class id {
-		public static final int action_settings = 0x7f0a0023;
+		public static final int action_settings = 0x7f0a0021;
 		public static final int additemImgV = 0x7f0a0008;
 		public static final int headerfooterlayout = 0x7f0a000b;
 		public static final int hrScrollview = 0x7f0a0006;

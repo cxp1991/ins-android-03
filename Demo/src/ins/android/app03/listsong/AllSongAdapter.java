@@ -8,17 +8,16 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Filter;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 public class AllSongAdapter extends BaseAdapter
@@ -157,51 +156,45 @@ public class AllSongAdapter extends BaseAdapter
 		public ImageView mThumbnail;
 		public TextView mSongName;
 		public TextView mArtist;
-		public TextView mDuration;
-		public CheckBox mCheckbox;
 		
 		public CompleteListViewHolder(View base) 
 		{  
 			mThumbnail = (ImageView) base.findViewById(R.id.thumbnail);
 			mSongName  = (TextView) base.findViewById(R.id.tvsongname);
 			mArtist    = (TextView) base.findViewById(R.id.tvartist);
-			//mDuration  = (TextView) base.findViewById(R.id.tvduration);
-//			mCheckbox  = (CheckBox) base.findViewById(R.id.checkbox); 
-//			
-//			mCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() 
-//			{
-//				
-//				@Override
-//				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) 
-//				{
-//					try {
-//					// Here we get the position that we have set for the checkbox using setTag.
-//					int getPosition = (Integer) buttonView.getTag();  
-//					// Set the value of checkbox to maintain its state
-//					
-//					if (buttonView.isChecked()) 
-//						mNumberItemIsChecked ++;
-//					else	
-//						mNumberItemIsChecked --;
-//							
-//					SongManager.mListAllSong.get(getPosition).setmSelected(buttonView.isChecked()); 
-//					
-//						mActivity.runOnUiThread(new Runnable() {
-//							
-//							@Override
-//							public void run() {
-//								Log.i("TAG", "adapter line 189");
-//								mAdapter.notifyDataSetChanged();							
-//							}
-//						});
-//						
-//					}
-//					catch (Exception e)
-//					{
-//						
-//					}
-//				}
-//			});
+			
+			mThumbnail.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {					
+					try {
+						int position = (Integer) v.getTag();
+						
+						if (SongManager.mListAllSong.get(position).ismSelected()) {
+							mNumberItemIsChecked --;
+							SongManager.mListAllSong.get(position).setmSelected(false);
+							if (SongManager.mListAllSong.get(position).getmThumbnail() != null)
+				             	mThumbnail.setImageBitmap(SongManager.mListAllSong.get(position).getmThumbnail());
+				             else
+				             	mThumbnail.setImageResource(R.drawable.music_orange);
+						} else {
+							mNumberItemIsChecked ++;
+							SongManager.mListAllSong.get(position).setmSelected(true);
+							mThumbnail.setImageResource(R.drawable.check_1);
+						}
+						
+						mActivity.runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								mAdapter.notifyDataSetChanged();							
+							}
+						});
+					} catch (Exception e) {
+						
+					}
+				}
+			});
 		}  
 	 }  
 	
@@ -226,28 +219,21 @@ public class AllSongAdapter extends BaseAdapter
         }  
 
         viewHolder.mSongName.setText(SongManager.mListAllSong.get(position).getmSongName());
-        viewHolder.mSongName.setTypeface(Typeface.SERIF);
         viewHolder.mArtist.setText(SongManager.mListAllSong.get(position).getmSongArtist());
-        viewHolder.mArtist.setTypeface(Typeface.SERIF);
         
-        String time;
-        String minute = SongManager.mListAllSong.get(position).getmSongDurationSecond()/60 + "";
-        int second = SongManager.mListAllSong.get(position).getmSongDurationSecond()%60;
-        if (second < 10)
-        	time = minute + ":" + "0" + second;
-        else
-        	time = minute + ":" + second;
-//        
-//        viewHolder.mDuration.setText(time);
-//        viewHolder.mDuration.setTypeface(Typeface.SERIF);
+        if (SongManager.mListAllSong.get(position).ismSelected()) {
+        	
+        	viewHolder.mThumbnail.setImageResource(R.drawable.check_1);
+        	
+        }else {
+        	
+        	 if (SongManager.mListAllSong.get(position).getmThumbnail() != null)
+             	viewHolder.mThumbnail.setImageBitmap(SongManager.mListAllSong.get(position).getmThumbnail());
+             else
+             	viewHolder.mThumbnail.setImageResource(R.drawable.music_orange);
+        }
         
-        if (SongManager.mListAllSong.get(position).getmThumbnail() != null)
-        	viewHolder.mThumbnail.setImageBitmap(SongManager.mListAllSong.get(position).getmThumbnail());
-        else
-        	viewHolder.mThumbnail.setImageResource(R.drawable.blue_music_icon);
-        
-//        viewHolder.mCheckbox.setTag(position); 
-//        viewHolder.mCheckbox.setChecked(SongManager.mListAllSong.get(position).ismSelected()); 
+        viewHolder.mThumbnail.setTag(position);
         
         return convertView;
 	}

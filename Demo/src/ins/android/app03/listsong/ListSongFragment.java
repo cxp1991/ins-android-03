@@ -37,7 +37,7 @@ public class ListSongFragment extends Activity
 	 
 		adapter = new AllSongAdapter(SongManager.mListAllSong, this);
 		lv = (ListView) findViewById(R.id.lv);
-		//lv.setOnItemClickListener(itemClickListener);
+		lv.setOnItemClickListener(itemClickListener);
 		lv.setAdapter(adapter);
 
 	}
@@ -52,17 +52,7 @@ public class ListSongFragment extends Activity
 		public void onItemClick (AdapterView<?> listview, View viewItem, int position,
 				long id) 
 		{
-//			Log.i("TAG", "onItemClick");
-//			CheckBox checkbox = (CheckBox) viewItem.findViewById(R.id.checkbox);
-//			
-//			if (checkbox.isChecked())
-//			{
-//				checkbox.setChecked(false);
-//			}
-//			else
-//			{
-//				checkbox.setChecked(true);
-//			}
+			viewItem.findViewById(R.id.thumbnail).performClick();
 		}
 	};
 	
