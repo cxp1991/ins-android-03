@@ -238,6 +238,9 @@ public class Main extends Activity
 	protected void onDestroy() {
 		super.onDestroy();
 		
+		Log.i("Main.java", "onDestroy");
+		
+		
 		try {
 			mAddSongIntoDatabase.join();
 		} catch (Exception e) {

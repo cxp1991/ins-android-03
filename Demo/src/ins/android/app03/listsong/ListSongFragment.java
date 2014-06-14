@@ -1,10 +1,13 @@
 package ins.android.app03.listsong;
 
+import ins.android.app03.home.HomeFragment;
 import ins.android.app03.home.MySong;
 import ins.android.app03.home.R;
 import ins.android.app03.home.SongManager;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,9 +32,12 @@ public class ListSongFragment extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listviewlayout);
 		
+		/* Enable add UP action into ActionBar */
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+	 
 		adapter = new AllSongAdapter(SongManager.mListAllSong, this);
 		lv = (ListView) findViewById(R.id.lv);
-		lv.setOnItemClickListener(itemClickListener);
+		//lv.setOnItemClickListener(itemClickListener);
 		lv.setAdapter(adapter);
 
 	}
@@ -46,17 +52,17 @@ public class ListSongFragment extends Activity
 		public void onItemClick (AdapterView<?> listview, View viewItem, int position,
 				long id) 
 		{
-			Log.i("TAG", "onItemClick");
-			CheckBox checkbox = (CheckBox) viewItem.findViewById(R.id.checkbox);
-			
-			if (checkbox.isChecked())
-			{
-				checkbox.setChecked(false);
-			}
-			else
-			{
-				checkbox.setChecked(true);
-			}
+//			Log.i("TAG", "onItemClick");
+//			CheckBox checkbox = (CheckBox) viewItem.findViewById(R.id.checkbox);
+//			
+//			if (checkbox.isChecked())
+//			{
+//				checkbox.setChecked(false);
+//			}
+//			else
+//			{
+//				checkbox.setChecked(true);
+//			}
 		}
 	};
 	
@@ -104,6 +110,12 @@ public class ListSongFragment extends Activity
 			Log.i("onQueryTextChange", "UnSelect all");
 			unSelectAllSong();
 			break;
+		case android.R.id.home:
+			Intent intent = new Intent(this, HomeFragment.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+	        NavUtils.navigateUpTo(this, intent);
+	        return true;
+	        
 		default:
 			break;
 		}
@@ -123,15 +135,15 @@ public class ListSongFragment extends Activity
 			/*
 			 * Sometime, item is visible but item's checkbox is not
 			 */
-			try 
-			{
-				CheckBox checkbox = (CheckBox) lv.getChildAt(position).findViewById(R.id.checkbox);
-				checkbox.setChecked(true);
-			}
-			catch (Exception e)
-			{
-				
-			}
+//			try 
+//			{
+//				CheckBox checkbox = (CheckBox) lv.getChildAt(position).findViewById(R.id.checkbox);
+//				checkbox.setChecked(true);
+//			}
+//			catch (Exception e)
+//			{
+//				
+//			}
 		}
 		
 		for (MySong song : SongManager.mListAllSong)
@@ -149,16 +161,16 @@ public class ListSongFragment extends Activity
 	{
 		for (int position = lv.getFirstVisiblePosition(); position < lv.getLastVisiblePosition(); position++)
 		{
-			try
-			{
-				Log.d("TAG", "count  = " + lv.getCount());
-				CheckBox checkbox = (CheckBox) lv.getChildAt(position).findViewById(R.id.checkbox);
-				checkbox.setChecked(false);
-			}
-			catch (Exception e)
-			{
-				
-			}
+//			try
+//			{
+//				Log.d("TAG", "count  = " + lv.getCount());
+//				CheckBox checkbox = (CheckBox) lv.getChildAt(position).findViewById(R.id.checkbox);
+//				checkbox.setChecked(false);
+//			}
+//			catch (Exception e)
+//			{
+//				
+//			}
 		}
 		
 

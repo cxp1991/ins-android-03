@@ -28,6 +28,10 @@
         <activity 
             android:name="ins.android.app03.listsong.ListSongFragment">
             
+            <meta-data
+            	android:name="android.support.PARENT_ACTIVITY"
+            	android:value="ins.android.app03.main.Main" />
+            
         </activity>
         
     </application>

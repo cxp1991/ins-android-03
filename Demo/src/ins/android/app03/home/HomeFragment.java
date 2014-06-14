@@ -77,6 +77,18 @@ public class HomeFragment extends Fragment
 	private int systemPlaybackState = PLAYBACK_STOP;
 
 	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		Log.i("Home", "onAttach");
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Log.i("Home", "onCreate");
+	}
+	
+	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 		Log.i("", "oncreateView");
@@ -123,9 +135,9 @@ public class HomeFragment extends Fragment
         buttonPlayAll.setOnClickListener(buttonPlayAllOnClickListener);
         
         if (mSongList.getmState() == AudioList.PLAYING) {
-        	buttonPlayAll.setText("Pause");
+        	buttonPlayAll.setBackgroundResource(R.drawable.button_black_pause);
         } else {
-        	buttonPlayAll.setText("Play");
+        	buttonPlayAll.setBackgroundResource(R.drawable.button_black_play);
         }
 
         /*
@@ -196,6 +208,7 @@ mMusicSeekBar.setProgress(mAudioManager
 		
 		@Override
 		public void onClick(View v) {
+			if (mSongList.getCount() == 0) return;
 			
 			/* From STOP state */
 			if (mSongList.getmState() == AudioList.STOP) {
@@ -214,6 +227,8 @@ mMusicSeekBar.setProgress(mAudioManager
 					}
 				}
 			
+				buttonPlayAll.setBackgroundResource(R.drawable.button_black_pause);
+				
 			/* From PAUSE state */
 			} else if (mSongList.getmState() == AudioList.PAUSE) {
 				
@@ -235,7 +250,7 @@ mMusicSeekBar.setProgress(mAudioManager
 					}
 				}
 				
-				buttonPlayAll.setText("Pause");
+				buttonPlayAll.setBackgroundResource(R.drawable.button_black_pause);
 				
 			/* From PLAYING state */
 			} else if (mSongList.getmState() == AudioList.PLAYING) {
@@ -248,7 +263,7 @@ mMusicSeekBar.setProgress(mAudioManager
 					}
 				}
 				
-				buttonPlayAll.setText("Play");
+				buttonPlayAll.setBackgroundResource(R.drawable.button_black_play);
 				
 			}
 			

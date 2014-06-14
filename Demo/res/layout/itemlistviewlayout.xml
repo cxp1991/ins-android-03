@@ -1,50 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="5dp">
-    
-	<RelativeLayout 
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/item_select">
+    android:padding="2dp" >
 
 		<!--  ListRow Left sied Thumbnail image -->
 		<LinearLayout 
 		    android:id="@+id/lnthumbnail"
-			android:layout_width="60dp"
-			android:layout_height="60dp"
-	        android:background="@drawable/background_item" 
+			android:layout_width="48dp"
+			android:layout_height="48dp"
 		    android:layout_marginRight="5dip">
 	        
 			<ImageView     
 				android:id="@+id/thumbnail"   
 		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"/>
+		        android:layout_height="match_parent"
+		        android:layout_gravity="center"/>
 	        
 		</LinearLayout>
-	    
-		  <CheckBox
-	    android:id="@+id/checkbox"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_centerVertical="true"
-	    android:focusable="false"
-	    android:focusableInTouchMode="false"
-	    android:layout_alignParentRight="true" />
-		  
-       <TextView
-        android:id="@+id/tvduration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/checkbox"
-        android:layout_centerVertical="true"
-        android:padding="5dp"
-        android:textSize="15sp"
-        android:singleLine="true"
-        android:ellipsize="marquee"
-        android:layout_marginTop="5dp"
-        android:textColor="#FFFFFF"/>
        
 		<LinearLayout 
 		    android:id="@+id/lntitle"
@@ -52,9 +25,8 @@
 		    android:layout_height="60dp"
 		    android:orientation="vertical"
 		    android:layout_marginLeft="5dp"
-		    android:layout_toRightOf="@id/lnthumbnail"
-		    android:layout_toLeftOf="@id/tvduration"
-		    >
+		    android:layout_toRightOf="@id/lnthumbnail" 
+		    android:paddingRight="100dp">
 			
 		    <TextView
 	        android:id="@+id/tvsongname"
@@ -64,7 +36,7 @@
 	        android:textSize="15sp"
 	        android:singleLine="true"
 	        android:ellipsize="marquee"
-	        android:textColor="#FFFFFF"/>
+	        android:textColor="#333333"/>
 		    
 		     <TextView
 	        android:id="@+id/tvartist"
@@ -74,9 +46,7 @@
 	        android:singleLine="true"
 	        android:ellipsize="marquee"
 	        android:layout_marginTop="5dp"
-	        android:textColor="#FFFFFF"/>
+	        android:textColor="#999999" />
 		</LinearLayout>
 	
 	</RelativeLayout>
-	
-</FrameLayout>

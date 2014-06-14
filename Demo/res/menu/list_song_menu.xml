@@ -21,11 +21,11 @@
           android:actionViewClass="android.widget.SearchView" />
     	
       <item android:id="@+id/action_done"
-          android:icon="@drawable/ic_action_accept"
+          android:icon="@drawable/ic_cab_done_holo_dark"
           android:showAsAction="always"/>
       
        <item android:id="@+id/action_more"
-          android:icon="@drawable/ic_action_overflow"
+          android:icon="@drawable/ic_menu_moreoverflow_normal_holo_dark"
           android:showAsAction="always">
         	<menu> 
         	   <item 

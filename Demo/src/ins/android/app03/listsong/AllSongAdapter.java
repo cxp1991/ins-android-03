@@ -165,43 +165,43 @@ public class AllSongAdapter extends BaseAdapter
 			mThumbnail = (ImageView) base.findViewById(R.id.thumbnail);
 			mSongName  = (TextView) base.findViewById(R.id.tvsongname);
 			mArtist    = (TextView) base.findViewById(R.id.tvartist);
-			mDuration  = (TextView) base.findViewById(R.id.tvduration);
-			mCheckbox  = (CheckBox) base.findViewById(R.id.checkbox); 
-			
-			mCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() 
-			{
-				
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) 
-				{
-					try {
-					// Here we get the position that we have set for the checkbox using setTag.
-					int getPosition = (Integer) buttonView.getTag();  
-					// Set the value of checkbox to maintain its state
-					
-					if (buttonView.isChecked()) 
-						mNumberItemIsChecked ++;
-					else	
-						mNumberItemIsChecked --;
-							
-					SongManager.mListAllSong.get(getPosition).setmSelected(buttonView.isChecked()); 
-					
-						mActivity.runOnUiThread(new Runnable() {
-							
-							@Override
-							public void run() {
-								Log.i("TAG", "adapter line 189");
-								mAdapter.notifyDataSetChanged();							
-							}
-						});
-						
-					}
-					catch (Exception e)
-					{
-						
-					}
-				}
-			});
+			//mDuration  = (TextView) base.findViewById(R.id.tvduration);
+//			mCheckbox  = (CheckBox) base.findViewById(R.id.checkbox); 
+//			
+//			mCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() 
+//			{
+//				
+//				@Override
+//				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) 
+//				{
+//					try {
+//					// Here we get the position that we have set for the checkbox using setTag.
+//					int getPosition = (Integer) buttonView.getTag();  
+//					// Set the value of checkbox to maintain its state
+//					
+//					if (buttonView.isChecked()) 
+//						mNumberItemIsChecked ++;
+//					else	
+//						mNumberItemIsChecked --;
+//							
+//					SongManager.mListAllSong.get(getPosition).setmSelected(buttonView.isChecked()); 
+//					
+//						mActivity.runOnUiThread(new Runnable() {
+//							
+//							@Override
+//							public void run() {
+//								Log.i("TAG", "adapter line 189");
+//								mAdapter.notifyDataSetChanged();							
+//							}
+//						});
+//						
+//					}
+//					catch (Exception e)
+//					{
+//						
+//					}
+//				}
+//			});
 		}  
 	 }  
 	
@@ -215,7 +215,7 @@ public class AllSongAdapter extends BaseAdapter
         {  
              LayoutInflater li = (LayoutInflater) mActivity  
                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);  
-             convertView = li.inflate(R.layout.itemlistviewlayout, null);  
+             convertView = li.inflate(R.layout.itemlistviewlayout, parent, false);  
 
              viewHolder = new CompleteListViewHolder(convertView);  
              convertView.setTag(viewHolder);  
@@ -237,17 +237,17 @@ public class AllSongAdapter extends BaseAdapter
         	time = minute + ":" + "0" + second;
         else
         	time = minute + ":" + second;
-        
-        viewHolder.mDuration.setText(time);
-        viewHolder.mDuration.setTypeface(Typeface.SERIF);
+//        
+//        viewHolder.mDuration.setText(time);
+//        viewHolder.mDuration.setTypeface(Typeface.SERIF);
         
         if (SongManager.mListAllSong.get(position).getmThumbnail() != null)
         	viewHolder.mThumbnail.setImageBitmap(SongManager.mListAllSong.get(position).getmThumbnail());
         else
-        	viewHolder.mThumbnail.setImageResource(R.drawable.music_icon_01);
+        	viewHolder.mThumbnail.setImageResource(R.drawable.blue_music_icon);
         
-        viewHolder.mCheckbox.setTag(position); 
-        viewHolder.mCheckbox.setChecked(SongManager.mListAllSong.get(position).ismSelected()); 
+//        viewHolder.mCheckbox.setTag(position); 
+//        viewHolder.mCheckbox.setChecked(SongManager.mListAllSong.get(position).ismSelected()); 
         
         return convertView;
 	}

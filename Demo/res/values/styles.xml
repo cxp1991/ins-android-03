@@ -18,7 +18,7 @@
     </style>
     
 	<style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">#FF6600</item>
+        <item name="android:background">#3385AD</item>
     </style>
     
 	<style name="your_style_name">  
@@ -27,6 +27,10 @@
     <item name="android:scrollbars">vertical</item>
     <item name="android:fadeScrollbars">false</item>
     <item name="android:scrollbarThumbVertical">@drawable/add</item>
-</style>
+	</style>
+	
+	<style name="listview_scrollbar_style" >
+	    <item name="android:background">#ffff0000</item>
+	</style>
 
 </resources>
