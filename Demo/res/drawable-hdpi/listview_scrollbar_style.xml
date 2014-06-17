@@ -15,5 +15,9 @@
 	<padding
     	android:left="0.5dp"
     	android:right="5dp" />
+	
+	<stroke 
+	    android:width="0.5dp"
+	    android:color="#aaaaaa"/>
 
 </shape>

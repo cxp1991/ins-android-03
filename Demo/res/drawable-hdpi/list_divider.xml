@@ -4,8 +4,8 @@
     android:insetLeft="73dp" >
 
  	<shape>
-    	<solid android:color="#BABABA" />
-    	<size android:height="2dp" />
+    	<solid android:color="#D0D0D0" />
+    	<size android:height="1dp" />
 	</shape> 
 
 </inset>

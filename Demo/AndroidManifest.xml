@@ -28,7 +28,7 @@
         <activity 
             android:name="ins.android.app03.listsong.ListSongFragment"
             android:label=""
-            android:icon="@drawable/treble_clef">
+            >
             
             <meta-data
             	android:name="android.support.PARENT_ACTIVITY"

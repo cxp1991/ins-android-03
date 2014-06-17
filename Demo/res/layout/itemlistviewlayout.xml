@@ -22,7 +22,7 @@
         android:textSize="16sp"
         android:singleLine="true"
         android:ellipsize="marquee"
-        android:textColor="#333333"
+        android:textColor="#666666"
         android:typeface="serif"/>
 		    
     <TextView
@@ -37,7 +37,12 @@
        android:textSize="15sp"
        android:singleLine="true"
        android:ellipsize="marquee"
-       android:typeface="serif"
+       android:typeface="normal"
        android:textColor="#999999" />
+    
+    <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"
+        android:layout_below="@id/tvartist"/>
 	
 	</RelativeLayout>

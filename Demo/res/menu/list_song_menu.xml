@@ -16,7 +16,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     	<item android:id="@+id/action_search"
           android:title="Search"
-          android:icon="@android:drawable/ic_menu_search"
+          android:icon="@drawable/ic_menu_search_holo_dark"
           android:showAsAction="ifRoom|collapseActionView"
           android:actionViewClass="android.widget.SearchView" />
     	
@@ -25,7 +25,7 @@
           android:showAsAction="always"/>
       
        <item android:id="@+id/action_more"
-          android:icon="@drawable/ic_menu_moreoverflow_normal_holo_dark"
+          android:icon="@drawable/ic_menu_moreoverflow_normal_holo_light"
           android:showAsAction="always">
         	<menu> 
         	   <item 

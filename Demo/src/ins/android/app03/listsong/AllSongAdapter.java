@@ -176,7 +176,7 @@ public class AllSongAdapter extends BaseAdapter
 							if (SongManager.mListAllSong.get(position).getmThumbnail() != null)
 				             	mThumbnail.setImageBitmap(SongManager.mListAllSong.get(position).getmThumbnail());
 				             else
-				             	mThumbnail.setImageResource(R.drawable.music_orange);
+				             	mThumbnail.setImageResource(R.drawable.music_icon_2);
 						} else {
 							mNumberItemIsChecked ++;
 							SongManager.mListAllSong.get(position).setmSelected(true);
@@ -230,7 +230,7 @@ public class AllSongAdapter extends BaseAdapter
         	 if (SongManager.mListAllSong.get(position).getmThumbnail() != null)
              	viewHolder.mThumbnail.setImageBitmap(SongManager.mListAllSong.get(position).getmThumbnail());
              else
-             	viewHolder.mThumbnail.setImageResource(R.drawable.music_orange);
+             	viewHolder.mThumbnail.setImageResource(R.drawable.music_icon_2);
         }
         
         viewHolder.mThumbnail.setTag(position);

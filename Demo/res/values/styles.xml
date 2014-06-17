@@ -18,7 +18,8 @@
     </style>
     
 	<style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">#29A3CC</item>
+        <item name="android:background">@drawable/actionbar_drawable</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_ab_back_holo_light_am</item>
     </style>
     
 	<style name="your_style_name">  
