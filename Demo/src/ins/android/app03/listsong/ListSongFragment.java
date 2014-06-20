@@ -1,13 +1,16 @@
 package ins.android.app03.listsong;
 
-import ins.android.app03.home.HomeFragment;
 import ins.android.app03.home.MySong;
 import ins.android.app03.home.R;
 import ins.android.app03.home.SongManager;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.IntentCompat;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,12 +19,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 
-public class ListSongFragment extends Activity
+
+
+
+
+public class ListSongFragment extends ActionBarActivity
 {
 	 private SearchView mSearchView;
 	 private ListView lv;
@@ -33,7 +37,8 @@ public class ListSongFragment extends Activity
 		setContentView(R.layout.listviewlayout);
 		
 		/* Enable add UP action into ActionBar */
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeAsUpIndicator(R.drawable.icon_pre_sign_in_press);
 	 
 		adapter = new AllSongAdapter(SongManager.mListAllSong, this);
 		lv = (ListView) findViewById(R.id.lv);
@@ -45,16 +50,15 @@ public class ListSongFragment extends Activity
 	/**
 	 * Checkbox onclick listener
 	 */
-	OnItemClickListener itemClickListener = new OnItemClickListener() 
-	{
+	 OnItemClickListener itemClickListener = new OnItemClickListener() {
 
-		@Override
-		public void onItemClick (AdapterView<?> listview, View viewItem, int position,
-				long id) 
-		{
-			viewItem.findViewById(R.id.thumbnail).performClick();
-		}
-	};
+		 @Override
+			public void onItemClick (AdapterView<?> listview, View viewItem, int position,
+					long id) 
+			{
+				viewItem.findViewById(R.id.thumbnail).performClick();
+			}
+	 };
 	
 	/**
 	 * Add Search item into Actionbar
@@ -65,8 +69,8 @@ public class ListSongFragment extends Activity
         
         /* Search View */
         MenuItem searchItem = menu.findItem(R.id.action_search);
-		mSearchView = (SearchView) searchItem.getActionView();
-		mSearchView.setIconifiedByDefault(true);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        mSearchView.setIconifiedByDefault(true);
 		mSearchView.setOnQueryTextListener(searchViewListener);
 		mSearchView.setOnSearchClickListener(new OnClickListener() {
 			
@@ -101,9 +105,9 @@ public class ListSongFragment extends Activity
 			unSelectAllSong();
 			break;
 		case android.R.id.home:
-			Intent intent = new Intent(this, HomeFragment.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_TASK_ON_HOME);
-	        NavUtils.navigateUpTo(this, intent);
+			/*Intent intent = new Intent (this, HomeFragment.class);
+			intent.setFlags(IntentCompat.FLAG_ACTIVITY_TASK_ON_HOME);
+	        NavUtils.navigateUpTo(this, intent)*/;
 	        return true;
 	        
 		default:
@@ -182,14 +186,12 @@ public class ListSongFragment extends Activity
 		@Override
 		public boolean onQueryTextSubmit(String arg0) 
 		{
-			//Log.i("TAG", "onQueryTextSubmit");
 			return false;
 		}
 		
 		@Override
 		public boolean onQueryTextChange(String newText) 
 		{
-//			//Log.i("onQueryTextChange", "" + newText);
 			adapter.myGetFilter().filter(newText);
 			return true;
 		}

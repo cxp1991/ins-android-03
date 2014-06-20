@@ -12,16 +12,6 @@
         -->
     </style>
 
-    <!-- Application theme. -->
-   <style name="MyTheme" parent="@android:style/Theme.Holo.Light">
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
-    </style>
-    
-	<style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">@drawable/actionbar_drawable</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_ab_back_holo_light_am</item>
-    </style>
-    
 	<style name="your_style_name">  
     <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
     <item name="android:scrollbarStyle">outsideOverlay</item>
@@ -34,4 +24,21 @@
 	    <item name="android:background">#ffff0000</item>
 	</style>
 
+	<!-- Theme -->
+	<style name="Theme.Styled" parent="@style/Theme.AppCompat.Light">
+	    <!-- Setting values in the default namespace affects API levels 7-13 -->
+	    <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
+	     <item name="windowActionBarOverlay">true</item>
+	</style>
+
+	<style name="Widget.Styled.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
+	    <!-- Setting values in the default namespace affects API levels 7-13 -->
+	    <item name="background">@drawable/actionbar_drawable</item>
+	    <item name="titleTextStyle">@style/titleStyle</item>
+	</style>
+	
+<style name="titleStyle" parent="@style/TextAppearance.AppCompat.Widget.Base.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+	
 </resources>

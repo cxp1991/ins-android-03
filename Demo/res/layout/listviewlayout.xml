@@ -10,8 +10,7 @@
         android:background="#e5e5e5"
         android:id="@+id/lv"
         android:divider="@drawable/list_divider" 
-        android:scrollbarThumbVertical="@drawable/listview_scrollbar_style"
-        >
+        android:scrollbarThumbVertical="@drawable/listview_scrollbar_style" >
     </ListView>
     
 </LinearLayout>

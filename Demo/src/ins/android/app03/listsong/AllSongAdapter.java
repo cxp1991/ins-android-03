@@ -14,11 +14,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
+
+
 
 public class AllSongAdapter extends BaseAdapter
 {
@@ -176,7 +176,7 @@ public class AllSongAdapter extends BaseAdapter
 							if (SongManager.mListAllSong.get(position).getmThumbnail() != null)
 				             	mThumbnail.setImageBitmap(SongManager.mListAllSong.get(position).getmThumbnail());
 				             else
-				             	mThumbnail.setImageResource(R.drawable.music_icon_2);
+				             	mThumbnail.setImageResource(R.drawable.ic_music_02);
 						} else {
 							mNumberItemIsChecked ++;
 							SongManager.mListAllSong.get(position).setmSelected(true);
@@ -230,7 +230,7 @@ public class AllSongAdapter extends BaseAdapter
         	 if (SongManager.mListAllSong.get(position).getmThumbnail() != null)
              	viewHolder.mThumbnail.setImageBitmap(SongManager.mListAllSong.get(position).getmThumbnail());
              else
-             	viewHolder.mThumbnail.setImageResource(R.drawable.music_icon_2);
+             	viewHolder.mThumbnail.setImageResource(R.drawable.ic_music_02);
         }
         
         viewHolder.mThumbnail.setTag(position);

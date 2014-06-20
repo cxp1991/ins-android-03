@@ -2,7 +2,6 @@ package com.example.myhorizontalscrollview;
 
 import java.util.ArrayList;
 
-import android.R.mipmap;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.LayoutTransition;
@@ -11,6 +10,8 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -21,12 +22,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationSet;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -292,6 +287,14 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		
 		if (imgView != null) // Fast removing
 			imgView.setImageDrawable(drawable);
+	}
+	
+	public void setThumbnailImageResourceFromBitmap(int index, Bitmap bitmap)
+	{
+		ImageView imgView = (ImageView)topLnLayout.getChildAt(index).findViewById(R.id.thumbnailImage);
+		
+		if (imgView != null) // Fast removing
+			imgView.setImageBitmap(bitmap);
 	}
 	
 	/**
@@ -589,7 +592,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 	 *  I do not update layout(centerIndex & highlight it)
 	 *  Do not using animation
 	 */ 
-	public void addThumbnailToParent() 
+	public void addThumbnailToParent(Bitmap bitmap) 
 	{
 		if (!isEditable)
 			return;
@@ -607,15 +610,59 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 		
     	numberThumbnail++;
     	
-    	/* Set all title again */
-        if (numberThumbnail >= 1)
+//    	/* Set all title again */
+//        if (numberThumbnail >= 1)
+//        {
+//        	for (int i = 1; i < numberThumbnail + 1; i++)
+//            {
+         //   	setThumbnailTitle(i,"" + i);
+            	setThumbnailImageResourceFromBitmap(numberThumbnail, bitmap);
+//            }
+//        }
+//        
+        if (itemAddListener != null)
         {
-        	for (int i = 1; i < numberThumbnail + 1; i++)
-            {
-            	setThumbnailTitle(i,"" + i);
-            	//setThumbnailImageResourceFromDrawable(i, normalThumbnailDrawable);
-            }
+        	this.itemAddListener.onItemnailAdd(numberThumbnail);
         }
+        /* 
+         * Scroll to end 
+         * Using animation
+         * */
+        //updateLayout(numberThumbnail);
+        
+        /*
+         * Not using animation
+         */
+	}
+	
+	/**
+	 *  Add 1 item at the end of parrent
+	 *  I do not update layout(centerIndex & highlight it)
+	 *  Do not using animation
+	 */ 
+	public void addThumbnailToParent(int drawableRes) 
+	{
+		if (!isEditable)
+			return;
+		
+		Log.i("TAG", "addThumbnailToParent");
+		/* Insert thumbnail at the end */ 
+		itemLayout = (FrameLayout) inflater.inflate(R.layout.item, null, false);
+		itemLayout.setLayoutParams(new LayoutParams(THUMBNAIL_WIDTH, LayoutParams.MATCH_PARENT));
+		ImageView thumbnail = (ImageView) itemLayout.findViewById(R.id.thumbnailImage);
+		TextView title = (TextView) itemLayout.findViewById(R.id.tv);
+		
+		thumbnail.setLayoutParams(params);
+		title.setLayoutParams(params);
+    	topLnLayout.addView(itemLayout,numberThumbnail + 1);
+		
+    	numberThumbnail++;
+    	
+ 
+    
+    	//setThumbnailTitle(i,"" + i);
+    	setThumbnailImageResourceFromId(numberThumbnail,drawableRes);
+  
         
         if (itemAddListener != null)
         {
@@ -923,7 +970,8 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 											{
 												imgView = (ImageView) topLnLayout.getChildAt(i).findViewById(R.id.thumbnailImage);
 												if (imgView != null) // fast removing
-												imgView.setImageDrawable(normalThumbnailDrawable);
+												//imgView.setImageDrawable(normalThumbnailDrawable);
+													imgView.setColorFilter(0xff000000, PorterDuff.Mode.OVERLAY);
 											}
 										
 										
@@ -931,7 +979,8 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 											imgView = (ImageView) topLnLayout.getChildAt(index).findViewById(R.id.thumbnailImage);
 											if (imgView != null) // fast removing
 											{
-												imgView.setImageDrawable(hilighLightThumbnailDrawable);
+												//imgView.setImageDrawable(hilighLightThumbnailDrawable);
+												imgView.setColorFilter(0x00000000, PorterDuff.Mode.OVERLAY);
 											}
 									}
 									catch (NullPointerException e)

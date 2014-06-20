@@ -13,30 +13,37 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    	<item android:id="@+id/action_search"
-          android:title="Search"
-          android:icon="@drawable/ic_menu_search_holo_dark"
-          android:showAsAction="ifRoom|collapseActionView"
-          android:actionViewClass="android.widget.SearchView" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:yourapp="http://schemas.android.com/apk/res-auto">
+    
+    	<item 
+    	    android:id="@+id/action_search"
+          	android:title="Search"
+          	android:icon="@drawable/ic_menu_search_holo_dark"
+          	yourapp:showAsAction="ifRoom|collapseActionView"
+          	yourapp:actionViewClass="android.support.v7.widget.SearchView" />
     	
-      <item android:id="@+id/action_done"
-          android:icon="@drawable/ic_cab_done_holo_dark"
-          android:showAsAction="always"/>
+		<item 
+		    android:id="@+id/action_done"
+          	android:icon="@drawable/ic_cab_done_holo_dark"
+          	yourapp:showAsAction="always" />
       
-       <item android:id="@+id/action_more"
-          android:icon="@drawable/ic_menu_moreoverflow_normal_holo_light"
-          android:showAsAction="always">
+       <item 
+           	android:id="@+id/action_more"
+          	android:icon="@drawable/ic_menu_moreoverflow_normal_holo_light"
+          	yourapp:showAsAction="always" >
+        	
         	<menu> 
         	   <item 
         	       	android:id="@+id/action_selectall"
           			android:title="Select All"
-          			android:showAsAction="withText"/>
+          			yourapp:showAsAction="withText"
+          			/>
+        	   
         	   <item 
         	       	android:id="@+id/action_unselectall"
           			android:title="Unselect All"
-          			android:showAsAction="withText"/> 
-        	</menu>  
-        </item>
-      
+          			yourapp:showAsAction="withText"/> 
+     		</menu>  
+	</item>
 </menu>

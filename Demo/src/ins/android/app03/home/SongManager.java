@@ -3,13 +3,8 @@ package ins.android.app03.home;
 import java.io.FileDescriptor;
 import java.util.ArrayList;
 
-import android.app.Activity;
-import android.app.LoaderManager;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,30 +12,34 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
-import android.util.Log;
-
-
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 
 public class SongManager
 {
 	/* Contain data result */
 	public static ArrayList<MySong> mListAllSong  = new ArrayList<MySong>();
 	
-	private  LoaderManager mLoadermanager;
-	private  CursorLoader mCursorLoader;
-	private  Activity mActivity;
-	private  Cursor mCursor;
-	private  boolean mRequestDone = false;
+	private LoaderManager mLoadermanager;
+	private CursorLoader mCursorLoader;
+	private Cursor mCursor;
+	private boolean mRequestDone = false;
+	private Context mContext;
 	
+	public SongManager(Context context) {
+		this.mContext = context;
+	}
 	/**
 	 * List all song in external device using cursorLoader
 	 * 
 	 * @param activity
 	 */
-	public void getAllAudio(Activity activity)
+	public void getAllAudio()
 	{
-		mActivity = activity;
-		mLoadermanager = activity.getLoaderManager();
+		mLoadermanager = ((FragmentActivity) mContext).getSupportLoaderManager();
 		mLoadermanager.initLoader(1, null, callback);
 	}
 	
@@ -83,7 +82,7 @@ public class SongManager
 			
 			
 			mCursorLoader = new  CursorLoader(
-				                    mActivity,   // Parent activity context
+				                    mContext,   // Parent activity context
 				                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,        // Table to query
 				                    projection,     // Projection to return
 				                    selection,            // No selection clause
@@ -121,7 +120,7 @@ public class SongManager
 					/* 
 					 * Get thumbnail from this audio
 					 * */
-					thumbnail = getAudioThumbnail(mActivity.getBaseContext(), mCursor.getLong(4));
+					thumbnail = getAudioThumbnail(mContext, mCursor.getLong(4));
 					
 					/*
 					 * Add to container 

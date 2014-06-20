@@ -3,6 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/rain_01"
+        android:scaleType="fitXY"
+        android:alpha="0.75"
+ />
+    
 	<com.example.myhorizontalscrollview.MyHorizontalScrollView 
         android:id="@+id/ringtonescrollview"
         android:layout_width="match_parent"
@@ -67,7 +74,11 @@
 	        <SeekBar 
 	            android:id="@+id/ringtone_volume_seekbar"
 	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content" />
+	            android:layout_height="wrap_content" 
+	            android:thumb="@drawable/seekbar_thumb"
+		        android:progressDrawable="@drawable/seekbar_styling" 
+		        android:minHeight="3dp"
+		        android:maxHeight="5dp"/>
 	    </LinearLayout>
 	    
 	    <LinearLayout 
@@ -84,8 +95,26 @@
 	      	<SeekBar 
 	          android:id="@+id/music_volume_seekbar"
 	          android:layout_width="match_parent"
-	          android:layout_height="wrap_content"/>
+	          android:layout_height="wrap_content"
+	          android:thumb="@drawable/seekbar_thumb"
+	          android:progressDrawable="@drawable/seekbar_styling" 
+	          android:minHeight="3dp"
+	          android:maxHeight="5dp"/>
 	  	</LinearLayout>
 	</LinearLayout> 
+	
+       <ListView
+           android:id="@+id/lv"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_above="@+id/musicscrollview"
+           android:layout_marginLeft="10dp"
+           android:layout_marginRight="10dp"
+           android:layout_marginTop="10dp"
+           android:background="#e5e5e5"
+           android:divider="@drawable/list_divider"
+           android:scrollbarThumbVertical="@drawable/listview_scrollbar_style" >
+
+    </ListView>
     
 </RelativeLayout>

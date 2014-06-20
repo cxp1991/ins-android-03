@@ -9,4 +9,20 @@
         <!-- API 14 theme customizations can go here. -->
     </style>
 
+    <style name="Theme.Styled" parent="@style/Theme.AppCompat.Light">
+   	 	<!-- Setting values in the android namespace affects API levels 14+ -->
+    	<item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+    	<!-- <item name="android:windowActionBarOverlay">true</item> -->
+	</style>
+
+	<style name="Widget.Styled.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
+	    <!-- Setting values in the android namespace affects API levels 14+ -->
+	   <!--  <item name="android:background">@drawable/actionbar_drawable</item> -->
+	    <item name="android:titleTextStyle">@style/titleStyle</item>
+	</style>
+	
+	<style name="titleStyle" parent="@style/TextAppearance.AppCompat.Widget.Base.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    
 </resources>
