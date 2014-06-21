@@ -7,27 +7,13 @@
         android:icon="@drawable/volume_icon_1">
     </item>
  		    
-    <item android:id="@+id/action_overflow"
-          android:icon="@drawable/ic_menu_moreoverflow_normal_holo_light"
-          yourapp:showAsAction="always">
-        	<menu> 
-        	   <item 
-        	       	android:id="@+id/action_add_song"
-          			android:title="Add Song"
-          			yourapp:showAsAction="withText"/>
-        	   <item 
-        	       	android:id="@+id/action_remove_all_song"
-          			android:title="Remove All Song"
-          			yourapp:showAsAction="withText"/>
-        	   <item 
-        	       	android:id="@+id/action_scroll_to_end"
-          			android:title="Scroll To End"
-          			yourapp:showAsAction="withText"/>
-        	   <item 
-        	       	android:id="@+id/action_scroll_to_head"
-          			android:title="Scroll To Head"
-          			yourapp:showAsAction="withText"/> 
-        	</menu>  
-	</item> 
+
+	   <item 
+	       	android:id="@+id/action_add_song"
+  			android:title="Add Song" 
+  			 yourapp:showAsAction="always"
+  			android:icon="@drawable/ic_music_blue_72x72"/>
+          		 
+
         
 </menu>

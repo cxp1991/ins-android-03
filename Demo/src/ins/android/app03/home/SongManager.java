@@ -131,7 +131,7 @@ public class SongManager
 		    				  mCursor.getInt(2)/1000, 
 		    				  mCursor.getString(3), 
 		    				  thumbnail));
-					
+
 				} while (mCursor.moveToNext());
 			}
 		}

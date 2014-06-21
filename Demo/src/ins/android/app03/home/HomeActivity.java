@@ -1,5 +1,8 @@
 package ins.android.app03.home;
 
+
+
+import ins.android.app03.home.AudioList.OnStartPlayListener;
 import ins.android.app03.home.SongList.OnEndSongListener;
 import ins.android.app03.listsong.AllSongAdapter;
 import android.app.Activity;
@@ -8,8 +11,11 @@ import android.graphics.Rect;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,12 +24,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import com.example.myhorizontalscrollview.MyHorizontalScrollView;
@@ -52,6 +58,11 @@ public class HomeActivity extends ActionBarActivity
 	 private SearchView mSearchView;
 	 private ListView lv;
 	 private AllSongAdapter adapter;
+	 private Menu mMenu;
+	 private ImageView mSearchImv;
+	 private ImageView mVolumeImv;
+	 private ImageView mAddImv;
+	 private ActionBar mActionBar;
 	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +75,7 @@ public class HomeActivity extends ActionBarActivity
 		
 		// Set GUI
 		setContentView(R.layout.activity_main);
+		mActionBar = getSupportActionBar();
 		
 		// Configure ListView
 		adapter = new AllSongAdapter(SongManager.mListAllSong, this);
@@ -75,6 +87,14 @@ public class HomeActivity extends ActionBarActivity
 		// Create 2 lists
 		mRingtoneList = new RingtoneList( AudioList.REPEAT_ONE, this);
 		mSongList = new SongList(AudioList.REPEAT_ALL, this);
+		mSongList.setStartPlayListener(new OnStartPlayListener() {
+			
+			@Override
+			public void onStartPlay(MySong song) {
+				Log.i("","start play");
+				mActionBar.setTitle(song.getmSongName());
+			}
+		});
 		
 		// Initialize 2 horizontialScrollview
 		ringtoneHrScrollView = (MyHorizontalScrollView) findViewById(R.id.ringtonescrollview);
@@ -126,7 +146,29 @@ public class HomeActivity extends ActionBarActivity
 		
 		// Update GUI
 		updateGui();
+		
+		// init own actionbar
+		initActionBar();
 
+	}
+	
+	private void initActionBar (){
+		/*mSearchImv = (ImageView) this.findViewById(R.id.ac_search);
+		mVolumeImv = (ImageView) this.findViewById(R.id.ac_volume);
+		mAddImv = (ImageView) this.findViewById(R.id.ac_add);
+		
+		mSearchImv.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				
+			}
+		});*/
+		
+		ActionBar actiobar = getSupportActionBar();
+	   // LayoutParams lp1 = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+	   // View customNav = LayoutInflater.from(this).inflate(R.layout.actionbar_layout, null); // layout which contains your button.
+		actiobar.setCustomView(R.layout.actionbar_layout);
 	}
 	
 	private void updateGui(){
@@ -174,6 +216,7 @@ public class HomeActivity extends ActionBarActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.homemenu, menu);
+		mMenu  = menu;
 		return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -254,15 +297,7 @@ public class HomeActivity extends ActionBarActivity
 			
 		}
 	};
-	
-	/**
-	 * Add menu tinto Actionbar
-	 *//*
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.homemenu, menu);
-		super.onCreateOptionsMenu(menu, inflater);
-	}*/
+
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -273,9 +308,19 @@ public class HomeActivity extends ActionBarActivity
 			while(!isInitializeListSongDone);
 			// Show listsong listview
 			if (lv.getVisibility() == View.GONE) {
+				//getMenuInflater().inflate(R.menu.list_song_menu, mMenu);
+				mMenu.removeItem(R.id.action_add_song);
+				mMenu.removeItem(R.id.action_volume);
+				getMenuInflater().inflate(R.menu.list_song_menu, mMenu);
+				getMenuInflater().inflate(R.menu.homemenu, mMenu);
+				 MenuItem searchItem = mMenu.findItem(R.id.action_search);
+			        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+			        mSearchView.setIconifiedByDefault(true);
+					mSearchView.setOnQueryTextListener(searchViewListener);
 				lv.setVisibility(View.VISIBLE);
 				lv.setSelection(0);
 			} else {
+				mMenu.removeItem(R.id.action_search);
 				lv.setVisibility(View.GONE);
 				adapter.notifyDataSetChanged();
 				updateGui();
@@ -564,6 +609,26 @@ public class HomeActivity extends ActionBarActivity
 			  }
 			Log.i("volume", "OUTSIDE");
 		  return true;
+		}
+	};
+	
+	/**
+	 * SearchView listener 
+	 */
+	SearchView.OnQueryTextListener searchViewListener = new OnQueryTextListener() 
+    {
+		
+		@Override
+		public boolean onQueryTextSubmit(String arg0) 
+		{
+			return false;
+		}
+		
+		@Override
+		public boolean onQueryTextChange(String newText) 
+		{
+			adapter.myGetFilter().filter(newText);
+			return true;
 		}
 	};
 

@@ -1,5 +1,7 @@
 package ins.android.app03.home;
 
+import ins.android.app03.home.SongList.OnEndSongListener;
+
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -29,6 +31,7 @@ public abstract class AudioList {
 	private boolean mIsEnableEditList;
 	private MediaPlayer mMediaPlayer;
 	private float mVolume;
+	private OnStartPlayListener mStartPlayListener;
 	
 	public AudioList(int playingMode) 
 	{
@@ -168,6 +171,9 @@ public abstract class AudioList {
 			mMediaPlayer.setDataSource(song.getmSongPath());
 			mMediaPlayer.prepare();
 			mMediaPlayer.start();
+			if (mStartPlayListener != null) {
+				mStartPlayListener.onStartPlay(song);
+			}
 			Log.e("TAG", "Playing");
 			mState = PLAYING;
 		} 
@@ -177,6 +183,16 @@ public abstract class AudioList {
 		}
 		
 		this.setmAudioPlaying(index);
+	}
+	
+	public void setStartPlayListener(OnStartPlayListener listener) 
+	{
+	    this.mStartPlayListener = listener;
+	}
+	
+	public interface OnStartPlayListener 
+	{
+	    public void onStartPlay (MySong song);
 	}
 	
 	/**

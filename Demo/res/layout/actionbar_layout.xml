@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:yourapp="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:background="#6666FF"
+    android:id="@+id/actionbar_layout" xmlns:app="http://schemas.android.com/apk/res/ins.android.app03.home">
+    
+    <ImageView 
+        android:id="@+id/ac_thumbnail"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_music_05"/>
+    
+    <TextView 
+        android:id="@+id/ac_name_of_song"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:text="Hello"
+        android:layout_toRightOf="@id/ac_thumbnail"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="20dp"/>
+    
+     <ImageView 
+        android:id="@+id/ac_volume"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/volume_icon_1"
+        android:layout_toRightOf="@id/ac_name_of_song"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="10dp"/>
+     
+      <ImageView 
+        android:id="@+id/ac_add"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_music_blue"
+        android:layout_toRightOf="@id/ac_volume"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentRight="true"/>
+
+</RelativeLayout>

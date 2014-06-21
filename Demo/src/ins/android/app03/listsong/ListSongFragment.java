@@ -91,29 +91,29 @@ public class ListSongFragment extends ActionBarActivity
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_done:
-			setResult(adapter.getmNumberItemIsChecked());
-			finish();
-			break;
-		case R.id.action_selectall:
-			Log.i("onQueryTextChange", "Select all");
-			selectAllSong();
-			break;
-		case R.id.action_unselectall:
-			Log.i("onQueryTextChange", "UnSelect all");
-			unSelectAllSong();
-			break;
-		case android.R.id.home:
-			/*Intent intent = new Intent (this, HomeFragment.class);
-			intent.setFlags(IntentCompat.FLAG_ACTIVITY_TASK_ON_HOME);
-	        NavUtils.navigateUpTo(this, intent)*/;
-	        return true;
-	        
-		default:
-			break;
-		}
-		
+//		switch (item.getItemId()) {
+//		case R.id.action_done:
+//			setResult(adapter.getmNumberItemIsChecked());
+//			finish();
+//			break;
+//		case R.id.action_selectall:
+//			Log.i("onQueryTextChange", "Select all");
+//			selectAllSong();
+//			break;
+//		case R.id.action_unselectall:
+//			Log.i("onQueryTextChange", "UnSelect all");
+//			unSelectAllSong();
+//			break;
+//		case android.R.id.home:
+//			/*Intent intent = new Intent (this, HomeFragment.class);
+//			intent.setFlags(IntentCompat.FLAG_ACTIVITY_TASK_ON_HOME);
+//	        NavUtils.navigateUpTo(this, intent)*/;
+//	        return true;
+//	        
+//		default:
+//			break;
+//		}
+//		
 		return super.onOptionsItemSelected(item);
 	}
 
