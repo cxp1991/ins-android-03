@@ -970,8 +970,8 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 											{
 												imgView = (ImageView) topLnLayout.getChildAt(i).findViewById(R.id.thumbnailImage);
 												if (imgView != null) // fast removing
-												//imgView.setImageDrawable(normalThumbnailDrawable);
-													imgView.setColorFilter(0xff000000, PorterDuff.Mode.OVERLAY);
+											imgView.setImageDrawable(normalThumbnailDrawable);
+													//imgView.setColorFilter(0xff000000, PorterDuff.Mode.OVERLAY);
 											}
 										
 										
@@ -979,8 +979,8 @@ public class MyHorizontalScrollView extends HorizontalScrollView
 											imgView = (ImageView) topLnLayout.getChildAt(index).findViewById(R.id.thumbnailImage);
 											if (imgView != null) // fast removing
 											{
-												//imgView.setImageDrawable(hilighLightThumbnailDrawable);
-												imgView.setColorFilter(0x00000000, PorterDuff.Mode.OVERLAY);
+												imgView.setImageDrawable(hilighLightThumbnailDrawable);
+												//imgView.setColorFilter(0x00000000, PorterDuff.Mode.OVERLAY);
 											}
 									}
 									catch (NullPointerException e)

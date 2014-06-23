@@ -167,13 +167,18 @@ public abstract class AudioList {
 			if (getmState() == PLAYING || getmState() == PAUSE)
 				this.stopMediaPlayer();
 			
-			Log.i("TAG", "song " + song + " index " + index);
+			Log.i("", "state = " + getmState());
+			
+			Log.i("TAG", "song " + song.getmSongPath() + 
+						 "\nindex " + index +
+						 "\nplayer = " + mMediaPlayer);
 			mMediaPlayer.setDataSource(song.getmSongPath());
 			mMediaPlayer.prepare();
 			mMediaPlayer.start();
 			if (mStartPlayListener != null) {
 				mStartPlayListener.onStartPlay(song);
 			}
+			
 			Log.e("TAG", "Playing");
 			mState = PLAYING;
 		} 
@@ -218,8 +223,8 @@ public abstract class AudioList {
 			{
 				mMediaPlayer.stop();
 				mMediaPlayer.reset();
+				Log.e("TAG", "STOP");
 			}
-			//Log.e("TAG", "Pause");
 			mState = STOP;
 		}
 	}

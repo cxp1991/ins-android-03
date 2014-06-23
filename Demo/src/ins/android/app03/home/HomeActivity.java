@@ -1,10 +1,13 @@
 package ins.android.app03.home;
 
-
-
 import ins.android.app03.home.AudioList.OnStartPlayListener;
+import ins.android.app03.home.R.layout;
 import ins.android.app03.home.SongList.OnEndSongListener;
 import ins.android.app03.listsong.AllSongAdapter;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
@@ -23,6 +26,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -55,7 +60,7 @@ public class HomeActivity extends ActionBarActivity
 	private CountDownTimer remainingTimeCounter = null;
 	private Thread mAddSongIntoDatabase;
 	private boolean isInitializeListSongDone = false;
-	 private SearchView mSearchView;
+	private SearchView mSearchView;
 	 private ListView lv;
 	 private AllSongAdapter adapter;
 	 private Menu mMenu;
@@ -63,6 +68,7 @@ public class HomeActivity extends ActionBarActivity
 	 private ImageView mVolumeImv;
 	 private ImageView mAddImv;
 	 private ActionBar mActionBar;
+	 WebView webviewActionView;
 	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,9 +96,13 @@ public class HomeActivity extends ActionBarActivity
 		mSongList.setStartPlayListener(new OnStartPlayListener() {
 			
 			@Override
-			public void onStartPlay(MySong song) {
+			public void onStartPlay(final MySong song) {
 				Log.i("","start play");
-				mActionBar.setTitle(song.getmSongName());
+				runOnUiThread(new Runnable() {
+					public void run() {
+						mActionBar.setTitle(song.getmSongName());
+					}
+				});
 			}
 		});
 		
@@ -149,7 +159,18 @@ public class HomeActivity extends ActionBarActivity
 		
 		// init own actionbar
 		initActionBar();
-
+		
+		InputStream stream = null;
+        try {
+            stream = getAssets().open("rain.gif");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        GifDecoderView view = (GifDecoderView) findViewById(R.id.imv_background);
+        view.playGif(stream);
+        
+		
 	}
 	
 	private void initActionBar (){
@@ -184,10 +205,7 @@ public class HomeActivity extends ActionBarActivity
         		if (song.ismSelected())
         		{
         			mSongList.addmAudio(song);
-        			if (song.getmThumbnail() != null)
-        				musicHrScrollView.addThumbnailToParent(song.getmThumbnail());
-        			else
-        				musicHrScrollView.addThumbnailToParent(R.drawable.ic_music_02);
+    				musicHrScrollView.addThumbnailToParent(R.drawable.ic_music_04);
         			
         			 /* To add 1 song after, 
         			 * we uncheck slected item in listview
@@ -488,6 +506,8 @@ public class HomeActivity extends ActionBarActivity
 			/*
 			 * Only play this song if selected item is different.
 			 */
+			Log.i("", "mSongList.getmState() = " + mSongList.getmState());
+			
 			if ((centerIndex != mSongList.getmAudioPlaying())
 					&& (mSongList.getmState() != AudioList.PAUSE))
 			{
@@ -578,8 +598,8 @@ public class HomeActivity extends ActionBarActivity
 		
 		@Override
 		public void onItemnailAdd(int numberThumnail) {
-			if (ringtoneHrScrollView.getVisibility() == View.INVISIBLE)
-				ringtoneHrScrollView.setVisibility(View.VISIBLE);
+			/*if (ringtoneHrScrollView.getVisibility() == View.INVISIBLE)
+				ringtoneHrScrollView.setVisibility(View.VISIBLE);*/
 		}
 	};
 	
@@ -630,6 +650,10 @@ public class HomeActivity extends ActionBarActivity
 			adapter.myGetFilter().filter(newText);
 			return true;
 		}
+	};
+	
+	protected void onDestroy(){
+		mSongList.releasePlayer();
 	};
 
 }
