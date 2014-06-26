@@ -9,6 +9,7 @@
         android:layout_height="match_parent"
         android:background="#e5e5e5"
         android:id="@+id/lv"
+        android:fadeScrollbars="false"
         android:divider="@drawable/list_divider" 
         android:scrollbarThumbVertical="@drawable/listview_scrollbar_style" >
     </ListView>

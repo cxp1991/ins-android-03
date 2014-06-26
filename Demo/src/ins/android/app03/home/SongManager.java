@@ -1,5 +1,6 @@
 package ins.android.app03.home;
 
+
 import java.io.FileDescriptor;
 import java.util.ArrayList;
 
@@ -17,6 +18,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 
 public class SongManager
 {
@@ -28,6 +31,7 @@ public class SongManager
 	private Cursor mCursor;
 	private boolean mRequestDone = false;
 	private Context mContext;
+	private OnSongAddIntoDatabase mSongAddIntoDatabase; 
 	
 	public SongManager(Context context) {
 		this.mContext = context;
@@ -92,8 +96,8 @@ public class SongManager
 
 			return mCursorLoader;
 		}
-	}; 
-	
+	};
+
 	/**
 	 * Insert query's result to @mListAllSong
 	 */
@@ -120,7 +124,11 @@ public class SongManager
 					/* 
 					 * Get thumbnail from this audio
 					 * */
-					thumbnail = getAudioThumbnail(mContext, mCursor.getLong(4));
+					try {
+						thumbnail = getAudioThumbnail(mContext, mCursor.getLong(4));
+					} catch (Exception e) {
+						 Log.e("EXXXX1", e + "");
+					}
 					
 					/*
 					 * Add to container 
@@ -131,15 +139,34 @@ public class SongManager
 		    				  mCursor.getInt(2)/1000, 
 		    				  mCursor.getString(3), 
 		    				  thumbnail));
-
+					
+//					if (mSongAddIntoDatabase != null) {
+//						try {
+//							mSongAddIntoDatabase.songAddedIntoDatabase();
+//						} catch (Exception e) {
+//							 Log.e("EXXXX2", e + "");
+//						}
+//					}
+					
 				} while (mCursor.moveToNext());
+				
+				//Log.i("", "mCursor" + mCursor.getCount());
+				
 			}
 		}
 		catch (Exception e)
 		{
-			
+			 Log.e("EXXXX3", e + "");
 		}
 		
+	}
+	
+	public void setSongAddIntoDatabase(OnSongAddIntoDatabase listener){
+		mSongAddIntoDatabase = listener;
+	}
+	
+	public interface OnSongAddIntoDatabase {
+		void songAddedIntoDatabase();
 	}
 	
 	/**

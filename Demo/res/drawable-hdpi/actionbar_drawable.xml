@@ -7,7 +7,7 @@
     	</shape>
 	</item>
     
-    <item
+    <!-- <item
         android:top="-2dp"
         android:right="-2dp"
         android:left="-2dp" >
@@ -22,7 +22,7 @@
 	        
         </shape>
         
-    </item>
+    </item> -->
     
 </layer-list>
 

@@ -27,18 +27,18 @@ public final class R {
 		public static final int add_2 = 0x7f02005a;
 		public static final int balloon_dark = 0x7f02005c;
 		public static final int balloon_light = 0x7f02005d;
-		public static final int ic_launcher = 0x7f02006a;
-		public static final int songthumbnaildark = 0x7f02009a;
+		public static final int ic_launcher = 0x7f02006b;
+		public static final int songthumbnaildark = 0x7f02009d;
 	}
 	public static final class id {
-		public static final int action_settings = 0x7f06005e;
-		public static final int additemImgV = 0x7f06004b;
-		public static final int headerfooterlayout = 0x7f06004e;
-		public static final int hrScrollview = 0x7f060049;
-		public static final int itemFrLayout = 0x7f06004f;
-		public static final int thumbnailImage = 0x7f060050;
-		public static final int toplinearlayout = 0x7f06004a;
-		public static final int tv = 0x7f060051;
+		public static final int action_settings = 0x7f060060;
+		public static final int additemImgV = 0x7f06004c;
+		public static final int headerfooterlayout = 0x7f06004f;
+		public static final int hrScrollview = 0x7f06004a;
+		public static final int itemFrLayout = 0x7f060050;
+		public static final int thumbnailImage = 0x7f060051;
+		public static final int toplinearlayout = 0x7f06004b;
+		public static final int tv = 0x7f060052;
 	}
 	public static final class layout {
 		public static final int activity_my_horizontal_scroll_view = 0x7f03001a;

@@ -1,20 +1,22 @@
 package ins.android.app03.home;
 
 import ins.android.app03.home.AudioList.OnStartPlayListener;
-import ins.android.app03.home.R.layout;
 import ins.android.app03.home.SongList.OnEndSongListener;
-import ins.android.app03.listsong.AllSongAdapter;
+import ins.android.app03.home.SongManager.OnSongAddIntoDatabase;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.media.AudioManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
@@ -26,14 +28,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup.LayoutParams;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
@@ -49,7 +50,6 @@ public class HomeActivity extends ActionBarActivity
 	public SongList mSongList = null; 
 	public RingtoneList mRingtoneList = null; 
 	private Button buttonPlayAll = null;
-	private Activity mActivity = null;
 	private LinearLayout mVolumeLayout = null;
 	private int mFutureInMillis = 5000;
 	private SeekBar mRingtoneSeekBar = null;
@@ -59,25 +59,19 @@ public class HomeActivity extends ActionBarActivity
 	private SongManager mSongManager;
 	private CountDownTimer remainingTimeCounter = null;
 	private Thread mAddSongIntoDatabase;
-	private boolean isInitializeListSongDone = false;
 	private SearchView mSearchView;
-	 private ListView lv;
-	 private AllSongAdapter adapter;
-	 private Menu mMenu;
-	 private ImageView mSearchImv;
-	 private ImageView mVolumeImv;
-	 private ImageView mAddImv;
-	 private ActionBar mActionBar;
-	 WebView webviewActionView;
-	 
+	private ListView lv;
+	public static AllSongAdapter adapter;
+	private Menu mMenu;
+	private ActionBar mActionBar;
+	public boolean isListSongDone = false;
+	private List<Fragment> fragments;
+	private MyPagerAdapter mPager;
+	private ViewPager mViewPager;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// List All Songs in device
-		mSongManager = new SongManager(this);
-		mSongManager.getAllAudio();
-		mAddSongIntoDatabase = new Thread(new AddSongIntoDatabase());
-		mAddSongIntoDatabase.start();
 		
 		// Set GUI
 		setContentView(R.layout.activity_main);
@@ -89,6 +83,25 @@ public class HomeActivity extends ActionBarActivity
 		lv.setOnItemClickListener(itemClickListener);
 		lv.setAdapter(adapter);
 		lv.setVisibility(View.GONE);
+		
+		// List All Songs in device
+		mSongManager = new SongManager(this);
+		mSongManager.getAllAudio();
+		mAddSongIntoDatabase = new Thread(new AddSongIntoDatabase());
+		mAddSongIntoDatabase.start();
+		mSongManager.setSongAddIntoDatabase(new OnSongAddIntoDatabase() {
+			@Override
+			public void songAddedIntoDatabase() {
+				if (lv.getVisibility() == View.VISIBLE) {
+				/*	runOnUiThread(new Runnable() {
+						public void run() {*/
+							adapter.notifyDataSetChanged();
+			/*			}
+					});
+				}*/
+				}
+			}
+		});
 		
 		// Create 2 lists
 		mRingtoneList = new RingtoneList( AudioList.REPEAT_ONE, this);
@@ -160,17 +173,72 @@ public class HomeActivity extends ActionBarActivity
 		// init own actionbar
 		initActionBar();
 		
-		InputStream stream = null;
-        try {
-            stream = getAssets().open("rain.gif");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        GifDecoderView view = (GifDecoderView) findViewById(R.id.imv_background);
-        view.playGif(stream);
-        
+        // Viewpager
+        fragments =  getFragments();
 		
+		mPager = new MyPagerAdapter(getSupportFragmentManager(), fragments);
+		mViewPager = (ViewPager) findViewById(R.id.viewpager);
+		mViewPager.setOffscreenPageLimit(1);
+		mViewPager.setAdapter(mPager);
+		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(final int position) {
+				Log.i("onPageSelected", "Position = " + position);
+				new StartGifAnimation().execute(position);
+				
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int state) {
+				Log.i("onPageScrollStateChanged", "state = " + state);
+			}
+		});
+	}
+	
+	private int mGifPos = -1;
+	class StartGifAnimation extends AsyncTask<Integer, String , Integer> {
+
+		@Override
+		protected Integer doInBackground(Integer... params) {
+			int position = params[0];
+			
+			if (mGifPos >= 0){
+				publishProgress("rain_gif.gif");
+			}
+				
+			((MyFragment) fragments.get(position)).startGifAnimation("rain_gif.gif");
+			mGifPos  = position;
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(String... values) {
+			((MyFragment) fragments.get(mGifPos)).stopGifAnimation("rain_gif.gif");
+		}
+		
+	}
+	
+	private List<Fragment> getFragments(){
+		  List<Fragment> fList = new ArrayList<Fragment>();
+		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
+		
+		  return fList;
 	}
 	
 	private void initActionBar (){
@@ -196,6 +264,8 @@ public class HomeActivity extends ActionBarActivity
 		 if (mSongList.getCount() == 0) {
 	        	ringtoneHrScrollView.setVisibility(View.INVISIBLE);
         }
+		 
+		 try {
 		 mNumberSongChecked = adapter.getmNumberItemIsChecked();
 		if(mNumberSongChecked > 0)
         {      	
@@ -205,7 +275,7 @@ public class HomeActivity extends ActionBarActivity
         		if (song.ismSelected())
         		{
         			mSongList.addmAudio(song);
-    				musicHrScrollView.addThumbnailToParent(R.drawable.ic_music_04);
+    				musicHrScrollView.addThumbnailToParent(R.drawable.ic_music_071);
         			
         			 /* To add 1 song after, 
         			 * we uncheck slected item in listview
@@ -215,6 +285,9 @@ public class HomeActivity extends ActionBarActivity
         		}
         	}
         }
+		 } catch (Exception e) {
+			 Log.e("", "" + e);
+		 }
 	}
 	
 	/**
@@ -230,9 +303,9 @@ public class HomeActivity extends ActionBarActivity
 			}
 	 };
 	
-	 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		Log.i("", "onCreateOptionsMenu");
 		getMenuInflater().inflate(R.menu.homemenu, menu);
 		mMenu  = menu;
 		return super.onCreateOptionsMenu(menu);
@@ -243,7 +316,8 @@ public class HomeActivity extends ActionBarActivity
 		@Override
 		public void run() {
           mSongManager.insertQueryResultIntoSonglist();
-          isInitializeListSongDone = true;
+          isListSongDone = true;
+          Log.i("", "Finish add to database");
 		}
 	}
 	
@@ -320,29 +394,49 @@ public class HomeActivity extends ActionBarActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
+		RelativeLayout parentRl = (RelativeLayout) findViewById(R.id.parent_layout);
+		
 		switch (item.getItemId()) {
 			
 		case R.id.action_add_song:
-			while(!isInitializeListSongDone);
+			while (!isListSongDone);
 			// Show listsong listview
 			if (lv.getVisibility() == View.GONE) {
-				//getMenuInflater().inflate(R.menu.list_song_menu, mMenu);
+				parentRl.setBackgroundColor(0xff777777);
+				musicHrScrollView.setBackgroundColor(0xff777777);
+				
 				mMenu.removeItem(R.id.action_add_song);
 				mMenu.removeItem(R.id.action_volume);
 				getMenuInflater().inflate(R.menu.list_song_menu, mMenu);
 				getMenuInflater().inflate(R.menu.homemenu, mMenu);
-				 MenuItem searchItem = mMenu.findItem(R.id.action_search);
-			        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-			        mSearchView.setIconifiedByDefault(true);
-					mSearchView.setOnQueryTextListener(searchViewListener);
+				
+				MenuItem searchItem = mMenu.findItem(R.id.action_search);
+			    mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+			    mSearchView.setIconifiedByDefault(true);
+				mSearchView.setOnQueryTextListener(searchViewListener);
+				
+				lv.setAdapter(lv.getAdapter());
 				lv.setVisibility(View.VISIBLE);
 				lv.setSelection(0);
+				
 			} else {
-				mMenu.removeItem(R.id.action_search);
+				parentRl.setBackgroundColor(0xffcccccc);
+				musicHrScrollView.setBackgroundColor(0xffcccccc);
+				
 				lv.setVisibility(View.GONE);
-				adapter.notifyDataSetChanged();
 				updateGui();
+				
+				try {
+					mMenu.removeItem(R.id.action_search);
+					mMenu.removeItem(R.id.action_volume);
+					mMenu.removeItem(R.id.action_add_song);
+					getMenuInflater().inflate(R.menu.homemenu, mMenu);
+				} catch (Exception e) {
+					Log.e("XXX", e + "");
+				}
+				//supportInvalidateOptionsMenu();
 			}
+			
 			break;
 			
 		case R.id.action_volume:
@@ -654,6 +748,7 @@ public class HomeActivity extends ActionBarActivity
 	
 	protected void onDestroy(){
 		mSongList.releasePlayer();
+		super.onDestroy();
 	};
 
 }

@@ -58,6 +58,17 @@ public class GifDecoder {
         protected Vector<GifFrame> frames; // frames read from current file
         protected int frameCount;
 
+        public void freeResource() {
+        	lct = null;
+        	gct = null;
+        	act = null;
+        	block = null;
+        	suffix = null;
+        	prefix = null;
+        	suffix = null;
+        	pixelStack = null;
+        	pixels = null;
+        }
         private static class GifFrame {
                 public GifFrame(Bitmap im, int del) {
                         image = im;
