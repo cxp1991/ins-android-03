@@ -28,7 +28,7 @@ public final class R {
 		public static final int balloon_dark = 0x7f02005c;
 		public static final int balloon_light = 0x7f02005d;
 		public static final int ic_launcher = 0x7f02006b;
-		public static final int songthumbnaildark = 0x7f02009d;
+		public static final int songthumbnaildark = 0x7f02009c;
 	}
 	public static final class id {
 		public static final int action_settings = 0x7f060060;

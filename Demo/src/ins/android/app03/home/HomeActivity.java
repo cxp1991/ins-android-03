@@ -227,16 +227,16 @@ public class HomeActivity extends ActionBarActivity
 	
 	private List<Fragment> getFragments(){
 		  List<Fragment> fList = new ArrayList<Fragment>();
-		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.stream_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
+		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
 		
 		  return fList;
 	}
