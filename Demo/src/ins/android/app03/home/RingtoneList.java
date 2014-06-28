@@ -12,16 +12,12 @@ public class RingtoneList extends AudioList
 	 * Ringtone's id in /res/raw
 	 * */
 	private int[] mRingtoneResourceID = new int []
-			{
-				R.raw.flute,
-				R.raw.frog,
-				R.raw.nighttime,
-				R.raw.rain,
-				R.raw.river,
-				R.raw.thunder,
-				R.raw.whistle,
-				R.raw.wind
-			};
+	{
+		R.raw.rain_sound,
+		R.raw.stream_sound,
+		R.raw.lighting_strike_sound,
+		R.raw.lighting_strike_sound
+	};
 	
 	/**
 	 * Name of ringtone
@@ -31,7 +27,7 @@ public class RingtoneList extends AudioList
 		"Flute", "Frog", "Nighttime", "Rain", "River", "Thunder", "Whistle", "Wind"
 	};
 	
-	private int NUMER_RINGTOMES = 8;
+	private int NUMER_RINGTOMES = 4;
 	
 	private MediaPlayer mPlayer;
 	
@@ -102,7 +98,7 @@ public class RingtoneList extends AudioList
 		
 	}
 
-		public void stopPlayer(int index) {
+	public void stopPlayer(int index) {
 		MediaPlayer player = getAudio(index-1).getmPlayer();
 		if (player != null) {
 			player.stop();

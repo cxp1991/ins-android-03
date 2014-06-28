@@ -69,6 +69,12 @@ public class GifDecoder {
         	pixelStack = null;
         	pixels = null;
         }
+        
+        public void freeAllResource() {
+        	frames.clear();
+        	frames = null;
+        }
+        
         private static class GifFrame {
                 public GifFrame(Bitmap im, int del) {
                         image = im;

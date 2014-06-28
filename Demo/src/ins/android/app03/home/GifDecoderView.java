@@ -8,9 +8,10 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
-public class GifDecoderView extends ImageView {
+public class GifDecoderView extends ImageButton {
 
     private boolean mIsPlayingGif = false;
 
@@ -30,17 +31,14 @@ public class GifDecoderView extends ImageView {
 
     public GifDecoderView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		// TODO Auto-generated constructor stub
 	}
 
 	public GifDecoderView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		// TODO Auto-generated constructor stub
 	}
 
 	public GifDecoderView(Context context) {
 		super(context);
-		// TODO Auto-generated constructor stub
 	}
 
 	public GifDecoderView(Context context, InputStream stream) {
@@ -66,21 +64,20 @@ public class GifDecoderView extends ImageView {
                     	mTmpBitmap = mGifDecoder.getFrame(i);
                         int t = mGifDecoder.getDelay(i);
                         mHandler.post(mUpdateResults);
-                        try {
-                            Thread.sleep(t);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                        if (t > 0) {
+                        	 try {
+                         		Thread.sleep(t);
+                             } catch (InterruptedException e) {
+                                 e.printStackTrace();
+                             }
                         }
                     }
                     if(ntimes != 0) {
                         repetitionCounter ++;
                     }
                 } while (mIsPlayingGif && (repetitionCounter <= ntimes));
-//                
-//                if (!mTmpBitmap.isRecycled())
-//                {
-//                	mTmpBitmap.recycle();
-//                }
+                
+                mGifDecoder.freeAllResource();
                 mTmpBitmap = null;
                 mGifDecoder = null;
             }

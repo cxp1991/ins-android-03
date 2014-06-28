@@ -41,30 +41,44 @@
         android:layout_alignParentBottom="true">
     </com.example.myhorizontalscrollview.MyHorizontalScrollView>
 
-	<android.support.v4.view.ViewPager
-       android:id="@+id/viewpager"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content" 
+    <FrameLayout 
+       android:layout_width="match_parent"
+       android:layout_height="match_parent" 
        android:layout_above="@id/musicscrollview"
        android:layout_marginTop="70dp">
+        <ImageView 
+            android:id="@+id/imv_startup"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/rain_jpg"
+            android:padding="10dp" />
+        
+        <android.support.v4.view.ViewPager
+	       android:id="@+id/viewpager"
+	       android:layout_width="match_parent"
+	       android:layout_height="match_parent" 
+	       android:visibility="invisible">
+	       
 	</android.support.v4.view.ViewPager>
+    </FrameLayout>
    
    <Button
        android:id="@+id/btplayall"
        android:layout_width="100dp"
        android:layout_height="100dp"
 	   android:layout_centerInParent="true"
-       android:background="@drawable/button_black_play"
        android:visibility="invisible"/> 
        
    <ListView
            android:id="@+id/lv"
            android:layout_width="match_parent"
            android:layout_height="match_parent"
-           android:layout_marginLeft="5dp"
-           android:layout_marginRight="5dp"
            android:layout_marginTop="80dp"
-           android:layout_marginBottom="5dp"
+           android:layout_marginBottom="10dp"
+           android:layout_marginLeft="10dp"
+           android:layout_marginRight="10dp"
            android:background="@drawable/listsong_drawable"
            android:divider="@drawable/list_divider"
            android:scrollbarThumbVertical="@drawable/listview_scrollbar_style"
@@ -76,9 +90,9 @@
 	    android:layout_height="wrap_content"
 	    android:orientation="vertical" 
 	    android:background="@drawable/volume_controller_background"
-	    android:layout_marginLeft="10dp"
-	    android:layout_marginRight="10dp"
-	     android:layout_marginTop="80dp"
+	    android:layout_marginLeft="20dp"
+	    android:layout_marginRight="20dp"
+	     android:layout_marginTop="90dp"
 	    android:id="@+id/ln_volume"
 	    android:padding="10dp" >
 
@@ -115,6 +129,7 @@
 			  android:text="MUSIC"
 			  android:layout_gravity="center_vertical|center_horizontal"
 			  android:textColor="#ffffff"/>
+	        
 	      	<SeekBar 
 	          android:id="@+id/music_volume_seekbar"
 	          android:layout_width="match_parent"

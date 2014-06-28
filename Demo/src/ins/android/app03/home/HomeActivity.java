@@ -9,6 +9,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.inputmethodservice.KeyboardView;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -68,6 +69,8 @@ public class HomeActivity extends ActionBarActivity
 	private List<Fragment> fragments;
 	private MyPagerAdapter mPager;
 	private ViewPager mViewPager;
+	private long mStartTime = 0, mCurrentTime = 0;
+	private boolean ableDecodeGif;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,12 +96,7 @@ public class HomeActivity extends ActionBarActivity
 			@Override
 			public void songAddedIntoDatabase() {
 				if (lv.getVisibility() == View.VISIBLE) {
-				/*	runOnUiThread(new Runnable() {
-						public void run() {*/
-							adapter.notifyDataSetChanged();
-			/*			}
-					});
-				}*/
+					adapter.notifyDataSetChanged();
 				}
 			}
 		});
@@ -119,13 +117,7 @@ public class HomeActivity extends ActionBarActivity
 			}
 		});
 		
-		// Initialize 2 horizontialScrollview
-		ringtoneHrScrollView = (MyHorizontalScrollView) findViewById(R.id.ringtonescrollview);
-        ringtoneHrScrollView.setOnTouchFinishListener(ringtoneOnTouchFinishListener);
-        if (mSongList.getCount() == 0) {
-        	ringtoneHrScrollView.setVisibility(View.INVISIBLE);
-        }
-        
+        /* Music HorizontialScrollView */
         musicHrScrollView = (MyHorizontalScrollView) findViewById(R.id.musicscrollview);
         musicHrScrollView.setOnTouchFinishListener(musicOnTouchFinish);
         musicHrScrollView.setOnThumbnailLongTouchListener(musicOnLongTouchListener);
@@ -135,21 +127,11 @@ public class HomeActivity extends ActionBarActivity
 			@Override
 			public void onEndSong(int index) {
 				Log.i("", "setEndSongListener, index = " + index);
-				
 				musicHrScrollView.updateLayout(index);
 				musicHrScrollView.setCenterIndex(index);
 			}
         });
         
-        // Button stop play/pause both ringtone & music
-        buttonPlayAll = (Button) findViewById(R.id.btplayall);
-        buttonPlayAll.setOnClickListener(buttonPlayAllOnClickListener);
-        if (mSongList.getmState() == AudioList.PLAYING) {
-        	buttonPlayAll.setBackgroundResource(R.drawable.button_black_pause);
-        } else {
-        	buttonPlayAll.setBackgroundResource(R.drawable.button_black_play);
-        }
-
         // Volume Controller
         mVolumeLayout = (LinearLayout) findViewById(R.id.ln_volume);
         mVolumeLayout.setVisibility(View.GONE);
@@ -171,7 +153,7 @@ public class HomeActivity extends ActionBarActivity
 		updateGui();
 		
 		// init own actionbar
-		initActionBar();
+		//initActionBar();
 		
         // Viewpager
         fragments =  getFragments();
@@ -184,88 +166,69 @@ public class HomeActivity extends ActionBarActivity
 			
 			@Override
 			public void onPageSelected(final int position) {
-				Log.i("onPageSelected", "Position = " + position);
-				new StartGifAnimation().execute(position);
-				
+				//mCurrentTime = System.currentTimeMillis();
+				//Log.i("time", "time = " + (mCurrentTime - mStartTime));
+				///if (mCurrentTime - mStartTime > 300) {
+					new StartGifAnimation().execute(position);
+				//}
+				//mStartTime = System.currentTimeMillis();
 			}
 			
 			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
-				
-			}
-			
+	        public void onPageScrolled(	int position, 
+						        		float positionOffset, 
+						        		int positionOffsetPixels) {
+				Log.i("", "offset = " + positionOffset);
+	        }
+	
 			@Override
 			public void onPageScrollStateChanged(int state) {
-				Log.i("onPageScrollStateChanged", "state = " + state);
+				//Log.i("")
 			}
 		});
+		
 	}
 	
 	private int mGifPos = -1;
-	class StartGifAnimation extends AsyncTask<Integer, String , Integer> {
+	String [] mGifName =  new String []{"rain_gif.gif", "stream_gif.gif",
+			"thunder_gif.gif", "frog_gif.gif"};
+	
+	class StartGifAnimation extends AsyncTask<Integer, Void , Integer> {
 
 		@Override
 		protected Integer doInBackground(Integer... params) {
 			int position = params[0];
-			
+			Log.i("", "AsyncTask called");
+			/* Stop invisible pager */
 			if (mGifPos >= 0){
-				publishProgress("rain_gif.gif");
+				publishProgress();
 			}
 				
-			((MyFragment) fragments.get(position)).startGifAnimation("rain_gif.gif");
+			/* Start visible pager */
+			((MyFragment) fragments.get(position)).startGifAnimation();
 			mGifPos  = position;
 			return null;
 		}
-		
 		@Override
-		protected void onProgressUpdate(String... values) {
-			((MyFragment) fragments.get(mGifPos)).stopGifAnimation("rain_gif.gif");
+		protected void onProgressUpdate(Void... values) {
+			((MyFragment) fragments.get(mGifPos)).stopGifAnimation();
 		}
-		
 	}
 	
 	private List<Fragment> getFragments(){
 		  List<Fragment> fList = new ArrayList<Fragment>();
-		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
-		  fList.add(MyFragment.newInstance(R.drawable.rain_jpg));
+		  
+		  fList.add(MyFragment.newInstance(1, R.drawable.rain_jpg, "rain_gif.gif"));
+		  fList.add(MyFragment.newInstance(2, R.drawable.stream_jpg, "stream_gif.gif"));
+		  fList.add(MyFragment.newInstance(3, R.drawable.thunder_jpg, "thunder_gif.gif"));
+		  fList.add(MyFragment.newInstance(4, R.drawable.frog_jpg, "frog_gif.gif"));
 		
 		  return fList;
 	}
 	
-	private void initActionBar (){
-		/*mSearchImv = (ImageView) this.findViewById(R.id.ac_search);
-		mVolumeImv = (ImageView) this.findViewById(R.id.ac_volume);
-		mAddImv = (ImageView) this.findViewById(R.id.ac_add);
-		
-		mSearchImv.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				
-			}
-		});*/
-		
-		ActionBar actiobar = getSupportActionBar();
-	   // LayoutParams lp1 = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-	   // View customNav = LayoutInflater.from(this).inflate(R.layout.actionbar_layout, null); // layout which contains your button.
-		actiobar.setCustomView(R.layout.actionbar_layout);
-	}
-	
 	private void updateGui(){
-		 if (mSongList.getCount() == 0) {
-	        	ringtoneHrScrollView.setVisibility(View.INVISIBLE);
-        }
-		 
-		 try {
+
+		try {
 		 mNumberSongChecked = adapter.getmNumberItemIsChecked();
 		if(mNumberSongChecked > 0)
         {      	
@@ -320,77 +283,7 @@ public class HomeActivity extends ActionBarActivity
           Log.i("", "Finish add to database");
 		}
 	}
-	
-	/**
-	 * Button Play All listener
-	 */
-	OnClickListener buttonPlayAllOnClickListener = new OnClickListener() {
-		
-		@Override
-		public void onClick(View v) {
-			if (mSongList.getCount() == 0) return;
-			
-			/* From STOP state */
-			if (mSongList.getmState() == AudioList.STOP) {
-				
-				mSongList.playMediaPlayer(1);
-				musicHrScrollView.updateLayout(1);
-				musicHrScrollView.setCenterIndex(1);
-				
-				for (MySong song : mRingtoneList.getmAudioList()) {
-					if (song.isChoose()) {
-						if (song.getmPlayerState() == AudioList.PAUSE) {
-							mRingtoneList.resumePlayer(song);
-						} else {
-							mRingtoneList.playMediaPlayer(getBaseContext(), song);
-						}
-					}
-				}
-			
-				buttonPlayAll.setBackgroundResource(R.drawable.button_black_pause);
-				
-			/* From PAUSE state */
-			} else if (mSongList.getmState() == AudioList.PAUSE) {
-				
-				if (mSongList.getmAudioPlaying() == musicHrScrollView.getCenterIndex()) {
-					mSongList.resumePlayer();
-				} else {
-					mSongList.playMediaPlayer(musicHrScrollView.getCenterIndex());
-				}
-				
-				for (MySong song : mRingtoneList.getmAudioList()) {
-					if (song.isChoose()) {
-						Log.i("", "song = " + song.getmSongName());
-						Log.i("", "song = " + song.getmPlayerState());
-						if (song.getmPlayerState() == AudioList.PAUSE) {
-							mRingtoneList.resumePlayer(song);
-						} else {
-							mRingtoneList.playMediaPlayer(getBaseContext(), song);
-						}
-					}
-				}
-				
-				buttonPlayAll.setBackgroundResource(R.drawable.button_black_pause);
-				
-			/* From PLAYING state */
-			} else if (mSongList.getmState() == AudioList.PLAYING) {
-				
-				mSongList.pauseMediaPlayer();
-			
-				for (MySong song : mRingtoneList.getmAudioList()) {
-					if (song.isChoose()) {
-						mRingtoneList.pausePlayer(song);
-					}
-				}
-				
-				buttonPlayAll.setBackgroundResource(R.drawable.button_black_play);
-				
-			}
-			
-		}
-	};
 
-	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
@@ -402,8 +295,8 @@ public class HomeActivity extends ActionBarActivity
 			while (!isListSongDone);
 			// Show listsong listview
 			if (lv.getVisibility() == View.GONE) {
-				parentRl.setBackgroundColor(0xff777777);
-				musicHrScrollView.setBackgroundColor(0xff777777);
+				parentRl.setBackgroundColor(0xff666666);
+				musicHrScrollView.setBackgroundColor(0xff666666);
 				
 				mMenu.removeItem(R.id.action_add_song);
 				mMenu.removeItem(R.id.action_volume);
@@ -418,6 +311,12 @@ public class HomeActivity extends ActionBarActivity
 				lv.setAdapter(lv.getAdapter());
 				lv.setVisibility(View.VISIBLE);
 				lv.setSelection(0);
+				
+				/* Hide viewpager */
+				mViewPager.setVisibility(View.INVISIBLE);
+				
+				/* Hide HorizontialScrollView */
+				musicHrScrollView.setVisibility(View.INVISIBLE);
 				
 			} else {
 				parentRl.setBackgroundColor(0xffcccccc);
@@ -434,6 +333,12 @@ public class HomeActivity extends ActionBarActivity
 				} catch (Exception e) {
 					Log.e("XXX", e + "");
 				}
+				
+				/* Show viewpager */
+				mViewPager.setVisibility(View.VISIBLE);
+				
+				/* Show HorizontialScrollView */
+				musicHrScrollView.setVisibility(View.VISIBLE);
 				//supportInvalidateOptionsMenu();
 			}
 			
@@ -522,41 +427,6 @@ public class HomeActivity extends ActionBarActivity
 			
 			break;
 			
-		/*case R.id.action_remove_all_song:
-			// Not null list 
-			if (musicHrScrollView.getNumberThumbnail() > 0)
-			{
-				LinearLayout lnlayout = musicHrScrollView.getTopLnLayout();
-				lnlayout.removeViews(1, musicHrScrollView.getNumberThumbnail());
-				musicHrScrollView.setNumberThumbnail(0);
-				musicHrScrollView.setCenterIndex(0);
-				mSongList.getmAudioList().clear();
-				mSongList.stopMediaPlayer();
-				
-				mRingtoneList.pauseMediaPlayer();
-			}
-			
-			break;
-		case R.id.action_scroll_to_head:
-			// Not null list & item is highlighting is not first item  
-			if (musicHrScrollView.getNumberThumbnail() > 0 &&
-					(musicHrScrollView.getCenterIndex() != 1))
-			{
-				musicHrScrollView.setCenterIndex(1);
-				musicHrScrollView.updateLayout(1);
-				mSongList.playMediaPlayer(1);
-			}
-			break;
-		case R.id.action_scroll_to_end:
-			// Not null list & item is highlighting is not last item  
-			if (musicHrScrollView.getNumberThumbnail() > 0 && 
-					(musicHrScrollView.getCenterIndex() != musicHrScrollView.getNumberThumbnail()))
-			{
-				musicHrScrollView.setCenterIndex(musicHrScrollView.getNumberThumbnail());
-				musicHrScrollView.updateLayout(musicHrScrollView.getNumberThumbnail());
-				mSongList.playMediaPlayer(mSongList.getCount());
-			}
-			break;*/
 		default:
 			break;
 		}
@@ -610,51 +480,6 @@ public class HomeActivity extends ActionBarActivity
 			}
 		}
 	};
-	
-	/* Same as  music above */
-	OnTouchFinishListener ringtoneOnTouchFinishListener = new OnTouchFinishListener() {
-		
-		@Override
-		public void onTouchFinish(View parrent, int index) {
-//			if (centerIndex == ringtoneHrScrollView.getmLongTouchItemIndex())
-//				return;
-//			
-//			/* Has longtouch Item */
-//			if(parrent != null)
-//			{
-//				Log.i("TAG", "onTouchFinish has long touch item");
-//				final ImageView img =  (ImageView) parrent.findViewById(R.id.thumbnailImage);
-//				
-//				getActivity().runOnUiThread(new Runnable() {
-//					
-//					@Override
-//					public void run() {
-//						// TODO Auto-generated method stub
-//						img.setBackgroundResource(R.drawable.image_transparent_border);
-//					}
-//				});
-//				
-//				mRingtoneList.setmPlayMode(AudioList.PLAY_ALL);
-//			}
-			
-				if (ringtoneHrScrollView.isItemHighLight(index)) {
-					
-					mRingtoneList.stopPlayer(index);
-					ringtoneHrScrollView.unHighlightIdex(index);
-					mRingtoneList.getAudio(index-1).setChoose(false);
-					
-				} else {
-					
-					if (mSongList.getmState() == AudioList.PLAYING) {
-						mRingtoneList.playMediaPlayer(getBaseContext(), index);
-					}
-					
-					ringtoneHrScrollView.highlightIdex(index);
-					mRingtoneList.getAudio(index-1).setChoose(true);
-					
-				}
-		}
-	};
 
 	/**
 	 * In longtouch event, we change item's background
@@ -671,20 +496,7 @@ public class HomeActivity extends ActionBarActivity
 			
 			mSongList.setmPlayMode(AudioList.REPEAT_ONE);
 			mSongList.setLooping(true);
-		}
-	};
-
-	OnThumbnailLongTouchListener ringtoneOnLongTouchListener = new OnThumbnailLongTouchListener() {
-		
-		@Override
-		public void onMyLongTouch(View view, int centerIndex) {
-			//FrameLayout itemLayout = (FrameLayout) view;
-			Log.d("TAG", "OnThumbnailLongTouchListener");
-			ImageView thumbnail = (ImageView) view.findViewById(R.id.thumbnailImage);
-			thumbnail.setBackgroundResource(R.drawable.image_border);
 			
-			mRingtoneList.setmPlayMode(AudioList.REPEAT_ONE);
-			mRingtoneList.setLooping(true);
 		}
 	};
 
@@ -692,37 +504,19 @@ public class HomeActivity extends ActionBarActivity
 		
 		@Override
 		public void onItemnailAdd(int numberThumnail) {
-			/*if (ringtoneHrScrollView.getVisibility() == View.INVISIBLE)
-				ringtoneHrScrollView.setVisibility(View.VISIBLE);*/
-		}
-	};
-	
-	OnTouchListener checkTouchOutsideVolumeController = new OnTouchListener() {
-		
-		@Override
-		public boolean onTouch(View v, MotionEvent event) {
-			
-			if ( event.getAction () == MotionEvent.ACTION_UP ) {
-			    Rect r = new Rect ( 0, 0, 0, 0 );
-			    mVolumeLayout.getHitRect(r);
-			    
-			    Log.i("volume", "left = " + r.left +
-			    				"\n right = " + r.right + 
-			    				"\n top = " + r.top + 
-			    				"\n bottom = " + r.bottom);
-			    
-			    Log.i ("", "X = " + event.getX() + 
-			    		   "\nY = " + event.getY());
-			    
-			    boolean intersects = r.contains ( (int) event.getX (), (int) event.getY () );
-			    
-			    if ( !intersects ) {
-			    	Log.i("volume", "INSIDE");
-			      return true;
-			    }
-			  }
-			Log.i("volume", "OUTSIDE");
-		  return true;
+			if (mViewPager.getVisibility() == View.INVISIBLE) {
+				mViewPager.setVisibility(View.VISIBLE);
+				ImageView v = (ImageView) findViewById(R.id.imv_startup);
+				v.setVisibility(View.GONE);
+				
+				/* Play song 1*/
+				mSongList.playMediaPlayer(1);
+				musicHrScrollView.highlightIdex(1);
+				musicHrScrollView.setCenterIndex(1);
+				
+				/* Play Ringtone */
+				new StartGifAnimation().execute(0);
+			}
 		}
 	};
 	
@@ -751,4 +545,15 @@ public class HomeActivity extends ActionBarActivity
 		super.onDestroy();
 	};
 
+	/* Index 1,2,3,... */
+	public void playRingtone (int index) {
+		mRingtoneList.playMediaPlayer(this,index);
+		//mRingtoneList.getAudio(index-1).setChoose(true);
+	}
+	
+	public void stopRingtone (int index) {
+		mRingtoneList.stopPlayer(index);
+		//mRingtoneList.getAudio(index-1).setChoose(false);
+	}
+	
 }
