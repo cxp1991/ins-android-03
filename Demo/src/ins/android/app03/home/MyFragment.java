@@ -54,15 +54,19 @@ public class MyFragment extends Fragment{
 		gifView.setImageResource(resId);
 		
 		gifView.setOnClickListener (new View.OnClickListener() {
+			
 			@Override
 			public void onClick(View arg0) {
+				
 				if (state == PLAYING) {
 					stopGifAnimation();
 				}
 				else if (state == STOP) {
 					startGifAnimation();
 				}
+				
 			}
+			
 		});
 		
 		return gifView;
@@ -72,18 +76,18 @@ public class MyFragment extends Fragment{
 	{
 		try {
 			stream = getActivity().getAssets().open(mGifName);
+			gifView.playGif(stream);
+			state = PLAYING;
+			((HomeActivity)getActivity()).playRingtone(mIndex);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		gifView.playGif(stream);
-		state = PLAYING;
-		((HomeActivity)getActivity()).playRingtone(mIndex);
 		
 	}
 	
 	public void stopGifAnimation ()
 	{
+		/* Exception is page is already stop */
 		try {
 			gifView.stopRendering();
 			
@@ -95,12 +99,21 @@ public class MyFragment extends Fragment{
 
 			gifView.setImageResource(0);
 			
+			state = STOP;
+			((HomeActivity)getActivity()).stopRingtone(mIndex);
+			
 		} catch (Exception e) {
 			
 		}
 		
-		state = STOP;
-		((HomeActivity)getActivity()).stopRingtone(mIndex);
+	}
+	
+	public void pagerClickDisable () {
+		gifView.setClickable(false);
+	}
+	
+	public void pagerClickEnable () {
+		gifView.setClickable(true);
 	}
 	
 }

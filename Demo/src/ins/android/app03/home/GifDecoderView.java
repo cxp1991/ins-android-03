@@ -13,7 +13,7 @@ import android.widget.ImageView;
 
 public class GifDecoderView extends ImageButton {
 
-    private boolean mIsPlayingGif = false;
+    private boolean mIsPlayingGif = true;
 
     private GifDecoder mGifDecoder;
 
@@ -47,13 +47,15 @@ public class GifDecoderView extends ImageButton {
     }
 
     public void playGif(InputStream stream) {
+    	
+    	Log.i ("", "mIsPlayingGif = " + mIsPlayingGif);
         mGifDecoder = new GifDecoder();
         mGifDecoder.read(stream);
-
         mIsPlayingGif = true;
 
         new Thread(new Runnable() {
             public void run() {
+            	int t = 0;
                 final int n = mGifDecoder.getFrameCount();
                 final int ntimes = mGifDecoder.getLoopCount();
                 int repetitionCounter = 0;
@@ -61,9 +63,17 @@ public class GifDecoderView extends ImageButton {
                 
                 do {
                     for (int i = 0; i < n; i++) {
-                    	mTmpBitmap = mGifDecoder.getFrame(i);
-                        int t = mGifDecoder.getDelay(i);
-                        mHandler.post(mUpdateResults);
+                    	
+                    	try {
+                    		mTmpBitmap = mGifDecoder.getFrame(i);
+                    		//Log.i("", "byte count = " + mTmpBitmap.getByteCount());
+                    		//Log.i("", "frame count = " + n);
+                            t = mGifDecoder.getDelay(i);
+                            mHandler.post(mUpdateResults);
+                    	} catch (Exception e) {
+                    		
+                    	}
+                        
                         if (t > 0) {
                         	 try {
                          		Thread.sleep(t);
@@ -80,6 +90,7 @@ public class GifDecoderView extends ImageButton {
                 mGifDecoder.freeAllResource();
                 mTmpBitmap = null;
                 mGifDecoder = null;
+                mIsPlayingGif = true;
             }
         }).start();
         

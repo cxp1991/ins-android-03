@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Rect;
-import android.inputmethodservice.KeyboardView;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,10 +23,7 @@ import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -166,25 +161,19 @@ public class HomeActivity extends ActionBarActivity
 			
 			@Override
 			public void onPageSelected(final int position) {
-				//mCurrentTime = System.currentTimeMillis();
-				//Log.i("time", "time = " + (mCurrentTime - mStartTime));
-				///if (mCurrentTime - mStartTime > 300) {
-					new StartGifAnimation().execute(position);
-				//}
-				//mStartTime = System.currentTimeMillis();
+				new StartGifAnimation().execute(position);						
 			}
 			
 			@Override
 	        public void onPageScrolled(	int position, 
 						        		float positionOffset, 
 						        		int positionOffsetPixels) {
-				Log.i("", "offset = " + positionOffset);
 	        }
 	
 			@Override
 			public void onPageScrollStateChanged(int state) {
-				//Log.i("")
 			}
+			
 		});
 		
 	}
@@ -197,22 +186,25 @@ public class HomeActivity extends ActionBarActivity
 
 		@Override
 		protected Integer doInBackground(Integer... params) {
-			int position = params[0];
-			Log.i("", "AsyncTask called");
+			final int position = params[0];
+			
 			/* Stop invisible pager */
-			if (mGifPos >= 0){
+			if (mGifPos >= 0)
 				publishProgress();
-			}
-				
-			/* Start visible pager */
+			
+			/* Start visible pager in 0.7s */
 			((MyFragment) fragments.get(position)).startGifAnimation();
+			
 			mGifPos  = position;
+			
 			return null;
 		}
+		
 		@Override
 		protected void onProgressUpdate(Void... values) {
 			((MyFragment) fragments.get(mGifPos)).stopGifAnimation();
 		}
+		
 	}
 	
 	private List<Fragment> getFragments(){
@@ -352,6 +344,9 @@ public class HomeActivity extends ActionBarActivity
 			
 			if (mVolumeLayout.getVisibility() == View.GONE) {
 				
+				/* Disable gif clickable */
+				((MyFragment)fragments.get(mViewPager.getCurrentItem())).pagerClickDisable();
+				
 				mVolumeLayout.setVisibility(View.VISIBLE);
 				mRingtoneSeekBar.setProgress(mAudioManager
                 .getStreamVolume(AudioManager.STREAM_MUSIC));
@@ -412,11 +407,17 @@ public class HomeActivity extends ActionBarActivity
 
 					@Override
 					public void onFinish() {
+						/* Enable gif clickable */
+						((MyFragment)fragments.get(mViewPager.getCurrentItem())).pagerClickEnable();
+						
 						mVolumeLayout.setVisibility(View.GONE);
 					}
 		        }.start();
 		        
 			} else {
+				
+				/* Enable gif clickable */
+				((MyFragment)fragments.get(mViewPager.getCurrentItem())).pagerClickEnable();
 				
 				if (remainingTimeCounter != null) {
 					remainingTimeCounter.cancel();

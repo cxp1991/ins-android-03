@@ -68,17 +68,19 @@ public class GifDecoder {
         	suffix = null;
         	pixelStack = null;
         	pixels = null;
+        	System.gc();
         }
         
         public void freeAllResource() {
         	frames.clear();
         	frames = null;
+        	System.gc();
         }
         
         private static class GifFrame {
                 public GifFrame(Bitmap im, int del) {
-                        image = im;
-                        delay = del;
+                    image = im;
+                    delay = del;
                 }
 
                 public Bitmap image;

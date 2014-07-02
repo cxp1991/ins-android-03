@@ -3,6 +3,7 @@ package ins.android.app03.home;
 import ins.android.app03.home.R;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
@@ -77,7 +78,7 @@ public class AllSongAdapter extends BaseAdapter
 			Log.i("TAG", "performFiltering");
 			FilterResults results=new FilterResults();
 			
-			String prefix  = constraint.toString().toLowerCase();
+			String prefix  = constraint.toString().toLowerCase(Locale.ENGLISH);
 			ArrayList<MySong> valueArraylist = new ArrayList<MySong>();                              
 			
 			/* reset data */
@@ -97,8 +98,8 @@ public class AllSongAdapter extends BaseAdapter
 				
             for (MySong song : SongManager.mListAllSong) 
             {
-            	final String value = song.getmSongName().toLowerCase();
-                final String valueText = value.toString().toLowerCase();
+            	final String value = song.getmSongName().toLowerCase(Locale.ENGLISH);
+                final String valueText = value.toString().toLowerCase(Locale.ENGLISH);
 
 				if (valueText.startsWith(prefix)) 
 				{
