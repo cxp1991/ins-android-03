@@ -2,6 +2,7 @@
 package ins.android.app03.home;
 
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,15 +17,17 @@ public class GifDecoderView extends ImageButton {
     private boolean mIsPlayingGif = true;
 
     private GifDecoder mGifDecoder;
-
-    private Bitmap mTmpBitmap;
-
+    //private Bitmap mTmpBitmap;
+    
+    private WeakReference<Bitmap> mBitmapWeakReference;
+    
     final Handler mHandler = new Handler();
 
     final Runnable mUpdateResults = new Runnable() {
         public void run() {
-            if (mTmpBitmap != null && !mTmpBitmap.isRecycled()) {
-                GifDecoderView.this.setImageBitmap(mTmpBitmap);
+            if (mBitmapWeakReference != null) {
+            	final Bitmap imageview = mBitmapWeakReference.get();
+                setImageBitmap(imageview);
             }
         }
     };
@@ -65,9 +68,7 @@ public class GifDecoderView extends ImageButton {
                     for (int i = 0; i < n; i++) {
                     	
                     	try {
-                    		mTmpBitmap = mGifDecoder.getFrame(i);
-                    		//Log.i("", "byte count = " + mTmpBitmap.getByteCount());
-                    		//Log.i("", "frame count = " + n);
+                    		mBitmapWeakReference = new WeakReference<Bitmap> (mGifDecoder.getFrame(i));
                             t = mGifDecoder.getDelay(i);
                             mHandler.post(mUpdateResults);
                     	} catch (Exception e) {
@@ -88,7 +89,6 @@ public class GifDecoderView extends ImageButton {
                 } while (mIsPlayingGif && (repetitionCounter <= ntimes));
                 
                 mGifDecoder.freeAllResource();
-                mTmpBitmap = null;
                 mGifDecoder = null;
                 mIsPlayingGif = true;
             }
