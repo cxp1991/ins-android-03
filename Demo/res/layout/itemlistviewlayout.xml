@@ -9,7 +9,8 @@
         android:layout_height="48dp"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="5dp" />
+        android:layout_marginLeft="5dp"
+        android:contentDescription="@string/thumbnail" />
 	        
     <TextView
         android:id="@+id/tvsongname"

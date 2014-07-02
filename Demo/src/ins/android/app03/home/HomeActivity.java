@@ -42,10 +42,8 @@ import com.example.myhorizontalscrollview.MyHorizontalScrollView.OnTouchFinishLi
 public class HomeActivity extends ActionBarActivity 
 {
 	private MyHorizontalScrollView musicHrScrollView;
-	private MyHorizontalScrollView ringtoneHrScrollView;
 	public SongList mSongList = null; 
 	public RingtoneList mRingtoneList = null; 
-	private Button buttonPlayAll = null;
 	private LinearLayout mVolumeLayout = null;
 	private int mFutureInMillis = 5000;
 	private SeekBar mRingtoneSeekBar = null;
@@ -64,8 +62,6 @@ public class HomeActivity extends ActionBarActivity
 	private List<Fragment> fragments;
 	private MyPagerAdapter mPager;
 	private ViewPager mViewPager;
-	private long mStartTime = 0, mCurrentTime = 0;
-	private boolean ableDecodeGif;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -146,9 +142,6 @@ public class HomeActivity extends ActionBarActivity
 		
 		// Update GUI
 		updateGui();
-		
-		// init own actionbar
-		//initActionBar();
 		
         // Viewpager
         fragments =  getFragments();
